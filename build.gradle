@@ -19,20 +19,20 @@ apply plugin: 'forge'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-version = "2.5-1.7.10"
+version = "2.5-1.7.10-471"
 group= "thaumic.tinkerer"
 archivesBaseName = "ThaumicTinkerer"
 
 minecraft {
-	version = "1.7.10-10.13.2.1232"
+	version = "1.7.10-10.13.2.1291"
 	runDir = "eclipse"
 }
 
 dependencies {
-	compile files('lib/Baubles-deobf-1.7.10-1.0.1.10.jar', 'lib/Thaumcraft-deobf-1.7.10-4.2.3.4.jar', 'lib/ThaumicTinkerer-2.5-1.7.10-dev.jar')
+	compile files('lib/Baubles-deobf-1.7.10-1.0.1.10.jar', 'lib/Thaumcraft-deobf-1.7.10-4.2.3.4.jar', 'lib/ThaumicTinkerer-2.5-1.7.10-471-dev.jar')
 }
 
 jar {
-	from zipTree('lib/ThaumicTinkerer-2.5-1.7.10.jar')
+	from zipTree('lib/ThaumicTinkerer-2.5-1.7.10-471.jar')
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

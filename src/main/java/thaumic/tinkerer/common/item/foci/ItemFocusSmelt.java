@@ -32,6 +32,8 @@ public class ItemFocusSmelt extends ItemModFocus
 	private static final AspectList visUsage = new AspectList().add(Aspect.FIRE, 45).add(Aspect.ENTROPY, 12);
 	public static Map<String, SmeltData> playerData = new HashMap();
 
+	private int soundCooldown = 3; // In ticks
+
 	public ItemFocusSmelt()
 	{
 		super();
@@ -47,7 +49,6 @@ public class ItemFocusSmelt extends ItemModFocus
 	public IRegisterableResearch getResearchItem()
 	{
 		return (TTResearchItem) new TTResearchItem(LibResearch.KEY_FOCUS_SMELT, new AspectList().add(Aspect.FIRE, 2).add(Aspect.ENERGY, 1).add(Aspect.MAGIC, 1), -2, -2, 2, new ItemStack(this)).setParents("FOCUSEXCAVATION").setConcealed().setPages(new ResearchPage("0"), ResearchHelper.arcaneRecipePage(LibResearch.KEY_FOCUS_SMELT));
-
 	}
 
 	@Override
@@ -76,8 +77,7 @@ public class ItemFocusSmelt extends ItemModFocus
 			int meta = p.worldObj.getBlockMetadata(pos.blockX, pos.blockY, pos.blockZ);
 			// TODO gamerforEA code start
 			BreakEvent event = new BreakEvent(pos.blockX, pos.blockY, pos.blockZ, p.worldObj, block, meta, p);
-			MinecraftForge.EVENT_BUS.post(event);
-			if (event.isCanceled()) return;
+			if (MinecraftForge.EVENT_BUS.post(event)) return;
 			// TODO gamerforEA code end
 
 			ItemStack blockStack = new ItemStack(block, 1, meta);
@@ -100,14 +100,16 @@ public class ItemFocusSmelt extends ItemModFocus
 							if (!p.worldObj.isRemote)
 							{
 								p.worldObj.setBlock(pos.blockX, pos.blockY, pos.blockZ, Block.getBlockFromItem(result.getItem()), result.getItemDamage(), 1 | 2);
-								p.worldObj.playSoundAtEntity(p, "fire.ignite", 0.6F, 1F);
-								p.worldObj.playSoundAtEntity(p, "fire.fire", 1F, 1F);
-
 								wand.consumeAllVis(stack, p, visUsage, true, false);
 								playerData.remove(p.getGameProfile().getName());
 								decremented = false;
 							}
-
+							//  Sound
+							////////////////////
+							p.worldObj.playSoundAtEntity(p, "fire.ignite", 0.6F, 1F);
+							p.worldObj.playSoundAtEntity(p, "fire.fire", 1F, 1F);
+							//  Particle
+							////////////////////
 							for (int i = 0; i < 25; i++)
 							{
 								double x = pos.blockX + Math.random();
@@ -125,14 +127,21 @@ public class ItemFocusSmelt extends ItemModFocus
 					int potency = this.getUpgradeLevel(stack, FocusUpgradeType.potency);
 					playerData.put(p.getGameProfile().getName(), new SmeltData(pos, 20 - Math.min(3, potency) * 5));
 				}
-				else for (int i = 0; i < 2; i++)
+				else
 				{
-					double x = pos.blockX + Math.random();
-					double y = pos.blockY + Math.random();
-					double z = pos.blockZ + Math.random();
-					p.worldObj.playSoundAtEntity(p, "fire.fire", (float) Math.random() / 2F + 0.5F, 1F);
+					//  Sound
+					////////////////////
+					if (time % soundCooldown == 0) p.worldObj.playSoundAtEntity(p, "fire.fire", 0.2F, 1F);
+					//  Particle
+					////////////////////
+					for (int i = 0; i < 2; i++)
+					{
+						double x = pos.blockX + Math.random();
+						double y = pos.blockY + Math.random();
+						double z = pos.blockZ + Math.random();
 
-					ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
+						ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
+					}
 				}
 
 				if (p.worldObj.isRemote) ThaumicTinkerer.tcProxy.beamCont(p.worldObj, p, pos.blockX + 0.5, pos.blockY + 0.5, pos.blockZ + 0.5, 2, 0xFF0000, true, 0F, null, 1);

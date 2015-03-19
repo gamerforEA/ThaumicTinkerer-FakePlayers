@@ -79,36 +79,34 @@ public final class ToolHandler
 				{
 					//if (x != x1 && y != y1 && z != z1) {
 					ToolHandler.removeBlockWithDrops(player, world, x1 + x, y1 + y, z1 + z, x, y, z, block, materialsListing, silk, fortune, blockHardness);
+
 					//}
 				}
 			}
 		}
-		List<EntityItem> list = world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x + xs, y + ys, z + zs, x + xe, y + ye, z + ze));
-		for (EntityItem entity : list)
+		List list = world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x + xs, y + ys, z + zs, x + xe, y + ye, z + ze));
+		for (Object entity : list)
 		{
-			EntityItem item = entity;
+			EntityItem item = (EntityItem) entity;
 			item.setPosition(player.posX, player.posY + 1, player.posZ);
 		}
 	}
 
-	// TODO gamerforEA small optimizations
 	public static void removeBlockWithDrops(EntityPlayer player, World world, int x, int y, int z, int bx, int by, int bz, Block block, Material[] materialsListing, boolean silk, int fortune, float blockHardness)
 	{
 		if (!world.blockExists(x, y, z)) return;
 
 		Block blk = world.getBlock(x, y, z);
 
-		if (blk == null) return;
 		if (block != null && blk != block) return;
 
 		int meta = world.getBlockMetadata(x, y, z);
 		// TODO gamerforEA code start
 		BreakEvent event = new BreakEvent(x, y, z, world, blk, meta, player);
-		MinecraftForge.EVENT_BUS.post(event);
-		if (event.isCanceled()) return;
+		if (MinecraftForge.EVENT_BUS.post(event)) return;
 		// TODO gamerforEA code end
-		Material mat = blk.getMaterial();
-		if (!blk.isAir(world, x, y, z) && ((blk.getPlayerRelativeBlockHardness(player, world, x, y, z) != 0 || (blk == Blocks.bedrock && (y <= 253 && world.provider instanceof WorldProviderBedrock)))))
+		Material mat = world.getBlock(x, y, z).getMaterial();
+		if (blk != null && !blk.isAir(world, x, y, z) && ((blk.getPlayerRelativeBlockHardness(player, world, x, y, z) != 0 || (blk == Blocks.bedrock && (y <= 253 && world.provider instanceof WorldProviderBedrock)))))
 		{
 			if (!blk.canHarvestBlock(player, meta) || !isRightMaterial(mat, materialsListing)) return;
 			if (ConfigHandler.bedrockDimensionID != 0 && block == Blocks.bedrock && ((world.provider.isSurfaceWorld() && y < 5) || (y > 253 && world.provider instanceof WorldProviderBedrock)))
@@ -121,13 +119,13 @@ public final class ToolHandler
 			}
 			if (!player.capabilities.isCreativeMode && blk != Blocks.bedrock)
 			{
-				meta = world.getBlockMetadata(x, y, z);
+				int localMeta = world.getBlockMetadata(x, y, z);
 				if (MiscHelper.breakBlockToAirWithCheck(world, x, y, z, player))
 				{
-					blk.onBlockDestroyedByPlayer(world, x, y, z, meta);
+					blk.onBlockDestroyedByPlayer(world, x, y, z, localMeta);
 
-					blk.harvestBlock(world, player, x, y, z, meta);
-					blk.onBlockHarvested(world, x, y, z, meta, player);
+					blk.harvestBlock(world, player, x, y, z, localMeta);
+					blk.onBlockHarvested(world, x, y, z, localMeta, player);
 				}
 			}
 			else

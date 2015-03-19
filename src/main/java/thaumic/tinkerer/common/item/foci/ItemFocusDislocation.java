@@ -87,8 +87,7 @@ public class ItemFocusDislocation extends ItemModFocus
 		int meta = world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 		// TODO gamerforEA code start
 		BreakEvent event = new BreakEvent(mop.blockX, mop.blockY, mop.blockZ, world, block, meta, player);
-		MinecraftForge.EVENT_BUS.post(event);
-		if (event.isCanceled()) return itemstack;
+		if (MinecraftForge.EVENT_BUS.post(event)) return itemstack;
 		// TODO gamerforEA code end
 		TileEntity tile = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 		ItemWandCasting wand = (ItemWandCasting) itemstack.getItem();
@@ -282,7 +281,6 @@ public class ItemFocusDislocation extends ItemModFocus
 	{
 		blacklist.add(Blocks.piston_extension);
 		blacklist.add(Blocks.piston_head);
-
 	}
 
 	@Override
