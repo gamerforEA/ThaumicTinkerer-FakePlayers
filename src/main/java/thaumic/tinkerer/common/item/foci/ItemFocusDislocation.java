@@ -29,8 +29,6 @@ import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
@@ -48,6 +46,9 @@ import thaumic.tinkerer.common.registry.ThaumicTinkererRecipe;
 import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.ResearchHelper;
 import thaumic.tinkerer.common.research.TTResearchItem;
+
+import com.gamerforea.ttinkerer.FakePlayerUtils;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -83,12 +84,12 @@ public class ItemFocusDislocation extends ItemModFocus
 	{
 		if (mop == null) return itemstack;
 
+		// TODO gamerforEA code start
+		if (FakePlayerUtils.callBlockBreakEvent(mop.blockX, mop.blockY, mop.blockZ, player).isCancelled()) return itemstack;
+		// TODO gamerforEA code end
+
 		Block block = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
 		int meta = world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
-		// TODO gamerforEA code start
-		BreakEvent event = new BreakEvent(mop.blockX, mop.blockY, mop.blockZ, world, block, meta, player);
-		if (MinecraftForge.EVENT_BUS.post(event)) return itemstack;
-		// TODO gamerforEA code end
 		TileEntity tile = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 		ItemWandCasting wand = (ItemWandCasting) itemstack.getItem();
 
@@ -109,7 +110,7 @@ public class ItemFocusDislocation extends ItemModFocus
 					if (!world.isRemote)
 					{
 						world.setBlock(mop.blockX, mop.blockY, mop.blockZ, ((ItemBlock) stack.getItem()).field_150939_a, stack.getItemDamage(), 1 | 2);
-						block.onBlockPlacedBy(world, mop.blockX, mop.blockY, mop.blockZ, player, itemstack);
+						((ItemBlock) stack.getItem()).field_150939_a.onBlockPlacedBy(world, mop.blockX, mop.blockY, mop.blockZ, player, itemstack);
 						NBTTagCompound tileCmp = getStackTileEntity(itemstack);
 						if (tileCmp != null && !tileCmp.hasNoTags())
 						{

@@ -9,8 +9,6 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent.BreakEvent;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.research.ResearchPage;
@@ -26,6 +24,8 @@ import thaumic.tinkerer.common.registry.ThaumicTinkererRecipe;
 import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.ResearchHelper;
 import thaumic.tinkerer.common.research.TTResearchItem;
+
+import com.gamerforea.ttinkerer.FakePlayerUtils;
 
 public class ItemFocusSmelt extends ItemModFocus
 {
@@ -49,6 +49,7 @@ public class ItemFocusSmelt extends ItemModFocus
 	public IRegisterableResearch getResearchItem()
 	{
 		return (TTResearchItem) new TTResearchItem(LibResearch.KEY_FOCUS_SMELT, new AspectList().add(Aspect.FIRE, 2).add(Aspect.ENERGY, 1).add(Aspect.MAGIC, 1), -2, -2, 2, new ItemStack(this)).setParents("FOCUSEXCAVATION").setConcealed().setPages(new ResearchPage("0"), ResearchHelper.arcaneRecipePage(LibResearch.KEY_FOCUS_SMELT));
+
 	}
 
 	@Override
@@ -73,12 +74,12 @@ public class ItemFocusSmelt extends ItemModFocus
 
 		if (pos != null)
 		{
+			// TODO gamerforEA code start
+			if (FakePlayerUtils.callBlockBreakEvent(pos.blockX, pos.blockY, pos.blockZ, p).isCancelled()) return;
+			// TODO gamerforEA code end
+
 			Block block = p.worldObj.getBlock(pos.blockX, pos.blockY, pos.blockZ);
 			int meta = p.worldObj.getBlockMetadata(pos.blockX, pos.blockY, pos.blockZ);
-			// TODO gamerforEA code start
-			BreakEvent event = new BreakEvent(pos.blockX, pos.blockY, pos.blockZ, p.worldObj, block, meta, p);
-			if (MinecraftForge.EVENT_BUS.post(event)) return;
-			// TODO gamerforEA code end
 
 			ItemStack blockStack = new ItemStack(block, 1, meta);
 			ItemStack result = FurnaceRecipes.smelting().getSmeltingResult(blockStack);
