@@ -19,7 +19,7 @@ apply plugin: 'forge'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-version = "2.5-1.7.10-479"
+version = "2.5-1.7.10-484"
 group= "thaumic.tinkerer"
 archivesBaseName = "ThaumicTinkerer"
 
@@ -29,10 +29,10 @@ minecraft {
 }
 
 dependencies {
-	compile files('lib/bukkit-api.jar', 'lib/WorldGuardEventWrapperPlugin.jar', 'lib/Baubles-deobf-1.7.10-1.0.1.10.jar', 'lib/Thaumcraft-deobf-1.7.10-4.2.3.4.jar', 'lib/ThaumicTinkerer-2.5-1.7.10-479-dev.jar')
+	compile files('lib/bukkit-api.jar', 'lib/WorldGuardEventWrapperPlugin.jar', 'lib/Baubles-deobf-1.7.10-1.0.1.10.jar', 'lib/Thaumcraft-deobf-1.7.10-4.2.3.4.jar', 'lib/ThaumicTinkerer-2.5-1.7.10-484-dev.jar')
 }
 
 jar {
-	from zipTree('lib/ThaumicTinkerer-2.5-1.7.10-479.jar')
+	from zipTree('lib/ThaumicTinkerer-2.5-1.7.10-484.jar')
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

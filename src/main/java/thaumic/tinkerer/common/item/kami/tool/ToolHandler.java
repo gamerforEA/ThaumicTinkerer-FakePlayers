@@ -117,7 +117,7 @@ public final class ToolHandler
 		float strength = ForgeHooks.blockStrength(block, player, world, x, y, z);
 
 		// only harvestable blocks that aren't impossibly slow to harvest
-		if (!ForgeHooks.canHarvestBlock(block, player, meta) || refStrength / strength > 10f) return;
+		// if (!ForgeHooks.canHarvestBlock(block, player, meta) || refStrength / strength > 10f) return;
 
 		// send the blockbreak event
 		BlockEvent.BreakEvent event = ForgeHooks.onBlockBreakEvent(world, player.theItemInWorldManager.getGameType(), player, x, y, z);
@@ -150,7 +150,7 @@ public final class ToolHandler
 			if (block.removedByPlayer(world, player, x, y, z, true)) // boolean is if block can be harvested, checked above
 			{
 				block.onBlockDestroyedByPlayer(world, x, y, z, meta);
-				block.harvestBlock(world, player, x, y, z, meta);
+				if (block != Blocks.bedrock) block.harvestBlock(world, player, x, y, z, meta);
 				block.dropXpOnBlockBreak(world, x, y, z, event.getExpToDrop());
 			}
 
