@@ -28,9 +28,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.research.ResearchPage;
@@ -97,7 +94,7 @@ public class ItemIchorSwordAdv extends ItemIchorSword implements IAdvancedTool
 				for (Entity entity_ : entities)
 				{
 					// TODO gamerforEA code start
-					if (FakePlayerUtils.callEntityDamageByEntityEvent(player, entity_, DamageCause.ENTITY_ATTACK, 1.0F).isCancelled()) continue;
+					if (FakePlayerUtils.cantDamage(player, entity_)) continue;
 					// TODO gamerforEA code end
 					player.attackTargetEntityWithCurrentItem(entity_);
 				}
@@ -110,7 +107,6 @@ public class ItemIchorSwordAdv extends ItemIchorSword implements IAdvancedTool
 				EntityLivingBase living = (EntityLivingBase) entity;
 				PotionEffect effect = new PotionEffect(Potion.resistance.id, 1, 1);
 				living.addPotionEffect(effect);
-
 				SoulHeartHandler.addHearts(player);
 
 				break;
@@ -148,13 +144,11 @@ public class ItemIchorSwordAdv extends ItemIchorSword implements IAdvancedTool
 	public IRegisterableResearch getResearchItem()
 	{
 		return (IRegisterableResearch) new KamiResearchItem(LibResearch.KEY_ICHOR_SWORD_GEM, new AspectList().add(Aspect.AIR, 2).add(Aspect.WEAPON, 1).add(Aspect.SOUL, 1).add(Aspect.HUNGER, 1), 16, 12, 5, new ItemStack(this)).setParents(LibResearch.KEY_ICHOR_TOOLS).setPages(new ResearchPage("0"), ResearchHelper.infusionPage(LibResearch.KEY_ICHOR_SWORD_GEM), new ResearchPage("1"));
-
 	}
 
 	@Override
 	public ThaumicTinkererRecipe getRecipeItem()
 	{
 		return new ThaumicTinkererInfusionRecipe(LibResearch.KEY_ICHOR_SWORD_GEM, new ItemStack(this), 15, new AspectList().add(Aspect.AIR, 50).add(Aspect.HUNGER, 64).add(Aspect.SOUL, 32).add(Aspect.WEAPON, 32).add(Aspect.ENERGY, 32).add(Aspect.ORDER, 16).add(Aspect.CRYSTAL, 16), new ItemStack(ThaumicTinkerer.registry.getFirstItemFromClass(ItemIchorSword.class)), new ItemStack(ThaumicTinkerer.registry.getFirstItemFromClass(ItemKamiResource.class), 1, 2), new ItemStack(ThaumicTinkerer.registry.getFirstItemFromClass(ItemKamiResource.class)), new ItemStack(ConfigItems.itemSwordElemental), new ItemStack(ConfigItems.itemFocusFrost), new ItemStack(Blocks.cactus), new ItemStack(ConfigItems.itemNugget, 1, 21), new ItemStack(ConfigItems.itemNugget, 1, 16), new ItemStack(ConfigItems.itemNugget, 1, 31), new ItemStack(Items.diamond), new ItemStack(ConfigItems.itemFocusFrost), new ItemStack(ConfigItems.itemSwordElemental), new ItemStack(ThaumicTinkerer.registry.getFirstItemFromClass(ItemKamiResource.class), 1, 1));
-
 	}
 }

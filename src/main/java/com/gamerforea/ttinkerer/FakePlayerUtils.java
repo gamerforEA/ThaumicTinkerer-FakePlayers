@@ -11,17 +11,17 @@ import com.gamerforea.wgew.cauldron.event.CauldronEntityDamageByEntityEvent;
 
 public final class FakePlayerUtils
 {
-	public static org.bukkit.event.block.BlockBreakEvent callBlockBreakEvent(int x, int y, int z, EntityPlayer player)
+	public static boolean cantBreak(EntityPlayer player, int x, int y, int z)
 	{
 		CauldronBlockBreakEvent event = new CauldronBlockBreakEvent(player, x, y, z);
 		Bukkit.getServer().getPluginManager().callEvent(event);
-		return event.getBukkitEvent();
+		return event.getBukkitEvent().isCancelled();
 	}
 
-	public static org.bukkit.event.entity.EntityDamageByEntityEvent callEntityDamageByEntityEvent(Entity damager, Entity damagee, DamageCause cause, double damage)
+	public static boolean cantDamage(Entity damager, Entity damagee)
 	{
-		CauldronEntityDamageByEntityEvent event = new CauldronEntityDamageByEntityEvent(damager, damagee, cause, damage);
+		CauldronEntityDamageByEntityEvent event = new CauldronEntityDamageByEntityEvent(damager, damagee, DamageCause.ENTITY_ATTACK, 0D);
 		Bukkit.getServer().getPluginManager().callEvent(event);
-		return event.getBukkitEvent();
+		return event.getBukkitEvent().isCancelled();
 	}
 }

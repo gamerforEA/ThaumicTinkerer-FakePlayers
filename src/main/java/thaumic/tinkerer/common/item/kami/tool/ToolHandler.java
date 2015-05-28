@@ -19,6 +19,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,8 +34,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
-import net.minecraftforge.event.world.BlockEvent;
 import thaumic.tinkerer.common.ThaumicTinkerer;
 import thaumic.tinkerer.common.block.kami.BlockBedrockPortal;
 import thaumic.tinkerer.common.core.handler.ConfigHandler;
@@ -77,7 +76,6 @@ public final class ToolHandler
 	{
 		MovingObjectPosition mop = raytraceFromEntity(player.worldObj, player, false, 4.5d);
 		if (mop == null) return;
-		int sideHit = mop.sideHit;
 		for (int x1 = xs; x1 < xe; x1++)
 		{
 			for (int y1 = ys; y1 < ye; y1++)
@@ -85,19 +83,13 @@ public final class ToolHandler
 				for (int z1 = zs; z1 < ze; z1++)
 				{
 					if (x == x1 + x && y == y1 + y && z == z1 + z) continue;
-					Block lock2 = world.getBlock(x1 + x, y1 + y, z1 + z);
-
-					//ToolHandler.removeBlockWithDrops(player, world, x1 + x, y1 + y, z1 + z, x, y, z, lock2, materialsListing, silk, fortune, blockHardness,metadata);
 					breakExtraBlock(player.worldObj, x1 + x, y1 + y, z1 + z, player, x, y, z, materialsListing);
 				}
 			}
 		}
-		List list = world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x + xs, y + ys, z + zs, x + xe, y + ye, z + ze));
-		for (Object entity : list)
-		{
-			EntityItem item = (EntityItem) entity;
+		List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x + xs, y + ys, z + zs, x + xe, y + ye, z + ze));
+		for (EntityItem item : items)
 			item.setPosition(player.posX, player.posY + 1, player.posZ);
-		}
 	}
 
 	protected static void breakExtraBlock(World world, int x, int y, int z, EntityPlayer playerEntity, int refX, int refY, int refZ, Material[] materialsListing)
@@ -112,16 +104,13 @@ public final class ToolHandler
 
 		// only effective materials
 		if (!block.canHarvestBlock(player, meta) || !isRightMaterial(block.getMaterial(), materialsListing)) return;
-		Block refBlock = world.getBlock(refX, refY, refZ);
-		float refStrength = ForgeHooks.blockStrength(refBlock, player, world, refX, refY, refZ);
-		float strength = ForgeHooks.blockStrength(block, player, world, x, y, z);
 
-		// only harvestable blocks that aren't impossibly slow to harvest
-		// if (!ForgeHooks.canHarvestBlock(block, player, meta) || refStrength / strength > 10f) return;
-
+		/* TODO gamerforEA code replace, old code:
 		// send the blockbreak event
 		BlockEvent.BreakEvent event = ForgeHooks.onBlockBreakEvent(world, player.theItemInWorldManager.getGameType(), player, x, y, z);
-		if (event.isCanceled()) return;
+		if (event.isCanceled()) return; */
+		if (FakePlayerUtils.cantBreak(player, x, y, z)) return;
+		// TODO gamerforEA code end
 
 		if (player.capabilities.isCreativeMode)
 		{
@@ -151,7 +140,9 @@ public final class ToolHandler
 			{
 				block.onBlockDestroyedByPlayer(world, x, y, z, meta);
 				if (block != Blocks.bedrock) block.harvestBlock(world, player, x, y, z, meta);
-				block.dropXpOnBlockBreak(world, x, y, z, event.getExpToDrop());
+				// TODO gamerforEA code replace, old code: block.dropXpOnBlockBreak(world, x, y, z, event.getExpToDrop());
+				block.dropXpOnBlockBreak(world, x, y, z, block.getExpDrop(world, meta, EnchantmentHelper.getFortuneModifier(player)));
+				// TODO gamerforEA code end
 			}
 
 			// always send block update to client
@@ -170,17 +161,7 @@ public final class ToolHandler
 			{
 				block.onBlockDestroyedByPlayer(world, x, y, z, meta);
 			}
-			// callback to the tool
-			ItemStack itemstack = player.getCurrentEquippedItem();
-			if (itemstack != null)
-			{
-				itemstack.func_150999_a(world, block, x, y, z, player);
 
-				if (itemstack.stackSize == 0)
-				{
-					player.destroyCurrentEquippedItem();
-				}
-			}
 			Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C07PacketPlayerDigging(2, x, y, z, Minecraft.getMinecraft().objectMouseOver.sideHit));
 		}
 	}
@@ -194,7 +175,7 @@ public final class ToolHandler
 		if (block != null && blk != block) return;
 
 		// TODO gamerforEA code start
-		if (FakePlayerUtils.callBlockBreakEvent(x, y, z, player).isCancelled()) return;
+		if (FakePlayerUtils.cantBreak(player, x, y, z)) return;
 		// TODO gamerforEA code end
 
 		int meta = world.getBlockMetadata(x, y, z);

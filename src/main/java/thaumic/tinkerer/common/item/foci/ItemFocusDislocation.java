@@ -85,7 +85,7 @@ public class ItemFocusDislocation extends ItemModFocus
 		if (mop == null) return itemstack;
 
 		// TODO gamerforEA code start
-		if (FakePlayerUtils.callBlockBreakEvent(mop.blockX, mop.blockY, mop.blockZ, player).isCancelled()) return itemstack;
+		if (FakePlayerUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ)) return itemstack;
 		// TODO gamerforEA code end
 
 		Block block = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
@@ -214,13 +214,7 @@ public class ItemFocusDislocation extends ItemModFocus
 			block = Block.getBlockById(id);
 		}
 		int meta = ItemNBTHelper.getInt(focus, TAG_BLOCK_META, 0);
-		ItemStack stck;
-		//if(block instanceof BlockReed)
-		//{
-		//   stck=new ItemStack(Items.reeds,1,meta);
-		//}
-		stck = new ItemStack(new ItemBlock(block), 1, meta);
-		return stck;
+		return new ItemStack(new ItemBlock(block), 1, meta);
 	}
 
 	public NBTTagCompound getStackTileEntity(ItemStack stack)
@@ -298,7 +292,6 @@ public class ItemFocusDislocation extends ItemModFocus
 			return null;
 		}
 		return (TTResearchItem) new TTResearchItem(LibResearch.KEY_FOCUS_DISLOCATION, new AspectList().add(Aspect.ELDRITCH, 2).add(Aspect.MAGIC, 1).add(Aspect.EXCHANGE, 1), -5, -5, 2, new ItemStack(this)).setSecondary().setParents(LibResearch.KEY_FOCUS_FLIGHT).setConcealed().setPages(new ResearchPage("0"), new ResearchPage("1"), ResearchHelper.infusionPage(LibResearch.KEY_FOCUS_DISLOCATION));
-
 	}
 
 	@Override

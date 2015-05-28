@@ -49,7 +49,6 @@ public class ItemFocusSmelt extends ItemModFocus
 	public IRegisterableResearch getResearchItem()
 	{
 		return (TTResearchItem) new TTResearchItem(LibResearch.KEY_FOCUS_SMELT, new AspectList().add(Aspect.FIRE, 2).add(Aspect.ENERGY, 1).add(Aspect.MAGIC, 1), -2, -2, 2, new ItemStack(this)).setParents("FOCUSEXCAVATION").setConcealed().setPages(new ResearchPage("0"), ResearchHelper.arcaneRecipePage(LibResearch.KEY_FOCUS_SMELT));
-
 	}
 
 	@Override
@@ -74,10 +73,6 @@ public class ItemFocusSmelt extends ItemModFocus
 
 		if (pos != null)
 		{
-			// TODO gamerforEA code start
-			if (FakePlayerUtils.callBlockBreakEvent(pos.blockX, pos.blockY, pos.blockZ, p).isCancelled()) return;
-			// TODO gamerforEA code end
-
 			Block block = p.worldObj.getBlock(pos.blockX, pos.blockY, pos.blockZ);
 			int meta = p.worldObj.getBlockMetadata(pos.blockX, pos.blockY, pos.blockZ);
 
@@ -100,10 +95,13 @@ public class ItemFocusSmelt extends ItemModFocus
 						{
 							if (!p.worldObj.isRemote)
 							{
-								p.worldObj.setBlock(pos.blockX, pos.blockY, pos.blockZ, Block.getBlockFromItem(result.getItem()), result.getItemDamage(), 1 | 2);
 								wand.consumeAllVis(stack, p, visUsage, true, false);
 								playerData.remove(p.getGameProfile().getName());
 								decremented = false;
+								// TODO gamerforEA code start
+								if (!FakePlayerUtils.cantBreak(p, pos.blockX, pos.blockY, pos.blockZ))
+								// TODO gamerforEA code end
+								p.worldObj.setBlock(pos.blockX, pos.blockY, pos.blockZ, Block.getBlockFromItem(result.getItem()), result.getItemDamage(), 1 | 2);
 							}
 							//  Sound
 							////////////////////
@@ -111,6 +109,9 @@ public class ItemFocusSmelt extends ItemModFocus
 							p.worldObj.playSoundAtEntity(p, "fire.fire", 1F, 1F);
 							//  Particle
 							////////////////////
+							// TODO gamerforEA optimize code start:
+							if (p.worldObj.isRemote)
+							// TODO gamerforEA code end
 							for (int i = 0; i < 25; i++)
 							{
 								double x = pos.blockX + Math.random();
@@ -135,6 +136,9 @@ public class ItemFocusSmelt extends ItemModFocus
 					if (time % soundCooldown == 0) p.worldObj.playSoundAtEntity(p, "fire.fire", 0.2F, 1F);
 					//  Particle
 					////////////////////
+					// TODO gamerforEA optimize code start:
+					if (p.worldObj.isRemote)
+					// TODO gamerforEA code end
 					for (int i = 0; i < 2; i++)
 					{
 						double x = pos.blockX + Math.random();
