@@ -16,7 +16,12 @@ package thaumic.tinkerer.common.item.foci;
 
 import java.util.ArrayList;
 
+import com.gamerforea.ttinkerer.FakePlayerUtils;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockMobSpawner;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -46,11 +51,6 @@ import thaumic.tinkerer.common.registry.ThaumicTinkererRecipe;
 import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.ResearchHelper;
 import thaumic.tinkerer.common.research.TTResearchItem;
-
-import com.gamerforea.ttinkerer.FakePlayerUtils;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemFocusDislocation extends ItemModFocus
 {
@@ -84,11 +84,12 @@ public class ItemFocusDislocation extends ItemModFocus
 	{
 		if (mop == null) return itemstack;
 
+		Block block = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
+
 		// TODO gamerforEA code start
-		if (FakePlayerUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ)) return itemstack;
+		if (block instanceof BlockMobSpawner || FakePlayerUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ)) return itemstack;
 		// TODO gamerforEA code end
 
-		Block block = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
 		int meta = world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 		TileEntity tile = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 		ItemWandCasting wand = (ItemWandCasting) itemstack.getItem();
