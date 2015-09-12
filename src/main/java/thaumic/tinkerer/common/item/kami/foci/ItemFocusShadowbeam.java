@@ -1,5 +1,8 @@
 package thaumic.tinkerer.common.item.kami.foci;
 
+import com.gamerforea.ttinkerer.FakePlayerUtils;
+
+import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -31,10 +34,6 @@ import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.KamiResearchItem;
 import thaumic.tinkerer.common.research.ResearchHelper;
 
-import com.gamerforea.ttinkerer.FakePlayerUtils;
-
-import cpw.mods.fml.common.registry.EntityRegistry;
-
 public class ItemFocusShadowbeam extends ItemModKamiFocus
 {
 	AspectList cost = new AspectList().add(Aspect.ORDER, 25).add(Aspect.ENTROPY, 25).add(Aspect.AIR, 15);
@@ -50,11 +49,12 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 	{
 		ItemWandCasting wand = (ItemWandCasting) stack.getItem();
 
-		if (!player.worldObj.isRemote && wand.consumeAllVis(stack, player, getVisCost(stack), true, false))
+		if (!player.worldObj.isRemote && wand.consumeAllVis(stack, player, this.getVisCost(stack), true, false))
 		{
 			int potency = 0;
 
-			if (player.worldObj.rand.nextInt(10) == 0) player.worldObj.playSoundAtEntity(player, "thaumcraft:brain", 0.5F, 1F);
+			if (player.worldObj.rand.nextInt(10) == 0)
+				player.worldObj.playSoundAtEntity(player, "thaumcraft:brain", 0.5F, 1F);
 
 			Beam beam = new Beam(player.worldObj, player, potency);
 			beam.updateUntilDead();
@@ -82,7 +82,7 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 	@Override
 	public AspectList getVisCost(ItemStack stack)
 	{
-		return cost;
+		return this.cost;
 	}
 
 	@Override
@@ -171,7 +171,7 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 
 		private int initialOffset = 2;
 		private int length = 298;
-		private int maxTicks = initialOffset + length;
+		private int maxTicks = this.initialOffset + this.length;
 		private int size = 4;
 
 		private int potency;
@@ -185,8 +185,8 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 
 			this.potency = potency;
 			this.player = player;
-			setProjectileVelocity(motionX / 10, motionY / 10, motionZ / 10);
-			movementVector = new Vector3(motionX, motionY, motionZ);
+			this.setProjectileVelocity(this.motionX / 10, this.motionY / 10, this.motionZ / 10);
+			this.movementVector = new Vector3(this.motionX, this.motionY, this.motionZ);
 
 		}
 
@@ -201,7 +201,7 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 			{
 				float f = MathHelper.sqrt_double(par1 * par1 + par5 * par5);
 				this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(par1, par5) * 180.0D / Math.PI);
-				this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(par3, (double) f) * 180.0D / Math.PI);
+				this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(par3, f) * 180.0D / Math.PI);
 			}
 		}
 
@@ -219,55 +219,59 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 			par1 *= par7;
 			par3 *= par7;
 			par5 *= par7;
-			motionX = par1;
-			motionY = par3;
-			motionZ = par5;
+			this.motionX = par1;
+			this.motionY = par3;
+			this.motionZ = par5;
 		}
 
 		@Override
 		protected void onImpact(MovingObjectPosition mop)
 		{
-			if (mop == null) return;
+			if (mop == null)
+				return;
 
 			if (mop.entityHit != null)
 			{
 				// TODO gamerforEA code replace, old code: if ((MinecraftServer.getServer().isPVPEnabled() || !(mop.entityHit instanceof EntityPlayer)) && mop.entityHit != getThrower() && getThrower() instanceof EntityPlayer && !mop.entityHit.worldObj.isRemote) mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) getThrower()), 8 + potency);
-				if (mop.entityHit != getThrower() && getThrower() instanceof EntityPlayer && !FakePlayerUtils.cantDamage(getThrower(), mop.entityHit) && !mop.entityHit.worldObj.isRemote) mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) getThrower()), 8 + potency);
+				if (mop.entityHit != this.getThrower() && this.getThrower() instanceof EntityPlayer && !FakePlayerUtils.cantDamage(this.getThrower(), mop.entityHit) && !mop.entityHit.worldObj.isRemote)
+					mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) this.getThrower()), 8 + this.potency);
 				// TODO gamerforEA code end
 				return;
 			}
 
-			Vector3 movementVec = new Vector3(motionX, motionY, motionZ);
+			Vector3 movementVec = new Vector3(this.motionX, this.motionY, this.motionZ);
 			ForgeDirection dir = ForgeDirection.getOrientation(mop.sideHit);
 			Vector3 normalVector = new Vector3(dir.offsetX, dir.offsetY, dir.offsetZ).normalize();
 
-			movementVector = normalVector.multiply(-2 * movementVec.dotProduct(normalVector)).add(movementVec);
+			this.movementVector = normalVector.multiply(-2 * movementVec.dotProduct(normalVector)).add(movementVec);
 
-			motionX = movementVector.x;
-			motionY = movementVector.y;
-			motionZ = movementVector.z;
+			this.motionX = this.movementVector.x;
+			this.motionY = this.movementVector.y;
+			this.motionZ = this.movementVector.z;
 		}
 
 		@Override
 		public void onUpdate()
 		{
-			motionX = movementVector.x;
-			motionY = movementVector.y;
-			motionZ = movementVector.z;
+			this.motionX = this.movementVector.x;
+			this.motionY = this.movementVector.y;
+			this.motionZ = this.movementVector.z;
 
 			super.onUpdate();
 
-			if (ticksExisted > initialOffset) ThaumicTinkerer.proxy.shadowSparkle(worldObj, (float) posX, (float) posY, (float) posZ, size);
+			if (this.ticksExisted > this.initialOffset)
+				ThaumicTinkerer.proxy.shadowSparkle(this.worldObj, (float) this.posX, (float) this.posY, (float) this.posZ, this.size);
 
-			++ticksExisted;
+			++this.ticksExisted;
 
-			if (ticksExisted >= maxTicks) setDead();
+			if (this.ticksExisted >= this.maxTicks)
+				this.setDead();
 		}
 
 		public void updateUntilDead()
 		{
-			while (!isDead)
-				onUpdate();
+			while (!this.isDead)
+				this.onUpdate();
 		}
 
 		@Override

@@ -24,15 +24,25 @@ group= "thaumic.tinkerer"
 archivesBaseName = "ThaumicTinkerer"
 
 minecraft {
-	version = "1.7.10-10.13.2.1291"
+	version = "1.7.10-10.13.4.1492-1.7.10"
 	runDir = "eclipse"
 }
 
 dependencies {
-	compile files('lib/bukkit-api.jar', 'lib/WorldGuardEventWrapper.jar', 'lib/Baubles-deobf-1.7.10-1.0.1.10.jar', 'lib/Thaumcraft-deobf-1.7.10-4.2.3.4.jar', 'lib/ThaumicTinkerer-2.5-1.7.10-507-dev.jar')
+	compile files('lib/bukkit-api.jar', 'lib/WorldGuardEventWrapper.jar')
+	compile fileTree(dir: 'lib', include: '*-dev.jar')
 }
 
 jar {
-	from zipTree('lib/ThaumicTinkerer-2.5-1.7.10-507.jar')
+	manifest {
+		attributes 'FMLCorePlugin': 'thaumic.tinkerer.preloader.ThaumicTLoaderContainer'
+		attributes 'FMLCorePluginContainsFMLMod': 'true'
+    }
+
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+	from zipTree('lib/' + archivesBaseName + '-' + version + '.jar')
+	from zipTree('lib/WorldGuardEventWrapper.jar').matching {
+		include('com/gamerforea/wgew/cauldron/event/**.class')
+	}
 }

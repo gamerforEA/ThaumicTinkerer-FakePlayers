@@ -16,6 +16,8 @@ package thaumic.tinkerer.common.item.kami.tool;
 
 import java.util.List;
 
+import com.gamerforea.ttinkerer.FakePlayerUtils;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,8 +47,6 @@ import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.KamiResearchItem;
 import thaumic.tinkerer.common.research.ResearchHelper;
 
-import com.gamerforea.ttinkerer.FakePlayerUtils;
-
 public class ItemIchorSwordAdv extends ItemIchorSword implements IAdvancedTool
 {
 	IIcon[] specialIcons = new IIcon[3];
@@ -55,15 +55,15 @@ public class ItemIchorSwordAdv extends ItemIchorSword implements IAdvancedTool
 	public ItemIchorSwordAdv()
 	{
 		super();
-		setHasSubtypes(true);
+		this.setHasSubtypes(true);
 	}
 
 	@Override
 	public void registerIcons(IIconRegister par1IconRegister)
 	{
 		super.registerIcons(par1IconRegister);
-		for (int i = 0; i < specialIcons.length; i++)
-			specialIcons[i] = IconHelper.forItem(par1IconRegister, this, i);
+		for (int i = 0; i < this.specialIcons.length; i++)
+			this.specialIcons[i] = IconHelper.forItem(par1IconRegister, this, i);
 	}
 
 	@Override
@@ -76,42 +76,45 @@ public class ItemIchorSwordAdv extends ItemIchorSword implements IAdvancedTool
 
 			return par1ItemStack;
 		}
-		else return super.onItemRightClick(par1ItemStack, par2World, par3EntityPlayer);
+		else
+			return super.onItemRightClick(par1ItemStack, par2World, par3EntityPlayer);
 	}
 
 	@Override
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
 	{
-		if (!ignoreLeftClick && entity instanceof EntityLivingBase && ((EntityLivingBase) entity).hurtTime == 0 && !((EntityLivingBase) entity).isDead) switch (ToolHandler.getMode(stack))
-		{
-			case 0:
-				break;
-			case 1:
+		if (!this.ignoreLeftClick && entity instanceof EntityLivingBase && ((EntityLivingBase) entity).hurtTime == 0 && !((EntityLivingBase) entity).isDead)
+			switch (ToolHandler.getMode(stack))
 			{
-				int range = 3;
-				List<Entity> entities = player.worldObj.getEntitiesWithinAABB(entity.getClass(), AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
-				ignoreLeftClick = true;
-				for (Entity entity_ : entities)
+				case 0:
+					break;
+				case 1:
 				{
-					// TODO gamerforEA code start
-					if (FakePlayerUtils.cantDamage(player, entity_)) continue;
-					// TODO gamerforEA code end
-					player.attackTargetEntityWithCurrentItem(entity_);
+					int range = 3;
+					List<Entity> entities = player.worldObj.getEntitiesWithinAABB(entity.getClass(), AxisAlignedBB.getBoundingBox(entity.posX - range, entity.posY - range, entity.posZ - range, entity.posX + range, entity.posY + range, entity.posZ + range));
+					this.ignoreLeftClick = true;
+					for (Entity entity_ : entities)
+					{
+						// TODO gamerforEA code start
+						if (FakePlayerUtils.cantDamage(player, entity_))
+							continue;
+						// TODO gamerforEA code end
+						player.attackTargetEntityWithCurrentItem(entity_);
+					}
+					this.ignoreLeftClick = false;
+
+					break;
 				}
-				ignoreLeftClick = false;
+				case 2:
+				{
+					EntityLivingBase living = (EntityLivingBase) entity;
+					PotionEffect effect = new PotionEffect(Potion.resistance.id, 1, 1);
+					living.addPotionEffect(effect);
+					SoulHeartHandler.addHearts(player);
 
-				break;
+					break;
+				}
 			}
-			case 2:
-			{
-				EntityLivingBase living = (EntityLivingBase) entity;
-				PotionEffect effect = new PotionEffect(Potion.resistance.id, 1, 1);
-				living.addPotionEffect(effect);
-				SoulHeartHandler.addHearts(player);
-
-				break;
-			}
-		}
 
 		return super.onLeftClickEntity(stack, player, entity);
 	}
@@ -119,7 +122,7 @@ public class ItemIchorSwordAdv extends ItemIchorSword implements IAdvancedTool
 	@Override
 	public IIcon getIconFromDamage(int par1)
 	{
-		return par1 >= specialIcons.length ? super.getIconFromDamage(par1) : specialIcons[par1];
+		return par1 >= this.specialIcons.length ? super.getIconFromDamage(par1) : this.specialIcons[par1];
 	}
 
 	@Override

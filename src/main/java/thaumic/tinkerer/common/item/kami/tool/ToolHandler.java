@@ -16,6 +16,8 @@ package thaumic.tinkerer.common.item.kami.tool;
 
 import java.util.List;
 
+import com.gamerforea.ttinkerer.FakePlayerUtils;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -38,8 +40,6 @@ import thaumic.tinkerer.common.ThaumicTinkerer;
 import thaumic.tinkerer.common.block.kami.BlockBedrockPortal;
 import thaumic.tinkerer.common.core.handler.ConfigHandler;
 import thaumic.tinkerer.common.dim.WorldProviderBedrock;
-
-import com.gamerforea.ttinkerer.FakePlayerUtils;
 
 public final class ToolHandler
 {
@@ -65,9 +65,11 @@ public final class ToolHandler
 
 	public static boolean isRightMaterial(Material material, Material[] materialsListing)
 	{
-		if (material.isToolNotRequired()) return true;
+		if (material.isToolNotRequired())
+			return true;
 		for (Material mat : materialsListing)
-			if (material == mat) return true;
+			if (material == mat)
+				return true;
 
 		return false;
 	}
@@ -75,18 +77,16 @@ public final class ToolHandler
 	public static void removeBlocksInIteration(EntityPlayer player, World world, int x, int y, int z, int xs, int ys, int zs, int xe, int ye, int ze, Block block, Material[] materialsListing, boolean silk, int fortune)
 	{
 		MovingObjectPosition mop = raytraceFromEntity(player.worldObj, player, false, 4.5d);
-		if (mop == null) return;
+		if (mop == null)
+			return;
 		for (int x1 = xs; x1 < xe; x1++)
-		{
 			for (int y1 = ys; y1 < ye; y1++)
-			{
 				for (int z1 = zs; z1 < ze; z1++)
 				{
-					if (x == x1 + x && y == y1 + y && z == z1 + z) continue;
+					if (x == x1 + x && y == y1 + y && z == z1 + z)
+						continue;
 					breakExtraBlock(player.worldObj, x1 + x, y1 + y, z1 + z, player, x, y, z, materialsListing);
 				}
-			}
-		}
 		List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x + xs, y + ys, z + zs, x + xe, y + ye, z + ze));
 		for (EntityItem item : items)
 			item.setPosition(player.posX, player.posY + 1, player.posZ);
@@ -94,34 +94,37 @@ public final class ToolHandler
 
 	protected static void breakExtraBlock(World world, int x, int y, int z, EntityPlayer playerEntity, int refX, int refY, int refZ, Material[] materialsListing)
 	{
-		if (world.isAirBlock(x, y, z)) return;
+		if (world.isAirBlock(x, y, z))
+			return;
 
 		// what?
-		if (!(playerEntity instanceof EntityPlayerMP)) return;
+		if (!(playerEntity instanceof EntityPlayerMP))
+			return;
 		EntityPlayerMP player = (EntityPlayerMP) playerEntity;
 		Block block = world.getBlock(x, y, z);
 		int meta = world.getBlockMetadata(x, y, z);
 
 		// only effective materials
-		if (!block.canHarvestBlock(player, meta) || !isRightMaterial(block.getMaterial(), materialsListing)) return;
+		if (!block.canHarvestBlock(player, meta) || !isRightMaterial(block.getMaterial(), materialsListing))
+			return;
 
 		/* TODO gamerforEA code replace, old code:
 		// send the blockbreak event
 		BlockEvent.BreakEvent event = ForgeHooks.onBlockBreakEvent(world, player.theItemInWorldManager.getGameType(), player, x, y, z);
 		if (event.isCanceled()) return; */
-		if (FakePlayerUtils.cantBreak(player, x, y, z)) return;
+		if (FakePlayerUtils.cantBreak(player, x, y, z))
+			return;
 		// TODO gamerforEA code end
 
 		if (player.capabilities.isCreativeMode)
 		{
 			block.onBlockHarvested(world, x, y, z, meta, player);
-			if (block.removedByPlayer(world, player, x, y, z, false)) block.onBlockDestroyedByPlayer(world, x, y, z, meta);
+			if (block.removedByPlayer(world, player, x, y, z, false))
+				block.onBlockDestroyedByPlayer(world, x, y, z, meta);
 
 			// send update to client
 			if (!world.isRemote)
-			{
 				player.playerNetServerHandler.sendPacket(new S23PacketBlockChange(x, y, z, world));
-			}
 			return;
 		}
 
@@ -139,7 +142,8 @@ public final class ToolHandler
 			if (block.removedByPlayer(world, player, x, y, z, true)) // boolean is if block can be harvested, checked above
 			{
 				block.onBlockDestroyedByPlayer(world, x, y, z, meta);
-				if (block != Blocks.bedrock) block.harvestBlock(world, player, x, y, z, meta);
+				if (block != Blocks.bedrock)
+					block.harvestBlock(world, player, x, y, z, meta);
 				// TODO gamerforEA code replace, old code: block.dropXpOnBlockBreak(world, x, y, z, event.getExpToDrop());
 				block.dropXpOnBlockBreak(world, x, y, z, block.getExpDrop(world, meta, EnchantmentHelper.getFortuneModifier(player)));
 				// TODO gamerforEA code end
@@ -158,9 +162,7 @@ public final class ToolHandler
 			// following code can be found in PlayerControllerMP.onPlayerDestroyBlock
 			world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + (meta << 12));
 			if (block.removedByPlayer(world, player, x, y, z, true))
-			{
 				block.onBlockDestroyedByPlayer(world, x, y, z, meta);
-			}
 
 			Minecraft.getMinecraft().getNetHandler().addToSendQueue(new C07PacketPlayerDigging(2, x, y, z, Minecraft.getMinecraft().objectMouseOver.sideHit));
 		}
@@ -168,37 +170,35 @@ public final class ToolHandler
 
 	public static void removeBlockWithDrops(EntityPlayer player, World world, int x, int y, int z, int bx, int by, int bz, Block block, Material[] materialsListing, boolean silk, int fortune, float blockHardness, int metadata)
 	{
-		if (!world.blockExists(x, y, z)) return;
+		if (!world.blockExists(x, y, z))
+			return;
 
 		Block blk = world.getBlock(x, y, z);
 
-		if (block != null && blk != block) return;
+		if (block != null && blk != block)
+			return;
 
 		// TODO gamerforEA code start
-		if (FakePlayerUtils.cantBreak(player, x, y, z)) return;
+		if (FakePlayerUtils.cantBreak(player, x, y, z))
+			return;
 		// TODO gamerforEA code end
 
 		int meta = world.getBlockMetadata(x, y, z);
 		Material mat = world.getBlock(x, y, z).getMaterial();
-		if (blk != null && !blk.isAir(world, x, y, z) && ((blk.getPlayerRelativeBlockHardness(player, world, x, y, z) != 0 || (blk == Blocks.bedrock && (y <= 253 && world.provider instanceof WorldProviderBedrock)))))
+		if (blk != null && !blk.isAir(world, x, y, z) && (blk.getPlayerRelativeBlockHardness(player, world, x, y, z) != 0 || blk == Blocks.bedrock && y <= 253 && world.provider instanceof WorldProviderBedrock))
 		{
-			if (!blk.canHarvestBlock(player, meta) || !isRightMaterial(mat, materialsListing)) return;
-			if (ConfigHandler.bedrockDimensionID != 0 && block == Blocks.bedrock && ((world.provider.isSurfaceWorld() && y < 5) || (y > 253 && world.provider instanceof WorldProviderBedrock)))
-			{
+			if (!blk.canHarvestBlock(player, meta) || !isRightMaterial(mat, materialsListing))
+				return;
+			if (ConfigHandler.bedrockDimensionID != 0 && block == Blocks.bedrock && (world.provider.isSurfaceWorld() && y < 5 || y > 253 && world.provider instanceof WorldProviderBedrock))
 				world.setBlock(x, y, z, ThaumicTinkerer.registry.getFirstBlockFromClass(BlockBedrockPortal.class));
-			}
 			if (ConfigHandler.bedrockDimensionID != 0 && world.provider.dimensionId == ConfigHandler.bedrockDimensionID && blk == Blocks.bedrock && y <= 253)
-			{
 				world.setBlock(x, y, z, Blocks.air);
-			}
 			if (!player.capabilities.isCreativeMode && blk != Blocks.bedrock)
 			{
 				//tryHarvestBlock((EntityPlayerMP)player,world,x,y,z);
 			}
 			else
-			{
 				world.setBlockToAir(x, y, z);
-			}
 		}
 	}
 
@@ -217,7 +217,8 @@ public final class ToolHandler
 		float f2 = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * f;
 		double d0 = player.prevPosX + (player.posX - player.prevPosX) * f;
 		double d1 = player.prevPosY + (player.posY - player.prevPosY) * f;
-		if (!world.isRemote && player instanceof EntityPlayer) d1 += 1.62D;
+		if (!world.isRemote && player instanceof EntityPlayer)
+			d1 += 1.62D;
 		double d2 = player.prevPosZ + (player.posZ - player.prevPosZ) * f;
 		Vec3 vec3 = Vec3.createVectorHelper(d0, d1, d2);
 		float f3 = MathHelper.cos(-f2 * 0.017453292F - (float) Math.PI);
@@ -227,7 +228,8 @@ public final class ToolHandler
 		float f7 = f4 * f5;
 		float f8 = f3 * f5;
 		double d3 = range;
-		if (player instanceof EntityPlayerMP) d3 = ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
+		if (player instanceof EntityPlayerMP)
+			d3 = ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
 		Vec3 vec31 = vec3.addVector(f7 * d3, f6 * d3, f8 * d3);
 		return world.rayTraceBlocks(vec3, vec31, par3);
 	}

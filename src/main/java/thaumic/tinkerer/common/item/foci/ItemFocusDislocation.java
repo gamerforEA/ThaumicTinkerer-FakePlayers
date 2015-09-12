@@ -16,12 +16,14 @@ package thaumic.tinkerer.common.item.foci;
 
 import java.util.ArrayList;
 
+import com.gamerforea.ttinkerer.EventConfig;
 import com.gamerforea.ttinkerer.FakePlayerUtils;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockMobSpawner;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -31,6 +33,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -76,35 +80,55 @@ public class ItemFocusDislocation extends ItemModFocus
 	public void registerIcons(IIconRegister par1IconRegister)
 	{
 		super.registerIcons(par1IconRegister);
-		ornament = IconHelper.forItem(par1IconRegister, this, "Orn");
+		this.ornament = IconHelper.forItem(par1IconRegister, this, "Orn");
 	}
 
 	@Override
 	public ItemStack onFocusRightClick(ItemStack itemstack, World world, EntityPlayer player, MovingObjectPosition mop)
 	{
-		if (mop == null) return itemstack;
+		if (mop == null)
+			return itemstack;
 
 		Block block = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
+		int meta = world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 
 		// TODO gamerforEA code start
-		if (block instanceof BlockMobSpawner || FakePlayerUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ)) return itemstack;
+		UniqueIdentifier blockId = GameRegistry.findUniqueIdentifierFor(block);
+
+		if (blockId != null)
+		{
+			String name = blockId.modId + ":" + blockId.name;
+			if (EventConfig.focusDislocationBlackList.contains(name) || EventConfig.focusDislocationBlackList.contains(name + ":" + meta))
+			{
+				player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Данный блок запрещено перемещать!"));
+				return itemstack;
+			}
+		}
+
+		if (FakePlayerUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ))
+			return itemstack;
 		// TODO gamerforEA code end
 
-		int meta = world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 		TileEntity tile = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 		ItemWandCasting wand = (ItemWandCasting) itemstack.getItem();
 
 		if (player.canPlayerEdit(mop.blockX, mop.blockY, mop.blockZ, mop.sideHit, itemstack))
 		{
-			ItemStack stack = getPickedBlock(itemstack);
+			ItemStack stack = this.getPickedBlock(itemstack);
 			if (stack != null)
 			{
-				if (mop.sideHit == 0) --mop.blockY;
-				if (mop.sideHit == 1) ++mop.blockY;
-				if (mop.sideHit == 2) --mop.blockZ;
-				if (mop.sideHit == 3) ++mop.blockZ;
-				if (mop.sideHit == 4) --mop.blockX;
-				if (mop.sideHit == 5) ++mop.blockX;
+				if (mop.sideHit == 0)
+					--mop.blockY;
+				if (mop.sideHit == 1)
+					++mop.blockY;
+				if (mop.sideHit == 2)
+					--mop.blockZ;
+				if (mop.sideHit == 3)
+					++mop.blockZ;
+				if (mop.sideHit == 4)
+					--mop.blockX;
+				if (mop.sideHit == 5)
+					++mop.blockX;
 
 				if (block.canPlaceBlockOnSide(world, mop.blockX, mop.blockY, mop.blockZ, mop.sideHit))
 				{
@@ -112,7 +136,7 @@ public class ItemFocusDislocation extends ItemModFocus
 					{
 						world.setBlock(mop.blockX, mop.blockY, mop.blockZ, ((ItemBlock) stack.getItem()).field_150939_a, stack.getItemDamage(), 1 | 2);
 						((ItemBlock) stack.getItem()).field_150939_a.onBlockPlacedBy(world, mop.blockX, mop.blockY, mop.blockZ, player, itemstack);
-						NBTTagCompound tileCmp = getStackTileEntity(itemstack);
+						NBTTagCompound tileCmp = this.getStackTileEntity(itemstack);
 						if (tileCmp != null && !tileCmp.hasNoTags())
 						{
 							TileEntity tile1 = TileEntity.createAndLoadEntity(tileCmp);
@@ -122,8 +146,9 @@ public class ItemFocusDislocation extends ItemModFocus
 							world.setTileEntity(mop.blockX, mop.blockY, mop.blockZ, tile1);
 						}
 					}
-					else player.swingItem();
-					clearPickedBlock(itemstack);
+					else
+						player.swingItem();
+					this.clearPickedBlock(itemstack);
 
 					for (int i = 0; i < 8; i++)
 					{
@@ -141,7 +166,7 @@ public class ItemFocusDislocation extends ItemModFocus
 				{
 					world.removeTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 					world.setBlock(mop.blockX, mop.blockY, mop.blockZ, Blocks.air, 0, 1 | 2);
-					storePickedBlock(itemstack, block, (short) meta, tile);
+					this.storePickedBlock(itemstack, block, (short) meta, tile);
 				}
 
 				for (int i = 0; i < 8; i++)
@@ -154,7 +179,8 @@ public class ItemFocusDislocation extends ItemModFocus
 				world.playSoundAtEntity(player, block.stepSound.getBreakSound(), 1F, 1F);
 				world.playSoundAtEntity(player, "thaumcraft:wand", 0.5F, 1F);
 
-				if (world.isRemote) player.swingItem();
+				if (world.isRemote)
+					player.swingItem();
 			}
 		}
 
@@ -164,19 +190,18 @@ public class ItemFocusDislocation extends ItemModFocus
 	@Override
 	public String getSortingHelper(ItemStack itemstack)
 	{
-		return "DISLOCATION" + getUniqueKey(itemstack);
+		return "DISLOCATION" + this.getUniqueKey(itemstack);
 	}
 
 	public String getUniqueKey(ItemStack itemstack)
 	{
-		ItemStack stack = getPickedBlock(itemstack);
-		if (stack == null) return "";
+		ItemStack stack = this.getPickedBlock(itemstack);
+		if (stack == null)
+			return "";
 		String name = stack.getUnlocalizedName();
 		int datahash = 0;
 		if (stack.getTagCompound() != null)
-		{
 			datahash = stack.getTagCompound().hashCode();
-		}
 		return String.format("%s-%d", name, datahash);
 	}
 
@@ -189,10 +214,8 @@ public class ItemFocusDislocation extends ItemModFocus
 			focus = wand.getFocusItem(stack);
 		}
 		else
-		{
 			focus = stack;
-		}
-		return (ItemNBTHelper.getBoolean(focus, TAG_AVAILABLE, false)) ? getPickedBlockStack(stack) : null;
+		return ItemNBTHelper.getBoolean(focus, TAG_AVAILABLE, false) ? this.getPickedBlockStack(stack) : null;
 	}
 
 	public ItemStack getPickedBlockStack(ItemStack stack)
@@ -204,9 +227,7 @@ public class ItemFocusDislocation extends ItemModFocus
 			focus = wand.getFocusItem(stack);
 		}
 		else
-		{
 			focus = stack;
-		}
 		String name = ItemNBTHelper.getString(focus, TAG_BLOCK_NAME, "");
 		Block block = Block.getBlockFromName(name);
 		if (block == Blocks.air)
@@ -227,9 +248,7 @@ public class ItemFocusDislocation extends ItemModFocus
 			focus = wand.getFocusItem(stack);
 		}
 		else
-		{
 			focus = stack;
-		}
 		return ItemNBTHelper.getCompound(focus, TAG_TILE_CMP, true);
 	}
 
@@ -241,7 +260,8 @@ public class ItemFocusDislocation extends ItemModFocus
 		ItemNBTHelper.setString(focus, TAG_BLOCK_NAME, blockName);
 		ItemNBTHelper.setInt(focus, TAG_BLOCK_META, meta);
 		NBTTagCompound cmp = new NBTTagCompound();
-		if (tile != null) tile.writeToNBT(cmp);
+		if (tile != null)
+			tile.writeToNBT(cmp);
 		ItemNBTHelper.setCompound(focus, TAG_TILE_CMP, cmp);
 		ItemNBTHelper.setBoolean(focus, TAG_AVAILABLE, true);
 		wand.setFocus(stack, focus);
@@ -264,7 +284,7 @@ public class ItemFocusDislocation extends ItemModFocus
 	@Override
 	public IIcon getOrnament(ItemStack stack)
 	{
-		return ornament;
+		return this.ornament;
 	}
 
 	@Override
@@ -289,9 +309,7 @@ public class ItemFocusDislocation extends ItemModFocus
 	public IRegisterableResearch getResearchItem()
 	{
 		if (!Config.allowMirrors)
-		{
 			return null;
-		}
 		return (TTResearchItem) new TTResearchItem(LibResearch.KEY_FOCUS_DISLOCATION, new AspectList().add(Aspect.ELDRITCH, 2).add(Aspect.MAGIC, 1).add(Aspect.EXCHANGE, 1), -5, -5, 2, new ItemStack(this)).setSecondary().setParents(LibResearch.KEY_FOCUS_FLIGHT).setConcealed().setPages(new ResearchPage("0"), new ResearchPage("1"), ResearchHelper.infusionPage(LibResearch.KEY_FOCUS_DISLOCATION));
 	}
 

@@ -3,6 +3,8 @@ package thaumic.tinkerer.common.item.foci;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.gamerforea.ttinkerer.FakePlayerUtils;
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -24,8 +26,6 @@ import thaumic.tinkerer.common.registry.ThaumicTinkererRecipe;
 import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.ResearchHelper;
 import thaumic.tinkerer.common.research.TTResearchItem;
-
-import com.gamerforea.ttinkerer.FakePlayerUtils;
 
 public class ItemFocusSmelt extends ItemModFocus
 {
@@ -67,7 +67,8 @@ public class ItemFocusSmelt extends ItemModFocus
 	public void onUsingFocusTick(ItemStack stack, EntityPlayer p, int time)
 	{
 		ItemWandCasting wand = (ItemWandCasting) stack.getItem();
-		if (!wand.consumeAllVis(stack, p, visUsage, false, false)) return;
+		if (!wand.consumeAllVis(stack, p, visUsage, false, false))
+			return;
 
 		MovingObjectPosition pos = BlockUtils.getTargetBlock(p.worldObj, p, false);
 
@@ -100,8 +101,8 @@ public class ItemFocusSmelt extends ItemModFocus
 								decremented = false;
 								// TODO gamerforEA code start
 								if (!FakePlayerUtils.cantBreak(p, pos.blockX, pos.blockY, pos.blockZ))
-								// TODO gamerforEA code end
-								p.worldObj.setBlock(pos.blockX, pos.blockY, pos.blockZ, Block.getBlockFromItem(result.getItem()), result.getItemDamage(), 1 | 2);
+									// TODO gamerforEA code end
+									p.worldObj.setBlock(pos.blockX, pos.blockY, pos.blockZ, Block.getBlockFromItem(result.getItem()), result.getItemDamage(), 1 | 2);
 							}
 							//  Sound
 							////////////////////
@@ -111,15 +112,15 @@ public class ItemFocusSmelt extends ItemModFocus
 							////////////////////
 							// TODO gamerforEA optimize code start:
 							if (p.worldObj.isRemote)
-							// TODO gamerforEA code end
-							for (int i = 0; i < 25; i++)
-							{
-								double x = pos.blockX + Math.random();
-								double y = pos.blockY + Math.random();
-								double z = pos.blockZ + Math.random();
+								// TODO gamerforEA code end
+								for (int i = 0; i < 25; i++)
+								{
+									double x = pos.blockX + Math.random();
+									double y = pos.blockY + Math.random();
+									double z = pos.blockZ + Math.random();
 
-								ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
-							}
+									ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
+								}
 						}
 					}
 				}
@@ -133,23 +134,25 @@ public class ItemFocusSmelt extends ItemModFocus
 				{
 					//  Sound
 					////////////////////
-					if (time % soundCooldown == 0) p.worldObj.playSoundAtEntity(p, "fire.fire", 0.2F, 1F);
+					if (time % this.soundCooldown == 0)
+						p.worldObj.playSoundAtEntity(p, "fire.fire", 0.2F, 1F);
 					//  Particle
 					////////////////////
 					// TODO gamerforEA optimize code start:
 					if (p.worldObj.isRemote)
-					// TODO gamerforEA code end
-					for (int i = 0; i < 2; i++)
-					{
-						double x = pos.blockX + Math.random();
-						double y = pos.blockY + Math.random();
-						double z = pos.blockZ + Math.random();
+						// TODO gamerforEA code end
+						for (int i = 0; i < 2; i++)
+						{
+							double x = pos.blockX + Math.random();
+							double y = pos.blockY + Math.random();
+							double z = pos.blockZ + Math.random();
 
-						ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
-					}
+							ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
+						}
 				}
 
-				if (p.worldObj.isRemote) ThaumicTinkerer.tcProxy.beamCont(p.worldObj, p, pos.blockX + 0.5, pos.blockY + 0.5, pos.blockZ + 0.5, 2, 0xFF0000, true, 0F, null, 1);
+				if (p.worldObj.isRemote)
+					ThaumicTinkerer.tcProxy.beamCont(p.worldObj, p, pos.blockX + 0.5, pos.blockY + 0.5, pos.blockZ + 0.5, 2, 0xFF0000, true, 0F, null, 1);
 			}
 		}
 	}
