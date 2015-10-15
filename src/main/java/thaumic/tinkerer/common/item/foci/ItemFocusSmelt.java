@@ -3,7 +3,7 @@ package thaumic.tinkerer.common.item.foci;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.gamerforea.ttinkerer.FakePlayerUtils;
+import com.gamerforea.eventhelper.util.EventUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -100,7 +100,7 @@ public class ItemFocusSmelt extends ItemModFocus
 								playerData.remove(p.getGameProfile().getName());
 								decremented = false;
 								// TODO gamerforEA code start
-								if (!FakePlayerUtils.cantBreak(p, pos.blockX, pos.blockY, pos.blockZ))
+								if (!EventUtils.cantBreak(p, pos.blockX, pos.blockY, pos.blockZ))
 									// TODO gamerforEA code end
 									p.worldObj.setBlock(pos.blockX, pos.blockY, pos.blockZ, Block.getBlockFromItem(result.getItem()), result.getItemDamage(), 1 | 2);
 							}

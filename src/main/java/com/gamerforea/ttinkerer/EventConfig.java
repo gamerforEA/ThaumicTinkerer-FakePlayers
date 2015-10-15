@@ -1,11 +1,10 @@
 package com.gamerforea.ttinkerer;
 
-import java.io.File;
 import java.util.Set;
 
+import com.gamerforea.eventhelper.util.FastUtils;
 import com.google.common.collect.Sets;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraftforge.common.config.Configuration;
 
 public final class EventConfig
@@ -16,9 +15,7 @@ public final class EventConfig
 	{
 		try
 		{
-			File mainDirectory = FMLCommonHandler.instance().getMinecraftServerInstance().getFile(".");
-			Configuration config = new Configuration(new File(mainDirectory, "config/Events/ThaumicTinkerer.cfg"));
-			config.load();
+			Configuration config = FastUtils.getConfig("ThaumicTinkerer");
 
 			focusDislocationBlackList = Sets.newHashSet(config.getStringList("focusDislocationBlackList", Configuration.CATEGORY_GENERAL, focusDislocationBlackList.toArray(new String[focusDislocationBlackList.size()]), "Чёрный список блоков для Фокуса Перемещения"));
 

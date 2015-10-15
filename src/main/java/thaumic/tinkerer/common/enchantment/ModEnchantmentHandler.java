@@ -17,7 +17,7 @@ package thaumic.tinkerer.common.enchantment;
 import java.util.List;
 import java.util.Random;
 
-import com.gamerforea.ttinkerer.FakePlayerUtils;
+import com.gamerforea.eventhelper.util.EventUtils;
 
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -184,7 +184,7 @@ public class ModEnchantmentHandler
 			if (shockwave > 0)
 				for (EntityLivingBase target : (List<EntityLivingBase>) event.entity.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(event.entity.posX - 10, event.entity.posY - 10, event.entity.posZ - 10, event.entity.posX + 10, event.entity.posY + 10, event.entity.posZ + 10)))
 					// TODO gamerforEA add condition [3]
-					if (target != event.entity && event.distance > 3 && !FakePlayerUtils.cantDamage(event.entity, target))
+					if (target != event.entity && event.distance > 3 && !EventUtils.cantDamage(event.entity, target))
 						target.attackEntityFrom(DamageSource.fall, .1F * shockwave * event.distance);
 		}
 	}

@@ -16,8 +16,8 @@ package thaumic.tinkerer.common.item.foci;
 
 import java.util.ArrayList;
 
+import com.gamerforea.eventhelper.util.EventUtils;
 import com.gamerforea.ttinkerer.EventConfig;
-import com.gamerforea.ttinkerer.FakePlayerUtils;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
@@ -105,7 +105,7 @@ public class ItemFocusDislocation extends ItemModFocus
 			}
 		}
 
-		if (FakePlayerUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ))
+		if (EventUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ))
 			return itemstack;
 		// TODO gamerforEA code end
 

@@ -16,7 +16,7 @@ package thaumic.tinkerer.common.item.kami.tool;
 
 import java.util.List;
 
-import com.gamerforea.ttinkerer.FakePlayerUtils;
+import com.gamerforea.eventhelper.util.EventUtils;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -112,7 +112,7 @@ public final class ToolHandler
 		// send the blockbreak event
 		BlockEvent.BreakEvent event = ForgeHooks.onBlockBreakEvent(world, player.theItemInWorldManager.getGameType(), player, x, y, z);
 		if (event.isCanceled()) return; */
-		if (FakePlayerUtils.cantBreak(player, x, y, z))
+		if (EventUtils.cantBreak(player, x, y, z))
 			return;
 		// TODO gamerforEA code end
 
@@ -179,7 +179,7 @@ public final class ToolHandler
 			return;
 
 		// TODO gamerforEA code start
-		if (FakePlayerUtils.cantBreak(player, x, y, z))
+		if (EventUtils.cantBreak(player, x, y, z))
 			return;
 		// TODO gamerforEA code end
 

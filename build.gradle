@@ -19,7 +19,7 @@ apply plugin: 'forge'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-version = "2.5-1.7.10-507"
+version = "2.5-1.7.10-510"
 group= "thaumic.tinkerer"
 archivesBaseName = "ThaumicTinkerer"
 
@@ -29,7 +29,6 @@ minecraft {
 }
 
 dependencies {
-	compile files('lib/bukkit-api.jar', 'lib/WorldGuardEventWrapper.jar')
 	compile fileTree(dir: 'lib', include: '*-dev.jar')
 }
 
@@ -40,9 +39,5 @@ jar {
     }
 
 	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
 	from zipTree('lib/' + archivesBaseName + '-' + version + '.jar')
-	from zipTree('lib/WorldGuardEventWrapper.jar').matching {
-		include('com/gamerforea/wgew/cauldron/event/**.class')
-	}
 }

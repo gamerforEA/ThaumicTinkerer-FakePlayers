@@ -16,7 +16,7 @@ package thaumic.tinkerer.common.item.kami.tool;
 
 import java.util.List;
 
-import com.gamerforea.ttinkerer.FakePlayerUtils;
+import com.gamerforea.eventhelper.util.EventUtils;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
@@ -96,9 +96,10 @@ public class ItemIchorSwordAdv extends ItemIchorSword implements IAdvancedTool
 					for (Entity entity_ : entities)
 					{
 						// TODO gamerforEA code start
-						if (FakePlayerUtils.cantDamage(player, entity_))
+						if (EventUtils.cantDamage(player, entity_))
 							continue;
 						// TODO gamerforEA code end
+
 						player.attackTargetEntityWithCurrentItem(entity_);
 					}
 					this.ignoreLeftClick = false;

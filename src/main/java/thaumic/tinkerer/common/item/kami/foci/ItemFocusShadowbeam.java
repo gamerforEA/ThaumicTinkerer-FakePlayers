@@ -1,8 +1,9 @@
 package thaumic.tinkerer.common.item.kami.foci;
 
-import com.gamerforea.ttinkerer.FakePlayerUtils;
+import com.gamerforea.eventhelper.util.EventUtils;
 
 import cpw.mods.fml.common.registry.EntityRegistry;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -233,8 +234,9 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 			if (mop.entityHit != null)
 			{
 				// TODO gamerforEA code replace, old code: if ((MinecraftServer.getServer().isPVPEnabled() || !(mop.entityHit instanceof EntityPlayer)) && mop.entityHit != getThrower() && getThrower() instanceof EntityPlayer && !mop.entityHit.worldObj.isRemote) mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) getThrower()), 8 + potency);
-				if (mop.entityHit != this.getThrower() && this.getThrower() instanceof EntityPlayer && !FakePlayerUtils.cantDamage(this.getThrower(), mop.entityHit) && !mop.entityHit.worldObj.isRemote)
-					mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) this.getThrower()), 8 + this.potency);
+				Entity thrower = this.getThrower();
+				if (mop.entityHit != thrower && thrower instanceof EntityPlayer && !EventUtils.cantDamage(thrower, mop.entityHit) && !mop.entityHit.worldObj.isRemote)
+					mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) thrower), 8 + this.potency);
 				// TODO gamerforEA code end
 				return;
 			}
