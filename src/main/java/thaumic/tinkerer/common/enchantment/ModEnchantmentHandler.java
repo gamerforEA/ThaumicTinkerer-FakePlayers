@@ -87,7 +87,8 @@ public class ModEnchantmentHandler
 
 			int dispersedStrikes = EnchantmentHelper.getEnchantmentLevel(LibEnchantIDs.dispersedStrikes, heldItem);
 
-			if (focusedStrikes > 0 || dispersedStrikes > 0)
+			// TODO gamerforEA add condition [3]
+			if (focusedStrikes > 0 || dispersedStrikes > 0 && !(event.entityLiving instanceof EntityPlayer))
 			{
 				if (heldItem.stackTagCompound == null)
 					heldItem.stackTagCompound = new NBTTagCompound();
@@ -111,7 +112,9 @@ public class ModEnchantmentHandler
 					event.ammount /= 2;
 					event.ammount += .5 * successiveStrikes * event.ammount * focusedStrikes;
 				}
-				if (dispersedStrikes > 0)
+
+				// TODO gamerforEA add condition [3]
+				if (dispersedStrikes > 0 && !(event.entityLiving instanceof EntityPlayer))
 				{
 					event.ammount *= 1 + successiveStrikes / 5;
 					event.ammount /= 1 + successiveStrikes * 2;

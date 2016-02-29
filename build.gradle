@@ -15,21 +15,34 @@ buildscript {
 	}
 }
 
+repositories {
+	flatDir {
+		dirs 'lib'
+	}
+}
+
 apply plugin: 'forge'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-version = "2.5-1.7.10-510"
+version = "2.5-1.7.10-512"
 group= "thaumic.tinkerer"
 archivesBaseName = "ThaumicTinkerer"
 
 minecraft {
-	version = "1.7.10-10.13.4.1492-1.7.10"
+	version = "1.7.10-10.13.4.1614-1.7.10"
 	runDir = "eclipse"
 }
 
 dependencies {
-	compile fileTree(dir: 'lib', include: '*-dev.jar')
+	compile name: 'EventHelper-1.6-dev'
+	compile name: 'CoFHCore-[1.7.10]3.1.0-323-dev'
+	compile name: 'industrialcraft-2-2.2.810-experimental-dev'
+	compile name: 'ComputerCraft-1.74-dev'
+	compile name: 'OpenComputers-MC1.7.10-1.5.14.30-dev'
+	compile name: 'Baubles-1.7.10-1.0.1.10-dev'
+	compile name: 'Thaumcraft-1.7.10-4.2.3.5-dev'
+	compile name: archivesBaseName + '-' + version + '-dev'
 }
 
 jar {

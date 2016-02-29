@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
 
+import com.gamerforea.eventhelper.util.EventUtils;
+
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
@@ -28,10 +30,25 @@ public class PotionEffectHandler
 		if (e.source.getSourceOfDamage() instanceof EntityPlayer)
 		{
 			EntityPlayer p = (EntityPlayer) e.source.getSourceOfDamage();
+
+			/* TODO gamerforEA code replace, old code:
 			if (p.isPotionActive(ModPotions.potionAir) && !p.worldObj.isRemote)
 				airPotionHit.put(e.entity, e.entity.worldObj.getTotalWorldTime());
 			if (p.isPotionActive(ModPotions.potionFire) && !p.worldObj.isRemote)
-				firePotionHit.put(e.entity, e.entity.worldObj.getTotalWorldTime());
+				firePotionHit.put(e.entity, e.entity.worldObj.getTotalWorldTime()); */
+			if (!p.worldObj.isRemote)
+			{
+				boolean air = p.isPotionActive(ModPotions.potionAir);
+				boolean fire = p.isPotionActive(ModPotions.potionFire);
+				if ((air || fire) && EventUtils.cantDamage(p, e.entity))
+					return;
+				if (air)
+					airPotionHit.put(e.entity, e.entity.worldObj.getTotalWorldTime());
+				if (fire)
+					firePotionHit.put(e.entity, e.entity.worldObj.getTotalWorldTime());
+			}
+			// TODO gamerforEA code end
+
 			if (p.isPotionActive(ModPotions.potionEarth) && !p.worldObj.isRemote)
 			{
 				boolean xAxis = Math.abs(e.entity.posZ - p.posZ) < Math.abs(e.entity.posX - p.posX);
@@ -56,10 +73,8 @@ public class PotionEffectHandler
 
 							ThaumicTinkerer.tcProxy.blockSparkle(p.worldObj, centerX + j, centerY + i, centerZ, 100, 100);
 						}
-
 			}
 		}
-
 	}
 
 	@SubscribeEvent

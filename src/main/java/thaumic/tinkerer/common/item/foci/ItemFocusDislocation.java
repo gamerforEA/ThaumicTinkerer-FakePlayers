@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import com.gamerforea.eventhelper.util.EventUtils;
 import com.gamerforea.ttinkerer.EventConfig;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -93,16 +91,10 @@ public class ItemFocusDislocation extends ItemModFocus
 		int meta = world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 
 		// TODO gamerforEA code start
-		UniqueIdentifier blockId = GameRegistry.findUniqueIdentifierFor(block);
-
-		if (blockId != null)
+		if (EventConfig.inBlackList(EventConfig.focusDislocationBlackList, block, meta))
 		{
-			String name = blockId.modId + ":" + blockId.name;
-			if (EventConfig.focusDislocationBlackList.contains(name) || EventConfig.focusDislocationBlackList.contains(name + ":" + meta))
-			{
-				player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Данный блок запрещено перемещать!"));
-				return itemstack;
-			}
+			player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Данный блок запрещено перемещать!"));
+			return itemstack;
 		}
 
 		if (EventUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ))

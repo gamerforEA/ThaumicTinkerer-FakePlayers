@@ -2280,7 +2280,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	public static enum EnumChatVisibility
 	{
-		FULL(0, "options.chat.visibility.full"), SYSTEM(1, "options.chat.visibility.system"), HIDDEN(2, "options.chat.visibility.hidden");
+		FULL(0, "options.chat.visibility.full"),
+		SYSTEM(1, "options.chat.visibility.system"),
+		HIDDEN(2, "options.chat.visibility.hidden");
 		private static final EntityPlayer.EnumChatVisibility[] field_151432_d = new EntityPlayer.EnumChatVisibility[values().length];
 		private final int chatVisibility;
 		private final String resourceKey;
@@ -2441,7 +2443,12 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	public static enum EnumStatus
 	{
-		OK, NOT_POSSIBLE_HERE, NOT_POSSIBLE_NOW, TOO_FAR_AWAY, OTHER_PROBLEM, NOT_SAFE;
+		OK,
+		NOT_POSSIBLE_HERE,
+		NOT_POSSIBLE_NOW,
+		TOO_FAR_AWAY,
+		OTHER_PROBLEM,
+		NOT_SAFE;
 
 		private static final String __OBFID = "CL_00001712";
 	}
