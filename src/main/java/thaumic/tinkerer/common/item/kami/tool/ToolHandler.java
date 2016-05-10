@@ -17,6 +17,7 @@ package thaumic.tinkerer.common.item.kami.tool;
 import java.util.List;
 
 import com.gamerforea.eventhelper.util.EventUtils;
+import com.gamerforea.ttinkerer.EventConfig;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -112,6 +113,9 @@ public final class ToolHandler
 		// send the blockbreak event
 		BlockEvent.BreakEvent event = ForgeHooks.onBlockBreakEvent(world, player.theItemInWorldManager.getGameType(), player, x, y, z);
 		if (event.isCanceled()) return; */
+		if (!EventConfig.enableIchorPickAdvBedrockBreaking && block == Blocks.bedrock)
+			return;
+
 		if (EventUtils.cantBreak(player, x, y, z))
 			return;
 		// TODO gamerforEA code end
@@ -144,6 +148,7 @@ public final class ToolHandler
 				block.onBlockDestroyedByPlayer(world, x, y, z, meta);
 				if (block != Blocks.bedrock)
 					block.harvestBlock(world, player, x, y, z, meta);
+
 				// TODO gamerforEA code replace, old code: block.dropXpOnBlockBreak(world, x, y, z, event.getExpToDrop());
 				block.dropXpOnBlockBreak(world, x, y, z, block.getExpDrop(world, meta, EnchantmentHelper.getFortuneModifier(player)));
 				// TODO gamerforEA code end
@@ -179,6 +184,9 @@ public final class ToolHandler
 			return;
 
 		// TODO gamerforEA code start
+		if (!EventConfig.enableIchorPickAdvBedrockBreaking && blk == Blocks.bedrock)
+			return;
+
 		if (EventUtils.cantBreak(player, x, y, z))
 			return;
 		// TODO gamerforEA code end

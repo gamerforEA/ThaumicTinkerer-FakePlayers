@@ -17,15 +17,17 @@ public final class EventConfig
 	public static Set<String> focusDislocationBlackList = Sets.newHashSet("minecraft:stone", "IC2:blockMachine:5");
 	public static Set<String> blockTalismanBlackList = Sets.newHashSet("minecraft:stone", "IC2:blockMachine:5");
 	public static Set<String> transvectorBlackList = Sets.newHashSet("minecraft:stone", "IC2:blockMachine:5");
+	public static boolean enableIchorPickAdvBedrockBreaking = false;
 
 	static
 	{
 		try
 		{
 			Configuration cfg = FastUtils.getConfig("ThaumicTinkerer");
-			focusDislocationBlackList = getStringSet(cfg, "focusDislocationBlackList", CATEGORY_GENERAL, "Чёрный список блоков для Фокуса Перемещения", focusDislocationBlackList);
-			blockTalismanBlackList = getStringSet(cfg, "blockTalismanBlackList", CATEGORY_GENERAL, "Чёрный список блоков для Кольца черной дыры", blockTalismanBlackList);
-			transvectorBlackList = getStringSet(cfg, "transvectorBlackList", CATEGORY_GENERAL, "Чёрный список блоков для Трансвекторного дислокатора", transvectorBlackList);
+			readStringSet(cfg, "focusDislocationBlackList", CATEGORY_GENERAL, "Чёрный список блоков для Фокуса Перемещения", focusDislocationBlackList);
+			readStringSet(cfg, "blockTalismanBlackList", CATEGORY_GENERAL, "Чёрный список блоков для Кольца черной дыры", blockTalismanBlackList);
+			readStringSet(cfg, "transvectorBlackList", CATEGORY_GENERAL, "Чёрный список блоков для Трансвекторного дислокатора", transvectorBlackList);
+			enableIchorPickAdvBedrockBreaking = cfg.getBoolean("enableIchorPickAdvBedrockBreaking", CATEGORY_GENERAL, enableIchorPickAdvBedrockBreaking, "Включить разрушение коренной породы Пробуждённой ихориевой киркой");
 			cfg.save();
 		}
 		catch (Throwable throwable)
@@ -47,6 +49,13 @@ public final class EventConfig
 		}
 
 		return false;
+	}
+
+	private static final void readStringSet(Configuration cfg, String name, String category, String comment, Set<String> def)
+	{
+		Set<String> temp = getStringSet(cfg, name, category, comment, def);
+		def.clear();
+		def.addAll(temp);
 	}
 
 	private static final Set<String> getStringSet(Configuration cfg, String name, String category, String comment, Set<String> def)

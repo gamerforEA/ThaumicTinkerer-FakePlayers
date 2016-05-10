@@ -107,7 +107,10 @@ public class BlockAnimationTablet extends BlockModContainer
 		// TODO gamerforEA code start
 		TileEntity tablet = par1World.getTileEntity(par2, par3, par4);
 		if (tablet instanceof TileAnimationTablet && par5EntityLiving instanceof EntityPlayer)
+		{
 			((TileAnimationTablet) tablet).fake.profile = ((EntityPlayer) par5EntityLiving).getGameProfile();
+			((TileAnimationTablet) tablet).resetFakePlayer();
+		}
 		// TODO gamerforEA code end
 		;
 	}

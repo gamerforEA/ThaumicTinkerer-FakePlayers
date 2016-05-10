@@ -65,7 +65,6 @@ import thaumic.tinkerer.common.lib.LibBlockNames;
 @Optional.InterfaceList({ @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers"), @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = "ComputerCraft") })
 public class TileAnimationTablet extends TileEntity implements IInventory, IMovableTile, IPeripheral, SimpleComponent
 {
-
 	private static final String TAG_LEFT_CLICK = "leftClick";
 	private static final String TAG_REDSTONE = "redstone";
 	private static final String TAG_PROGRESS = "progress";
@@ -94,6 +93,11 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 
 	// TODO gamerforEA code start
 	public final FakePlayerContainer fake = new FakePlayerContainerTileEntity(ModUtils.profile, this);
+
+	public void resetFakePlayer()
+	{
+		this.player = new TabletFakePlayer(this);
+	}
 	// TODO gamerforEA code end
 
 	@Override
@@ -194,35 +198,38 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 				block = this.worldObj.getBlock(coords.posX, coords.posY, coords.posZ);
 			}
 
-			try
-			{
-				ForgeEventFactory.onPlayerInteract(this.player, Action.RIGHT_CLICK_AIR, coords.posX, coords.posY, coords.posZ, side, this.worldObj);
-				Entity entity = this.detectedEntities.isEmpty() ? null : this.detectedEntities.get(this.worldObj.rand.nextInt(this.detectedEntities.size()));
-				done = entity != null && entity instanceof EntityLiving && (item.itemInteractionForEntity(stack, this.player, (EntityLivingBase) entity) || !(entity instanceof EntityAnimal) || ((EntityAnimal) entity).interact(this.player));
-
-				if (!done)
-					item.onItemUseFirst(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
-				if (!done)
-					done = block != null && block.onBlockActivated(this.worldObj, coords.posX, coords.posY, coords.posZ, this.player, side, 0F, 0F, 0F);
-				if (!done)
-					done = item.onItemUse(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
-				if (!done)
+			// TODO gamerforEA code start
+			if (!EventUtils.cantBreak(this.fake.getPlayer(), coords.posX, coords.posY, coords.posZ))
+				// TODO gamerforEA code end
+				try
 				{
-					item.onItemRightClick(stack, this.worldObj, this.player);
-					done = true;
-				}
+					ForgeEventFactory.onPlayerInteract(this.player, Action.RIGHT_CLICK_AIR, coords.posX, coords.posY, coords.posZ, side, this.worldObj);
+					Entity entity = this.detectedEntities.isEmpty() ? null : this.detectedEntities.get(this.worldObj.rand.nextInt(this.detectedEntities.size()));
+					done = entity != null && entity instanceof EntityLiving && (item.itemInteractionForEntity(stack, this.player, (EntityLivingBase) entity) || !(entity instanceof EntityAnimal) || ((EntityAnimal) entity).interact(this.player));
 
-			}
-			catch (Throwable e)
-			{
-				e.printStackTrace();
-				List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 8, this.yCoord - 8, this.zCoord - 8, this.xCoord + 8, this.yCoord + 8, this.zCoord + 8));
-				for (Object player : list)
-				{
-					((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Something went wrong with a Tool Dynamism Tablet! Check your FML log."));
-					((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + e.getMessage()));
+					if (!done)
+						item.onItemUseFirst(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
+					if (!done)
+						done = block != null && block.onBlockActivated(this.worldObj, coords.posX, coords.posY, coords.posZ, this.player, side, 0F, 0F, 0F);
+					if (!done)
+						done = item.onItemUse(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
+					if (!done)
+					{
+						item.onItemRightClick(stack, this.worldObj, this.player);
+						done = true;
+					}
+
 				}
-			}
+				catch (Throwable e)
+				{
+					e.printStackTrace();
+					List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 8, this.yCoord - 8, this.zCoord - 8, this.xCoord + 8, this.yCoord + 8, this.zCoord + 8));
+					for (Object player : list)
+					{
+						((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Something went wrong with a Tool Dynamism Tablet! Check your FML log."));
+						((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + e.getMessage()));
+					}
+				}
 		}
 
 		if (done)
@@ -449,6 +456,7 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 
 		// TODO gamerforEA code start
 		this.fake.readFromNBT(par1NBTTagCompound);
+		this.resetFakePlayer();
 		// TODO gamerforEA code end
 	}
 

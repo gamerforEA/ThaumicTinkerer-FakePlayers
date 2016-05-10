@@ -25,7 +25,7 @@ apply plugin: 'forge'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-version = "2.5-1.7.10-512"
+version = "2.5-1.7.10-515"
 group= "thaumic.tinkerer"
 archivesBaseName = "ThaumicTinkerer"
 
