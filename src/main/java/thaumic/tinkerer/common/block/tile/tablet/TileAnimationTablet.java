@@ -17,10 +17,8 @@ package thaumic.tinkerer.common.block.tile.tablet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.gamerforea.eventhelper.fake.FakePlayerContainer;
-import com.gamerforea.eventhelper.fake.FakePlayerContainerTileEntity;
 import com.gamerforea.eventhelper.util.EventUtils;
-import com.gamerforea.ttinkerer.ModUtils;
+import com.gamerforea.ttinkerer.EventConfig;
 
 import appeng.api.movable.IMovableTile;
 import cpw.mods.fml.common.Optional;
@@ -57,7 +55,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import thaumcraft.common.lib.FakeThaumcraftPlayer;
 import thaumic.tinkerer.common.ThaumicTinkerer;
 import thaumic.tinkerer.common.block.BlockAnimationTablet;
 import thaumic.tinkerer.common.lib.LibBlockNames;
@@ -83,22 +80,12 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 	public int swingProgress = 0;
 	List<Entity> detectedEntities = new ArrayList();
 	ItemStack[] inventorySlots = new ItemStack[1];
-	//public String Owner;
-	FakeThaumcraftPlayer player;
+	TabletFakePlayer player;
 	private int swingMod = 0;
 	private boolean isBreaking = false;
 	private int initialDamage = 0;
 	private int curblockDamage = 0;
 	private int durabilityRemainingOnBlock;
-
-	// TODO gamerforEA code start
-	public final FakePlayerContainer fake = new FakePlayerContainerTileEntity(ModUtils.profile, this);
-
-	public void resetFakePlayer()
-	{
-		this.player = new TabletFakePlayer(this);
-	}
-	// TODO gamerforEA code end
 
 	@Override
 	public void updateEntity()
@@ -154,6 +141,12 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 		ChunkCoordinates coords = this.getTargetLoc();
 		ItemStack stack = this.getStackInSlot(0);
 		Item item = stack.getItem();
+
+		// TODO gamerforEA code start
+		if (EventConfig.inBlackList(EventConfig.animationTabletBlackList, item, stack.getItemDamage()))
+			return;
+		// TODO gamerforEA code end
+
 		Block block = this.worldObj.getBlock(coords.posX, coords.posY, coords.posZ);
 
 		this.player.setCurrentItemOrArmor(0, stack);
@@ -199,36 +192,36 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 			}
 
 			// TODO gamerforEA code start
-			if (!EventUtils.cantBreak(this.fake.getPlayer(), coords.posX, coords.posY, coords.posZ))
+			if (!EventUtils.cantBreak(this.player, coords.posX, coords.posY, coords.posZ))
 				// TODO gamerforEA code end
 				try
 				{
-					ForgeEventFactory.onPlayerInteract(this.player, Action.RIGHT_CLICK_AIR, coords.posX, coords.posY, coords.posZ, side, this.worldObj);
-					Entity entity = this.detectedEntities.isEmpty() ? null : this.detectedEntities.get(this.worldObj.rand.nextInt(this.detectedEntities.size()));
-					done = entity != null && entity instanceof EntityLiving && (item.itemInteractionForEntity(stack, this.player, (EntityLivingBase) entity) || !(entity instanceof EntityAnimal) || ((EntityAnimal) entity).interact(this.player));
+				ForgeEventFactory.onPlayerInteract(this.player, Action.RIGHT_CLICK_AIR, coords.posX, coords.posY, coords.posZ, side, this.worldObj);
+				Entity entity = this.detectedEntities.isEmpty() ? null : this.detectedEntities.get(this.worldObj.rand.nextInt(this.detectedEntities.size()));
+				done = entity != null && entity instanceof EntityLiving && (item.itemInteractionForEntity(stack, this.player, (EntityLivingBase) entity) || !(entity instanceof EntityAnimal) || ((EntityAnimal) entity).interact(this.player));
 
-					if (!done)
-						item.onItemUseFirst(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
-					if (!done)
-						done = block != null && block.onBlockActivated(this.worldObj, coords.posX, coords.posY, coords.posZ, this.player, side, 0F, 0F, 0F);
-					if (!done)
-						done = item.onItemUse(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
-					if (!done)
-					{
-						item.onItemRightClick(stack, this.worldObj, this.player);
-						done = true;
-					}
+				if (!done)
+				item.onItemUseFirst(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
+				if (!done)
+				done = block != null && block.onBlockActivated(this.worldObj, coords.posX, coords.posY, coords.posZ, this.player, side, 0F, 0F, 0F);
+				if (!done)
+				done = item.onItemUse(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
+				if (!done)
+				{
+				item.onItemRightClick(stack, this.worldObj, this.player);
+				done = true;
+				}
 
 				}
 				catch (Throwable e)
 				{
-					e.printStackTrace();
-					List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 8, this.yCoord - 8, this.zCoord - 8, this.xCoord + 8, this.yCoord + 8, this.zCoord + 8));
-					for (Object player : list)
-					{
-						((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Something went wrong with a Tool Dynamism Tablet! Check your FML log."));
-						((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + e.getMessage()));
-					}
+				e.printStackTrace();
+				List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 8, this.yCoord - 8, this.zCoord - 8, this.xCoord + 8, this.yCoord + 8, this.zCoord + 8));
+				for (Object player : list)
+				{
+				((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Something went wrong with a Tool Dynamism Tablet! Check your FML log."));
+				((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + e.getMessage()));
+				}
 				}
 		}
 
@@ -453,11 +446,6 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 		//else
 		//    Owner="";
 		this.readCustomNBT(par1NBTTagCompound);
-
-		// TODO gamerforEA code start
-		this.fake.readFromNBT(par1NBTTagCompound);
-		this.resetFakePlayer();
-		// TODO gamerforEA code end
 	}
 
 	@Override
@@ -469,10 +457,6 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 		par1NBTTagCompound.setInteger(TAG_MOD, this.swingMod);
 		//par1NBTTagCompound.setString(TAG_OWNER,Owner);
 		this.writeCustomNBT(par1NBTTagCompound);
-
-		// TODO gamerforEA code start
-		this.fake.writeToNBT(par1NBTTagCompound);
-		// TODO gamerforEA code end
 	}
 
 	public void readCustomNBT(NBTTagCompound par1NBTTagCompound)
