@@ -115,11 +115,11 @@ public class ItemFocusSmelt extends ItemModFocus
 								// TODO gamerforEA code end
 								for (int i = 0; i < 25; i++)
 								{
-									double x = pos.blockX + Math.random();
-									double y = pos.blockY + Math.random();
-									double z = pos.blockZ + Math.random();
+								double x = pos.blockX + Math.random();
+								double y = pos.blockY + Math.random();
+								double z = pos.blockZ + Math.random();
 
-									ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
+								ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
 								}
 						}
 					}
@@ -143,11 +143,11 @@ public class ItemFocusSmelt extends ItemModFocus
 						// TODO gamerforEA code end
 						for (int i = 0; i < 2; i++)
 						{
-							double x = pos.blockX + Math.random();
-							double y = pos.blockY + Math.random();
-							double z = pos.blockZ + Math.random();
+						double x = pos.blockX + Math.random();
+						double y = pos.blockY + Math.random();
+						double z = pos.blockZ + Math.random();
 
-							ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
+						ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
 						}
 				}
 

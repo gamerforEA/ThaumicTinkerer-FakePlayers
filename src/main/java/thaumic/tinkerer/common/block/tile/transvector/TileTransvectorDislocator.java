@@ -70,7 +70,11 @@ public class TileTransvectorDislocator extends TileTransvector
 
 		ChunkCoordinates endCoords = new ChunkCoordinates(this.x, this.y, this.z);
 		ChunkCoordinates targetCoords = this.getBlockTarget();
+		List<Entity> entitiesAtEnd = this.getEntitiesAtPoint(endCoords);
+		List<Entity> entitiesAtTarget = this.getEntitiesAtPoint(targetCoords);
 
+		Vector3 targetToEnd = this.asVector(targetCoords, endCoords);
+		Vector3 endToTarget = this.asVector(endCoords, targetCoords);
 		if (this.worldObj.blockExists(this.x, this.y, this.z))
 		{
 			BlockData endData = new BlockData(endCoords);
@@ -88,12 +92,6 @@ public class TileTransvectorDislocator extends TileTransvector
 				targetData.notify(endCoords);
 			}
 		}
-
-		List<Entity> entitiesAtEnd = this.getEntitiesAtPoint(endCoords);
-		List<Entity> entitiesAtTarget = this.getEntitiesAtPoint(targetCoords);
-
-		Vector3 targetToEnd = this.asVector(targetCoords, endCoords);
-		Vector3 endToTarget = this.asVector(endCoords, targetCoords);
 
 		for (Entity entity : entitiesAtEnd)
 			this.moveEntity(entity, endToTarget);
