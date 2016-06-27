@@ -169,7 +169,6 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 
 	public static class Beam extends EntityThrowable
 	{
-
 		private int initialOffset = 2;
 		private int length = 298;
 		private int maxTicks = this.initialOffset + this.length;
@@ -268,6 +267,11 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 
 			if (this.ticksExisted >= this.maxTicks)
 				this.setDead();
+
+			// TODO gamerforEA code start
+			if (this.inPortal)
+				this.setDead();
+			// TODO gamerforEA code end
 		}
 
 		public void updateUntilDead()
