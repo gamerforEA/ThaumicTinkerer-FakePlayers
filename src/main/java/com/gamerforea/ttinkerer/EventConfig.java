@@ -10,13 +10,16 @@ import com.google.common.collect.Sets;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.GameRegistry.UniqueIdentifier;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraftforge.common.config.Configuration;
 
 public final class EventConfig
 {
-	public static Set<String> focusDislocationBlackList = Sets.newHashSet("minecraft:stone", "IC2:blockMachine:5");
-	public static Set<String> blockTalismanBlackList = Sets.newHashSet("minecraft:stone", "IC2:blockMachine:5");
-	public static Set<String> transvectorBlackList = Sets.newHashSet("minecraft:stone", "IC2:blockMachine:5");
+	public static final Set<String> focusDislocationBlackList = Sets.newHashSet("minecraft:stone", "IC2:blockMachine:5");
+	public static final Set<String> blockTalismanBlackList = Sets.newHashSet("minecraft:stone", "IC2:blockMachine:5");
+	public static final Set<String> transvectorBlackList = Sets.newHashSet("minecraft:stone", "IC2:blockMachine:5");
+	public static final Set<String> animationTabletBlackList = Sets.newHashSet("minecraft:stone", "IC2:blockMachine:5");
 	public static boolean enableIchorPickAdvBedrockBreaking = false;
 
 	static
@@ -27,6 +30,7 @@ public final class EventConfig
 			readStringSet(cfg, "focusDislocationBlackList", CATEGORY_GENERAL, "Чёрный список блоков для Фокуса Перемещения", focusDislocationBlackList);
 			readStringSet(cfg, "blockTalismanBlackList", CATEGORY_GENERAL, "Чёрный список блоков для Кольца черной дыры", blockTalismanBlackList);
 			readStringSet(cfg, "transvectorBlackList", CATEGORY_GENERAL, "Чёрный список блоков для Трансвекторного дислокатора", transvectorBlackList);
+			readStringSet(cfg, "animationTabletBlackList", CATEGORY_GENERAL, "Чёрный список предметов для Динамической дощечки", animationTabletBlackList);
 			enableIchorPickAdvBedrockBreaking = cfg.getBoolean("enableIchorPickAdvBedrockBreaking", CATEGORY_GENERAL, enableIchorPickAdvBedrockBreaking, "Включить разрушение коренной породы Пробуждённой ихориевой киркой");
 			cfg.save();
 		}
@@ -37,14 +41,26 @@ public final class EventConfig
 		}
 	}
 
+	public static final boolean inBlackList(Set<String> blackList, Item item, int meta)
+	{
+		if (item instanceof ItemBlock)
+			if (inBlackList(blackList, ((ItemBlock) item).field_150939_a, meta))
+				return true;
+
+		return inBlackList(blackList, GameRegistry.findUniqueIdentifierFor(item), meta);
+	}
+
 	public static final boolean inBlackList(Set<String> blackList, Block block, int meta)
 	{
-		UniqueIdentifier blockId = GameRegistry.findUniqueIdentifierFor(block);
+		return inBlackList(blackList, GameRegistry.findUniqueIdentifierFor(block), meta);
+	}
 
-		if (blockId != null)
+	private static final boolean inBlackList(Set<String> blackList, UniqueIdentifier id, int meta)
+	{
+		if (id != null)
 		{
-			String name = blockId.modId + ":" + blockId.name;
-			if (blackList.contains(name) || blackList.contains(name + ":" + meta))
+			String name = id.modId + ':' + id.name;
+			if (blackList.contains(name) || blackList.contains(name + ':' + meta))
 				return true;
 		}
 
