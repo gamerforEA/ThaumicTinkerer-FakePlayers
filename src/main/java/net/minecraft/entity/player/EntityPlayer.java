@@ -97,20 +97,27 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	/** Inventory of the player */
 	public InventoryPlayer inventory = new InventoryPlayer(this);
 	private InventoryEnderChest theInventoryEnderChest = new InventoryEnderChest();
-	/** The Container for the player's inventory (which opens when they press E) */
+	/**
+	 * The Container for the player's inventory (which opens when they press E)
+	 */
 	public Container inventoryContainer;
 	/** The Container the player has open. */
 	public Container openContainer;
 	/** The food object of the player, the general hunger logic. */
 	protected FoodStats foodStats = new FoodStats();
 	/**
-	 * Used to tell if the player pressed jump twice. If this is at 0 and it's pressed (And they are allowed to fly, as
-	 * defined in the player's movementInput) it sets this to 7. If it's pressed and it's greater than 0 enable fly.
+	 * Used to tell if the player pressed jump twice. If this is at 0 and it's
+	 * pressed (And they are allowed to fly, as defined in the player's
+	 * movementInput) it sets this to 7. If it's pressed and it's greater than 0
+	 * enable fly.
 	 */
 	protected int flyToggleTimer;
 	public float prevCameraYaw;
 	public float cameraYaw;
-	/** Used by EntityPlayer to prevent too many xp orbs from getting absorbed at once. */
+	/**
+	 * Used by EntityPlayer to prevent too many xp orbs from getting absorbed at
+	 * once.
+	 */
 	public int xpCooldown;
 	public double field_71091_bM;
 	public double field_71096_bN;
@@ -129,7 +136,10 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	public float field_71089_bV;
 	/** holds the spawn chunk of the player */
 	private ChunkCoordinates spawnChunk;
-	/** Whether this player's spawn point is forced, preventing execution of bed checks. */
+	/**
+	 * Whether this player's spawn point is forced, preventing execution of bed
+	 * checks.
+	 */
 	private boolean spawnForced;
 	/** Holds the coordinate of the player when enter a minecraft to ride. */
 	private ChunkCoordinates startMinecartRidingCoordinate;
@@ -138,21 +148,33 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	/** The current experience level the player is on. */
 	public int experienceLevel;
 	/**
-	 * The total amount of experience the player has. This also includes the amount of experience within their
-	 * Experience Bar.
+	 * The total amount of experience the player has. This also includes the
+	 * amount of experience within their Experience Bar.
 	 */
 	public int experienceTotal;
-	/** The current amount of experience the player has within their Experience Bar. */
+	/**
+	 * The current amount of experience the player has within their Experience
+	 * Bar.
+	 */
 	public float experience;
-	/** This is the item that is in use when the player is holding down the useItemButton (e.g., bow, food, sword) */
+	/**
+	 * This is the item that is in use when the player is holding down the
+	 * useItemButton (e.g., bow, food, sword)
+	 */
 	public ItemStack itemInUse;
-	/** This field starts off equal to getMaxItemUseDuration and is decremented on each tick */
+	/**
+	 * This field starts off equal to getMaxItemUseDuration and is decremented
+	 * on each tick
+	 */
 	public int itemInUseCount;
 	protected float speedOnGround = 0.1F;
 	protected float speedInAir = 0.02F;
 	private int field_82249_h;
 	private final GameProfile field_146106_i;
-	/** An instance of a fishing rod's hook. If this isn't null, the icon image of the fishing rod is slightly different */
+	/**
+	 * An instance of a fishing rod's hook. If this isn't null, the icon image
+	 * of the fishing rod is slightly different
+	 */
 	public EntityFishHook fishEntity;
 	private static final String __OBFID = "CL_00001711";
 
@@ -206,7 +228,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Checks if the entity is currently using an item (e.g., bow, food, sword) by holding down the useItemButton
+	 * Checks if the entity is currently using an item (e.g., bow, food, sword)
+	 * by holding down the useItemButton
 	 */
 	public boolean isUsingItem()
 	{
@@ -352,7 +375,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Return the amount of time this entity should stay in a portal before being transported.
+	 * Return the amount of time this entity should stay in a portal before
+	 * being transported.
 	 */
 	@Override
 	public int getMaxInPortalTime()
@@ -463,8 +487,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * sets current screen to null (used on escape buttons of GUIs); sets current crafting inventory back to the 2x2
-	 * square
+	 * sets current screen to null (used on escape buttons of GUIs); sets
+	 * current crafting inventory back to the 2x2 square
 	 */
 	public void closeScreen()
 	{
@@ -524,8 +548,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Keeps moving the entity up so it isn't colliding with blocks and other requirements for this entity to be spawned
-	 * (only actually used on players though its also on Entity)
+	 * Keeps moving the entity up so it isn't colliding with blocks and other
+	 * requirements for this entity to be spawned (only actually used on players
+	 * though its also on Entity)
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -546,8 +571,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-	 * use this to react to sunlight and start to burn.
+	 * Called frequently so the entity can update its state every tick as
+	 * required. For example, zombies and skeletons use this to react to
+	 * sunlight and start to burn.
 	 */
 	@Override
 	public void onLivingUpdate()
@@ -699,8 +725,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Adds a value to the player score. Currently not actually used and the entity passed in does nothing. Args:
-	 * entity, scoreToAdd
+	 * Adds a value to the player score. Currently not actually used and the
+	 * entity passed in does nothing. Args: entity, scoreToAdd
 	 */
 	@Override
 	public void addToPlayerScore(Entity p_70084_1_, int p_70084_2_)
@@ -812,7 +838,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Returns how strong the player is against the specified block at this moment
+	 * Returns how strong the player is against the specified block at this
+	 * moment
 	 */
 	@Deprecated //Metadata sensitive version, named getBreakSpeed
 	public float getCurrentPlayerStrVsBlock(Block p_146096_1_, boolean p_146096_2_)
@@ -866,7 +893,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Checks if the player has the ability to harvest a block (checks current inventory item for a tool if necessary)
+	 * Checks if the player has the ability to harvest a block (checks current
+	 * inventory item for a tool if necessary)
 	 */
 	public boolean canHarvestBlock(Block p_146099_1_)
 	{
@@ -972,7 +1000,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Displays the GUI for interacting with a chest inventory. Args: chestInventory
+	 * Displays the GUI for interacting with a chest inventory. Args:
+	 * chestInventory
 	 */
 	public void displayGUIChest(IInventory p_71007_1_)
 	{
@@ -1015,7 +1044,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * sets the players height back to normal after doing things like sleeping and dieing
+	 * sets the players height back to normal after doing things like sleeping
+	 * and dieing
 	 */
 	protected void resetHeight()
 	{
@@ -1087,7 +1117,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+	 * Returns the current armor value as determined by a call to
+	 * InventoryPlayer.getTotalArmorValue
 	 */
 	@Override
 	public int getTotalArmorValue()
@@ -1096,8 +1127,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * When searching for vulnerable players, if a player is invisible, the return value of this is the chance of seeing
-	 * them anyway.
+	 * When searching for vulnerable players, if a player is invisible, the
+	 * return value of this is the chance of seeing them anyway.
 	 */
 	public float getArmorVisibility()
 	{
@@ -1117,8 +1148,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Deals damage to the entity. If its a EntityPlayer then will take damage from the armor first and then health
-	 * second with the reduced value. Args: damageAmount
+	 * Deals damage to the entity. If its a EntityPlayer then will take damage
+	 * from the armor first and then health second with the reduced value. Args:
+	 * damageAmount
 	 */
 	@Override
 	protected void damageEntity(DamageSource p_70665_1_, float p_70665_2_)
@@ -1249,8 +1281,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Attacks for the player the targeted entity with the currently equipped item.  The equipped item has hitEntity
-	 * called on it. Args: targetEntity
+	 * Attacks for the player the targeted entity with the currently equipped
+	 * item. The equipped item has hitEntity called on it. Args: targetEntity
 	 */
 	public void attackTargetEntityWithCurrentItem(Entity p_71059_1_)
 	{
@@ -1355,7 +1387,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Called when the player performs a critical hit on the Entity. Args: entity that was hit critically
+	 * Called when the player performs a critical hit on the Entity. Args:
+	 * entity that was hit critically
 	 */
 	public void onCriticalHit(Entity p_71009_1_)
 	{
@@ -1542,8 +1575,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Ensure that a block enabling respawning exists at the specified coordinates and find an empty space nearby to
-	 * spawn.
+	 * Ensure that a block enabling respawning exists at the specified
+	 * coordinates and find an empty space nearby to spawn.
 	 */
 	public static ChunkCoordinates verifyRespawnCoordinates(World p_71056_0_, ChunkCoordinates p_71056_1_, boolean p_71056_2_)
 	{
@@ -1607,7 +1640,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Returns whether or not the player is asleep and the screen has fully faded.
+	 * Returns whether or not the player is asleep and the screen has fully
+	 * faded.
 	 */
 	public boolean isPlayerFullyAsleep()
 	{
@@ -1641,7 +1675,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Returns the location of the bed the player will respawn at, or null if the player has not slept in a bed.
+	 * Returns the location of the bed the player will respawn at, or null if
+	 * the player has not slept in a bed.
 	 */
 	@Deprecated
 	public ChunkCoordinates getBedLocation()
@@ -1656,7 +1691,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Defines a spawn coordinate to player spawn. Used by bed after the player sleep on it.
+	 * Defines a spawn coordinate to player spawn. Used by bed after the player
+	 * sleep on it.
 	 */
 	public void setSpawnChunk(ChunkCoordinates p_71063_1_, boolean p_71063_2_)
 	{
@@ -1708,7 +1744,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Moves the entity based on the specified heading.  Args: strafe, forward
+	 * Moves the entity based on the specified heading. Args: strafe, forward
 	 */
 	@Override
 	public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_)
@@ -1742,7 +1778,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Adds a value to a movement statistic field - like run, walk, swin or climb.
+	 * Adds a value to a movement statistic field - like run, walk, swin or
+	 * climb.
 	 */
 	public void addMovementStat(double p_71000_1_, double p_71000_3_, double p_71000_5_)
 	{
@@ -1800,7 +1837,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Adds a value to a mounted movement statistic field - by minecart, boat, or pig.
+	 * Adds a value to a mounted movement statistic field - by minecart, boat,
+	 * or pig.
 	 */
 	private void addMountedMovementStat(double p_71015_1_, double p_71015_3_, double p_71015_5_)
 	{
@@ -1956,8 +1994,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * This method returns the cap amount of experience that the experience bar can hold. With each level, the
-	 * experience cap on the player's experience bar is raised by 10.
+	 * This method returns the cap amount of experience that the experience bar
+	 * can hold. With each level, the experience cap on the player's experience
+	 * bar is raised by 10.
 	 */
 	public int xpBarCap()
 	{
@@ -1996,7 +2035,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * sets the itemInUse when the use item button is clicked. Args: itemstack, int maxItemUseDuration
+	 * sets the itemInUse when the use item button is clicked. Args: itemstack,
+	 * int maxItemUseDuration
 	 */
 	public void setItemInUse(ItemStack p_71008_1_, int p_71008_2_)
 	{
@@ -2014,7 +2054,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Returns true if the given block can be mined with the current tool in adventure mode.
+	 * Returns true if the given block can be mined with the current tool in
+	 * adventure mode.
 	 */
 	public boolean isCurrentToolAdventureModeExempt(int p_82246_1_, int p_82246_2_, int p_82246_3_)
 	{
@@ -2063,7 +2104,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Only use is to identify if class is an instance of player for experience dropping
+	 * Only use is to identify if class is an instance of player for experience
+	 * dropping
 	 */
 	@Override
 	protected boolean isPlayer()
@@ -2079,8 +2121,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Copies the values from the given player into this player if boolean par2 is true. Always clones Ender Chest
-	 * Inventory.
+	 * Copies the values from the given player into this player if boolean par2
+	 * is true. Always clones Ender Chest Inventory.
 	 */
 	public void clonePlayer(EntityPlayer p_71049_1_, boolean p_71049_2_)
 	{
@@ -2122,8 +2164,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
-	 * prevent them from trampling crops
+	 * returns if this entity triggers Block.onEntityWalking on the blocks they
+	 * walk on. used for spiders and wolves to prevent them from trampling crops
 	 */
 	@Override
 	protected boolean canTriggerWalking()
@@ -2146,7 +2188,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Gets the name of this command sender (usually username, but possibly "Rcon")
+	 * Gets the name of this command sender (usually username, but possibly
+	 * "Rcon")
 	 */
 	@Override
 	public String getCommandSenderName()
@@ -2187,7 +2230,8 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Sets the held item, or an armor slot. Slot 0 is held item. Slot 1-4 is armor. Params: Item, slot
+	 * Sets the held item, or an armor slot. Slot 0 is held item. Slot 1-4 is
+	 * armor. Params: Item, slot
 	 */
 	@Override
 	public void setCurrentItemOrArmor(int p_70062_1_, ItemStack p_70062_2_)
@@ -2199,9 +2243,10 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * Only used by renderer in EntityLivingBase subclasses.
-	 * Determines if an entity is visible or not to a specfic player, if the entity is normally invisible.
-	 * For EntityLivingBase subclasses, returning false when invisible will render the entity semitransparent.
+	 * Only used by renderer in EntityLivingBase subclasses. Determines if an
+	 * entity is visible or not to a specfic player, if the entity is normally
+	 * invisible. For EntityLivingBase subclasses, returning false when
+	 * invisible will render the entity semitransparent.
 	 */
 	@Override
 	@SideOnly(Side.CLIENT)
@@ -2280,7 +2325,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	public static enum EnumChatVisibility
 	{
-		FULL(0, "options.chat.visibility.full"), SYSTEM(1, "options.chat.visibility.system"), HIDDEN(2, "options.chat.visibility.hidden");
+		FULL(0, "options.chat.visibility.full"),
+		SYSTEM(1, "options.chat.visibility.system"),
+		HIDDEN(2, "options.chat.visibility.hidden");
 		private static final EntityPlayer.EnumChatVisibility[] field_151432_d = new EntityPlayer.EnumChatVisibility[values().length];
 		private final int chatVisibility;
 		private final String resourceKey;
@@ -2348,8 +2395,11 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	/**
 	 * A dimension aware version of getBedLocation.
-	 * @param dimension The dimension to get the bed spawn for
-	 * @return The player specific spawn location for the dimension.  May be null.
+	 * 
+	 * @param dimension
+	 *            The dimension to get the bed spawn for
+	 * @return The player specific spawn location for the dimension. May be
+	 *         null.
 	 */
 	public ChunkCoordinates getBedLocation(int dimension)
 	{
@@ -2357,11 +2407,15 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * A dimension aware version of isSpawnForced.
-	 * Noramally isSpawnForced is used to determine if the respawn system should check for a bed or not.
+	 * A dimension aware version of isSpawnForced. Noramally isSpawnForced is
+	 * used to determine if the respawn system should check for a bed or not.
 	 * This just extends that to be dimension aware.
-	 * @param dimension The dimension to get whether to check for a bed before spawning for
-	 * @return The player specific spawn location for the dimension.  May be null.
+	 * 
+	 * @param dimension
+	 *            The dimension to get whether to check for a bed before
+	 *            spawning for
+	 * @return The player specific spawn location for the dimension. May be
+	 *         null.
 	 */
 	public boolean isSpawnForced(int dimension)
 	{
@@ -2372,11 +2426,18 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/**
-	 * A dimension aware version of setSpawnChunk.
-	 * This functions identically, but allows you to specify which dimension to affect, rather than affecting the player's current dimension.
-	 * @param chunkCoordinates The spawn point to set as the player-specific spawn point for the dimension
-	 * @param forced Whether or not the respawn code should check for a bed at this location (true means it won't check for a bed)
-	 * @param dimension Which dimension to apply the player-specific respawn point to
+	 * A dimension aware version of setSpawnChunk. This functions identically,
+	 * but allows you to specify which dimension to affect, rather than
+	 * affecting the player's current dimension.
+	 * 
+	 * @param chunkCoordinates
+	 *            The spawn point to set as the player-specific spawn point for
+	 *            the dimension
+	 * @param forced
+	 *            Whether or not the respawn code should check for a bed at this
+	 *            location (true means it won't check for a bed)
+	 * @param dimension
+	 *            Which dimension to apply the player-specific respawn point to
 	 */
 	public void setSpawnChunk(ChunkCoordinates chunkCoordinates, boolean forced, int dimension)
 	{
@@ -2412,6 +2473,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	/**
 	 * Returns the default eye height of the player
+	 * 
 	 * @return player default eye height
 	 */
 	public float getDefaultEyeHeight()
@@ -2421,6 +2483,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	/**
 	 * Get the currently computed display name, cached for efficiency.
+	 * 
 	 * @return the current display name
 	 */
 	public String getDisplayName()
@@ -2441,7 +2504,12 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	public static enum EnumStatus
 	{
-		OK, NOT_POSSIBLE_HERE, NOT_POSSIBLE_NOW, TOO_FAR_AWAY, OTHER_PROBLEM, NOT_SAFE;
+		OK,
+		NOT_POSSIBLE_HERE,
+		NOT_POSSIBLE_NOW,
+		TOO_FAR_AWAY,
+		OTHER_PROBLEM,
+		NOT_SAFE;
 
 		private static final String __OBFID = "CL_00001712";
 	}

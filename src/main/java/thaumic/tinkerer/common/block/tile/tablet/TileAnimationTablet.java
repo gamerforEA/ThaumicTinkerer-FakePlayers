@@ -59,7 +59,9 @@ import thaumic.tinkerer.common.ThaumicTinkerer;
 import thaumic.tinkerer.common.block.BlockAnimationTablet;
 import thaumic.tinkerer.common.lib.LibBlockNames;
 
-@Optional.InterfaceList({ @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers"), @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral", modid = "ComputerCraft") })
+@Optional.InterfaceList({ @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent",
+		modid = "OpenComputers"), @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral",
+				modid = "ComputerCraft") })
 public class TileAnimationTablet extends TileEntity implements IInventory, IMovableTile, IPeripheral, SimpleComponent
 {
 	private static final String TAG_LEFT_CLICK = "leftClick";

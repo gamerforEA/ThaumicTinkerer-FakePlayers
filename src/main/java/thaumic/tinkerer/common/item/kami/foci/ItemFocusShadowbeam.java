@@ -18,12 +18,12 @@ import net.minecraftforge.common.util.ForgeDirection;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.research.ResearchPage;
-import thaumcraft.api.wands.FocusUpgradeType;
 import thaumcraft.client.fx.particles.FXSparkle;
 import thaumcraft.codechicken.lib.vec.Vector3;
 import thaumcraft.common.config.ConfigItems;
 import thaumcraft.common.items.wands.ItemWandCasting;
 import thaumic.tinkerer.common.ThaumicTinkerer;
+import thaumic.tinkerer.common.core.handler.ConfigHandler;
 import thaumic.tinkerer.common.core.proxy.TTCommonProxy;
 import thaumic.tinkerer.common.item.foci.ItemFocusDeflect;
 import thaumic.tinkerer.common.item.kami.ItemKamiResource;
@@ -87,12 +87,6 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 	}
 
 	@Override
-	public FocusUpgradeType[] getPossibleUpgradesByRank(ItemStack itemStack, int rank)
-	{
-		return new FocusUpgradeType[0];
-	}
-
-	@Override
 	public EnumRarity getRarity(ItemStack par1ItemStack)
 	{
 		return TTCommonProxy.kamiRarity;
@@ -107,6 +101,8 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 	@Override
 	public IRegisterableResearch getResearchItem()
 	{
+		if (!ConfigHandler.enableKami)
+			return null;
 		return (IRegisterableResearch) new KamiResearchItem(LibResearch.KEY_FOCUS_SHADOWBEAM, new AspectList().add(Aspect.DARKNESS, 2).add(Aspect.MAGIC, 1).add(Aspect.ELDRITCH, 1).add(Aspect.TAINT, 1), 14, 4, 5, new ItemStack(this)).setParents(LibResearch.KEY_ICHORCLOTH_ROD).setPages(new ResearchPage("0"), ResearchHelper.infusionPage(LibResearch.KEY_FOCUS_SHADOWBEAM));
 	}
 

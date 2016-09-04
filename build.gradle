@@ -25,7 +25,7 @@ apply plugin: 'forge'
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-version = "2.5-1.7.10-527"
+version = "2.5-1.7.10-538"
 group= "thaumic.tinkerer"
 archivesBaseName = "ThaumicTinkerer"
 
@@ -36,8 +36,8 @@ minecraft {
 
 dependencies {
 	compile name: 'EventHelper-1.6-dev'
-	compile name: 'CoFHCore-[1.7.10]3.1.2-325-dev'
-	compile name: 'industrialcraft-2-2.2.822-experimental-dev'
+	compile name: 'CoFHCore-[1.7.10]3.1.3-327-dev'
+	compile name: 'industrialcraft-2-2.2.825-experimental-dev'
 	compile name: 'ComputerCraft-1.74-dev'
 	compile name: 'OpenComputers-MC1.7.10-1.5.14.30-dev'
 	compile name: 'Baubles-1.7.10-1.0.1.10-dev'
