@@ -289,6 +289,11 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 
 				if (Item.getItemFromBlock(block) == stack.getItem() && stack.getItemDamage() == meta)
 				{
+					// TODO gamerforEA code start
+					if (stack.hasTagCompound())
+						continue;
+					// TODO gamerforEA code end
+
 					counts[i] = stack.stackSize;
 					if (highest == -1)
 						highest = i;
