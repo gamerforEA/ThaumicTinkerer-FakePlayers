@@ -127,6 +127,11 @@ public class ModEnchantmentHandler
 			int vampirism = EnchantmentHelper.getEnchantmentLevel(LibEnchantIDs.idVampirism, heldItem);
 			if (vampirism > 0)
 			{
+				// TODO gamerforEA code start
+				if (EventUtils.cantDamage(attacker, event.entityLiving))
+					return;
+				// TODO gamerforEA code end
+
 				attacker.heal(vampirism);
 				event.entityLiving.worldObj.playSoundAtEntity(event.entityLiving, "thaumcraft:zap", 0.6F, 1F);
 			}
