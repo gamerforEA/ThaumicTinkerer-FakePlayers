@@ -62,9 +62,16 @@ public class ItemFocusDislocation extends ItemModFocus
 	private static final String TAG_BLOCK_ID = "blockID";
 	private static final String TAG_BLOCK_NAME = "blockName";
 	private static final String TAG_BLOCK_META = "blockMeta";
-	private static final AspectList visUsage = new AspectList().add(Aspect.ENTROPY, 500).add(Aspect.ORDER, 500).add(Aspect.EARTH, 100);
-	private static final AspectList visUsageTile = new AspectList().add(Aspect.ENTROPY, 2500).add(Aspect.ORDER, 2500).add(Aspect.EARTH, 500);
-	private static final AspectList visUsageSpawner = new AspectList().add(Aspect.ENTROPY, 10000).add(Aspect.ORDER, 10000).add(Aspect.EARTH, 5000);
+
+	// TODO gamerforEA add multiplier
+	private static final AspectList visUsage = new AspectList().add(Aspect.ENTROPY, (int) (500 * EventConfig.dislocationVisMultipier)).add(Aspect.ORDER, (int) (500 * EventConfig.dislocationVisMultipier)).add(Aspect.EARTH, (int) (100 * EventConfig.dislocationVisMultipier));
+
+	// TODO gamerforEA add multiplier
+	private static final AspectList visUsageTile = new AspectList().add(Aspect.ENTROPY, (int) (2500 * EventConfig.dislocationVisMultipier)).add(Aspect.ORDER, (int) (2500 * EventConfig.dislocationVisMultipier)).add(Aspect.EARTH, (int) (500 * EventConfig.dislocationVisMultipier));
+
+	// TODO gamerforEA add multiplier
+	private static final AspectList visUsageSpawner = new AspectList().add(Aspect.ENTROPY, (int) (10000 * EventConfig.dislocationVisMultipier)).add(Aspect.ORDER, (int) (10000 * EventConfig.dislocationVisMultipier)).add(Aspect.EARTH, (int) (5000 * EventConfig.dislocationVisMultipier));
+
 	private static ArrayList<Block> blacklist = new ArrayList<Block>();
 	private IIcon ornament;
 
