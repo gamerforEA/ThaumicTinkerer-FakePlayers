@@ -2395,7 +2395,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	/**
 	 * A dimension aware version of getBedLocation.
-	 * 
+	 *
 	 * @param dimension
 	 *            The dimension to get the bed spawn for
 	 * @return The player specific spawn location for the dimension. May be
@@ -2410,7 +2410,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	 * A dimension aware version of isSpawnForced. Noramally isSpawnForced is
 	 * used to determine if the respawn system should check for a bed or not.
 	 * This just extends that to be dimension aware.
-	 * 
+	 *
 	 * @param dimension
 	 *            The dimension to get whether to check for a bed before
 	 *            spawning for
@@ -2429,7 +2429,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	 * A dimension aware version of setSpawnChunk. This functions identically,
 	 * but allows you to specify which dimension to affect, rather than
 	 * affecting the player's current dimension.
-	 * 
+	 *
 	 * @param chunkCoordinates
 	 *            The spawn point to set as the player-specific spawn point for
 	 *            the dimension
@@ -2473,7 +2473,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	/**
 	 * Returns the default eye height of the player
-	 * 
+	 *
 	 * @return player default eye height
 	 */
 	public float getDefaultEyeHeight()
@@ -2483,7 +2483,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	/**
 	 * Get the currently computed display name, cached for efficiency.
-	 * 
+	 *
 	 * @return the current display name
 	 */
 	public String getDisplayName()

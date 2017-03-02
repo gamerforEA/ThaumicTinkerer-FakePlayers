@@ -50,7 +50,7 @@ public class BlockMobilizer extends BlockMod
 
 		TileEntity tile;
 		if (entity instanceof EntityPlayer && (tile = world.getTileEntity(x, y, z)) instanceof TileEntityMobilizer)
-			((TileEntityMobilizer) tile).fake.profile = ((EntityPlayer) entity).getGameProfile();
+			((TileEntityMobilizer) tile).fake.setProfile(((EntityPlayer) entity).getGameProfile());
 	}
 	// TODO gamerforEA code end
 

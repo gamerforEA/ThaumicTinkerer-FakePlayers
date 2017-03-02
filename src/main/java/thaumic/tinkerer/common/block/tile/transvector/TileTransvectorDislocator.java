@@ -16,7 +16,6 @@ package thaumic.tinkerer.common.block.tile.transvector;
 
 import java.util.List;
 
-import com.gamerforea.eventhelper.util.EventUtils;
 import com.gamerforea.ttinkerer.EventConfig;
 
 import net.minecraft.block.Block;
@@ -110,7 +109,7 @@ public class TileTransvectorDislocator extends TileTransvector
 		if (EventConfig.inBlackList(EventConfig.transvectorBlackList, block, meta))
 			return false;
 
-		if (EventUtils.cantBreak(this.fake.getPlayer(), coords.posX, coords.posY, coords.posZ))
+		if (this.fake.cantBreak(coords.posX, coords.posY, coords.posZ))
 			return false;
 		// TODO gamerforEA code end
 

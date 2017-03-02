@@ -2,7 +2,6 @@ package thaumic.tinkerer.common.block.tile;
 
 import com.gamerforea.eventhelper.fake.FakePlayerContainer;
 import com.gamerforea.eventhelper.fake.FakePlayerContainerTileEntity;
-import com.gamerforea.eventhelper.util.EventUtils;
 import com.gamerforea.ttinkerer.ModUtils;
 
 import appeng.api.AEApi;
@@ -118,7 +117,7 @@ public class TileEntityMobilizer extends TileEntity
 				IAppEngApi api = AEApi.instance();
 
 				// TODO gamerforEA code start
-				if (EventUtils.cantBreak(this.fake.getPlayer(), targetX, this.yCoord, targetZ))
+				if (this.fake.cantBreak(targetX, this.yCoord, targetZ))
 				return;
 				// TODO gamerforEA code end
 
@@ -133,7 +132,7 @@ public class TileEntityMobilizer extends TileEntity
 				if (passengerId != Block.getBlockFromName("bedrock") && passengerId != Block.getBlockFromName(""))
 				{
 				// TODO gamerforEA code start
-				if (EventUtils.cantBreak(this.fake.getPlayer(), targetX, this.yCoord + 1, targetZ))
+				if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
 				return;
 				// TODO gamerforEA code end
 
@@ -141,7 +140,7 @@ public class TileEntityMobilizer extends TileEntity
 				if (passengerId != Block.getBlockFromName("air") && passengerId != Block.getBlockFromName("piston_head"))
 				{
 				// TODO gamerforEA code start
-				if (EventUtils.cantBreak(this.fake.getPlayer(), this.xCoord, this.yCoord + 1, this.zCoord))
+				if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
 				return;
 				// TODO gamerforEA code end
 
@@ -155,9 +154,9 @@ public class TileEntityMobilizer extends TileEntity
 				if (api.registries().movable().askToMove(passenger))
 				{
 				// TODO gamerforEA code start
-				if (EventUtils.cantBreak(this.fake.getPlayer(), targetX, this.yCoord + 1, targetZ))
+				if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
 				return;
-				if (EventUtils.cantBreak(this.fake.getPlayer(), this.xCoord, this.yCoord + 1, this.zCoord))
+				if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
 				return;
 				// TODO gamerforEA code end
 
@@ -174,9 +173,9 @@ public class TileEntityMobilizer extends TileEntity
 				else if (passenger instanceof IMovableTile || passenger.getClass().getName().startsWith("net.minecraft.tileentity"))
 				{
 				// TODO gamerforEA code start
-				if (EventUtils.cantBreak(this.fake.getPlayer(), targetX, this.yCoord + 1, targetZ))
+				if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
 				return;
-				if (EventUtils.cantBreak(this.fake.getPlayer(), this.xCoord, this.yCoord + 1, this.zCoord))
+				if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
 				return;
 				// TODO gamerforEA code end
 
@@ -205,7 +204,7 @@ public class TileEntityMobilizer extends TileEntity
 				//Move self
 
 				// TODO gamerforEA code start
-				if (EventUtils.cantBreak(this.fake.getPlayer(), targetX, this.yCoord, targetZ))
+				if (this.fake.cantBreak(targetX, this.yCoord, targetZ))
 				return;
 				// TODO gamerforEA code end
 

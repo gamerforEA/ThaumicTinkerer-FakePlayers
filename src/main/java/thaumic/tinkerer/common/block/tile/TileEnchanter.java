@@ -206,12 +206,9 @@ public class TileEnchanter extends TileEntity implements ISidedInventory, IMovab
 		if (aspects != null && aspects.size() != 0)
 		{
 			AspectList aspectList = new AspectList();
-			Aspect[] aspectArray = aspects.getAspects();
-			int arrayLength = aspectArray.length;
 
-			for (int i$ = 0; i$ < arrayLength; ++i$)
+			for (Aspect aspect : aspects.getAspects())
 			{
-				Aspect aspect = aspectArray[i$];
 				int cost = aspects.getAmount(aspect) * 100;
 				aspectList.add(aspect, cost);
 			}
@@ -219,40 +216,21 @@ public class TileEnchanter extends TileEntity implements ISidedInventory, IMovab
 			if (aspects != null && aspects.size() != 0)
 			{
 				AspectList nl = new AspectList();
-				Aspect[] arr$ = aspects.getAspects();
-				int len$ = arr$.length;
 
-				int i$;
-				Aspect aspect;
-				for (i$ = 0; i$ < len$; ++i$)
+				for (Aspect aspect : aspects.getAspects())
 				{
-					aspect = arr$[i$];
 					int cost = aspects.getAmount(aspect);
 					cost = (int) (cost * wandItem.getConsumptionModifier(is, player, aspect, true));
 					nl.add(aspect, cost);
 				}
 
-				arr$ = nl.getAspects();
-				len$ = arr$.length;
-
-				for (i$ = 0; i$ < len$; ++i$)
-				{
-					aspect = arr$[i$];
+				for (Aspect aspect : nl.getAspects())
 					if (wandItem.getVis(is, aspect) < nl.getAmount(aspect))
 						return false;
-				}
 
 				if (doit && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
-				{
-					arr$ = nl.getAspects();
-					len$ = arr$.length;
-
-					for (i$ = 0; i$ < len$; ++i$)
-					{
-						aspect = arr$[i$];
+					for (Aspect aspect : nl.getAspects())
 						wandItem.storeVis(is, aspect, wandItem.getVis(is, aspect) - nl.getAmount(aspect));
-					}
-				}
 
 				return true;
 			}

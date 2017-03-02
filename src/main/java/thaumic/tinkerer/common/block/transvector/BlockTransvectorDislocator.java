@@ -141,7 +141,7 @@ public class BlockTransvectorDislocator extends BlockCamo
 
 		// TODO gamerforEA code start
 		if (par5EntityLivingBase instanceof EntityPlayer)
-			((TileTransvectorDislocator) tile).fake.profile = ((EntityPlayer) par5EntityLivingBase).getGameProfile();
+			((TileTransvectorDislocator) tile).fake.setProfile(((EntityPlayer) par5EntityLivingBase).getGameProfile());
 		// TODO gamerforEA code end
 
 		((TileTransvectorDislocator) tile).orientation = BlockPistonBase.determineOrientation(par1World, par2, par3, par4, par5EntityLivingBase);
