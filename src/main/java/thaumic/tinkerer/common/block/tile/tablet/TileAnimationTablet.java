@@ -1,26 +1,22 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [9 Sep 2013, 15:51:34 (GMT)]
  */
 package thaumic.tinkerer.common.block.tile.tablet;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import appeng.api.movable.IMovableTile;
 import com.gamerforea.eventhelper.util.EventUtils;
 import com.gamerforea.ttinkerer.EventConfig;
-
-import appeng.api.movable.IMovableTile;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.common.eventhandler.Event;
 import dan200.computercraft.api.lua.ILuaContext;
@@ -59,9 +55,12 @@ import thaumic.tinkerer.common.ThaumicTinkerer;
 import thaumic.tinkerer.common.block.BlockAnimationTablet;
 import thaumic.tinkerer.common.lib.LibBlockNames;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Optional.InterfaceList({ @Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent",
-		modid = "OpenComputers"), @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral",
-				modid = "ComputerCraft") })
+											  modid = "OpenComputers"), @Optional.Interface(iface = "dan200.computercraft.api.peripheral.IPeripheral",
+																							modid = "ComputerCraft") })
 public class TileAnimationTablet extends TileEntity implements IInventory, IMovableTile, IPeripheral, SimpleComponent
 {
 	private static final String TAG_LEFT_CLICK = "leftClick";
@@ -70,9 +69,9 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 	private static final String TAG_MOD = "mod";
 	private static final String TAG_OWNER = "owner";
 
-	private static final int[][] LOC_INCREASES = new int[][] { { 0, -1 }, { 0, +1 }, { -1, 0 }, { +1, 0 } };
+	private static final int[][] LOC_INCREASES = { { 0, -1 }, { 0, +1 }, { -1, 0 }, { +1, 0 } };
 
-	private static final ForgeDirection[] SIDES = new ForgeDirection[] { ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.EAST };
+	private static final ForgeDirection[] SIDES = { ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.WEST, ForgeDirection.EAST };
 
 	private static final int SWING_SPEED = 3;
 	private static final int MAX_DEGREE = 45;
@@ -198,32 +197,38 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 				// TODO gamerforEA code end
 				try
 				{
-				ForgeEventFactory.onPlayerInteract(this.player, Action.RIGHT_CLICK_AIR, coords.posX, coords.posY, coords.posZ, side, this.worldObj);
-				Entity entity = this.detectedEntities.isEmpty() ? null : this.detectedEntities.get(this.worldObj.rand.nextInt(this.detectedEntities.size()));
-				done = entity != null && entity instanceof EntityLiving && (item.itemInteractionForEntity(stack, this.player, (EntityLivingBase) entity) || !(entity instanceof EntityAnimal) || ((EntityAnimal) entity).interact(this.player));
+					ForgeEventFactory.onPlayerInteract(this.player, Action.RIGHT_CLICK_AIR, coords.posX, coords.posY, coords.posZ, side, this.worldObj);
+					Entity entity = this.detectedEntities.isEmpty() ? null : this.detectedEntities.get(this.worldObj.rand.nextInt(this.detectedEntities.size()));
+					done = entity != null && entity instanceof EntityLiving && (item.itemInteractionForEntity(stack, this.player, (EntityLivingBase) entity) || !(entity instanceof EntityAnimal) || ((EntityAnimal) entity).interact(this.player));
 
-				if (!done)
-				item.onItemUseFirst(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
-				if (!done)
-				done = block != null && block.onBlockActivated(this.worldObj, coords.posX, coords.posY, coords.posZ, this.player, side, 0F, 0F, 0F);
-				if (!done)
-				done = item.onItemUse(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
-				if (!done)
-				{
-				item.onItemRightClick(stack, this.worldObj, this.player);
-				done = true;
-				}
+					if (!done)
+					{
+						// TODO gamerforEA code start
+						done =
+								// TODO gamerforEA code end
+								item.onItemUseFirst(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
+					}
+
+					if (!done)
+						done = block != null && block.onBlockActivated(this.worldObj, coords.posX, coords.posY, coords.posZ, this.player, side, 0F, 0F, 0F);
+					if (!done)
+						done = item.onItemUse(stack, this.player, this.worldObj, coords.posX, coords.posY, coords.posZ, side, 0F, 0F, 0F);
+					if (!done)
+					{
+						item.onItemRightClick(stack, this.worldObj, this.player);
+						done = true;
+					}
 
 				}
 				catch (Throwable e)
 				{
-				e.printStackTrace();
-				List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 8, this.yCoord - 8, this.zCoord - 8, this.xCoord + 8, this.yCoord + 8, this.zCoord + 8));
-				for (Object player : list)
-				{
-				((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Something went wrong with a Tool Dynamism Tablet! Check your FML log."));
-				((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + e.getMessage()));
-				}
+					e.printStackTrace();
+					List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 8, this.yCoord - 8, this.zCoord - 8, this.xCoord + 8, this.yCoord + 8, this.zCoord + 8));
+					for (Object player : list)
+					{
+						((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Something went wrong with a Tool Dynamism Tablet! Check your FML log."));
+						((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + e.getMessage()));
+					}
 				}
 		}
 
@@ -494,6 +499,7 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 		//par1NBTTagCompound.setInteger("durabilityRemainingOnBlock",durabilityRemainingOnBlock);
 		NBTTagList var2 = new NBTTagList();
 		for (int var3 = 0; var3 < this.inventorySlots.length; ++var3)
+		{
 			if (this.inventorySlots[var3] != null)
 			{
 				NBTTagCompound var4 = new NBTTagCompound();
@@ -501,6 +507,7 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 				this.inventorySlots[var3].writeToNBT(var4);
 				var2.appendTag(var4);
 			}
+		}
 		par1NBTTagCompound.setTag("Items", var2);
 	}
 
@@ -636,7 +643,8 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 
 	@Override
 	@Optional.Method(modid = "ComputerCraft")
-	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException
+	public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments)
+			throws LuaException
 	{
 		switch (method)
 		{
