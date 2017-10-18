@@ -1,24 +1,21 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [Dec 29, 2013, 6:01:31 PM (GMT)]
  */
 package thaumic.tinkerer.common.item.kami.tool;
 
-import java.util.List;
-
 import com.gamerforea.eventhelper.util.EventUtils;
 import com.gamerforea.ttinkerer.EventConfig;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -30,11 +27,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.server.S23PacketBlockChange;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.StatCollector;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.event.world.BlockEvent;
@@ -43,11 +36,13 @@ import thaumic.tinkerer.common.block.kami.BlockBedrockPortal;
 import thaumic.tinkerer.common.core.handler.ConfigHandler;
 import thaumic.tinkerer.common.dim.WorldProviderBedrock;
 
+import java.util.List;
+
 public final class ToolHandler
 {
-	public static Material[] materialsPick = new Material[] { Material.rock, Material.iron, Material.ice, Material.glass, Material.piston, Material.anvil };
-	public static Material[] materialsShovel = new Material[] { Material.grass, Material.ground, Material.sand, Material.snow, Material.craftedSnow, Material.clay };
-	public static Material[] materialsAxe = new Material[] { Material.coral, Material.leaves, Material.plants, Material.wood };
+	public static Material[] materialsPick = { Material.rock, Material.iron, Material.ice, Material.glass, Material.piston, Material.anvil };
+	public static Material[] materialsShovel = { Material.grass, Material.ground, Material.sand, Material.snow, Material.craftedSnow, Material.clay };
+	public static Material[] materialsAxe = { Material.coral, Material.leaves, Material.plants, Material.wood };
 
 	public static int getMode(ItemStack tool)
 	{
@@ -72,8 +67,10 @@ public final class ToolHandler
 		//if (material.isToolNotRequired())
 		//	return true;
 		for (Material mat : materialsListing)
+		{
 			if (material == mat)
 				return true;
+		}
 
 		return false;
 	}
@@ -84,16 +81,22 @@ public final class ToolHandler
 		if (mop == null)
 			return;
 		for (int x1 = xs; x1 < xe; x1++)
+		{
 			for (int y1 = ys; y1 < ye; y1++)
+			{
 				for (int z1 = zs; z1 < ze; z1++)
 				{
 					if (x == x1 + x && y == y1 + y && z == z1 + z)
 						continue;
 					breakExtraBlock(player.worldObj, x1 + x, y1 + y, z1 + z, player, x, y, z, materialsListing);
 				}
+			}
+		}
 		List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x + xs, y + ys, z + zs, x + xe, y + ye, z + ze));
 		for (EntityItem item : items)
+		{
 			item.setPosition(player.posX, player.posY + 1, player.posZ);
+		}
 	}
 
 	protected static void breakExtraBlock(World world, int x, int y, int z, EntityPlayer playerEntity, int refX, int refY, int refZ, Material[] materialsListing)

@@ -1,12 +1,11 @@
 package thaumic.tinkerer.common.block.tile;
 
-import com.gamerforea.eventhelper.fake.FakePlayerContainer;
-import com.gamerforea.eventhelper.fake.FakePlayerContainerTileEntity;
-import com.gamerforea.ttinkerer.ModUtils;
-
 import appeng.api.AEApi;
 import appeng.api.IAppEngApi;
 import appeng.api.movable.IMovableTile;
+import com.gamerforea.eventhelper.fake.FakePlayerContainer;
+import com.gamerforea.eventhelper.fake.FakePlayerContainerTileEntity;
+import com.gamerforea.ttinkerer.ModUtils;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -113,116 +112,116 @@ public class TileEntityMobilizer extends TileEntity
 				//Move the block on top of the mobilizer
 				if (!this.worldObj.isRemote)
 				{
-				TileEntity passenger = this.worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
-				IAppEngApi api = AEApi.instance();
+					TileEntity passenger = this.worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
+					IAppEngApi api = AEApi.instance();
 
-				// TODO gamerforEA code start
-				if (this.fake.cantBreak(targetX, this.yCoord, targetZ))
-				return;
-				// TODO gamerforEA code end
+					// TODO gamerforEA code start
+					if (this.fake.cantBreak(targetX, this.yCoord, targetZ))
+						return;
+					// TODO gamerforEA code end
 
-				//Prevent the passenger from popping off. Not sent to clients.
-				this.worldObj.setBlock(targetX, this.yCoord, targetZ, Block.getBlockFromName("stone"), 0, 0);
-				//Move non-TE blocks
-				Block passengerId = this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord);
+					//Prevent the passenger from popping off. Not sent to clients.
+					this.worldObj.setBlock(targetX, this.yCoord, targetZ, Block.getBlockFromName("stone"), 0, 0);
+					//Move non-TE blocks
+					Block passengerId = this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord);
 
-				if (this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) || passengerId.canPlaceBlockAt(this.worldObj, targetX, this.yCoord + 1, targetZ))
-				if (passenger == null)
-				{
-				if (passengerId != Block.getBlockFromName("bedrock") && passengerId != Block.getBlockFromName(""))
-				{
-				// TODO gamerforEA code start
-				if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
-				return;
-				// TODO gamerforEA code end
+					if (this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) || passengerId.canPlaceBlockAt(this.worldObj, targetX, this.yCoord + 1, targetZ))
+						if (passenger == null)
+						{
+							if (passengerId != Block.getBlockFromName("bedrock") && passengerId != Block.getBlockFromName(""))
+							{
+								// TODO gamerforEA code start
+								if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
+									return;
+								// TODO gamerforEA code end
 
-				this.worldObj.setBlock(targetX, this.yCoord + 1, targetZ, passengerId, this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord), 3);
-				if (passengerId != Block.getBlockFromName("air") && passengerId != Block.getBlockFromName("piston_head"))
-				{
-				// TODO gamerforEA code start
-				if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
-				return;
-				// TODO gamerforEA code end
+								this.worldObj.setBlock(targetX, this.yCoord + 1, targetZ, passengerId, this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord), 3);
+								if (passengerId != Block.getBlockFromName("air") && passengerId != Block.getBlockFromName("piston_head"))
+								{
+									// TODO gamerforEA code start
+									if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
+										return;
+									// TODO gamerforEA code end
 
-				this.worldObj.setBlock(this.xCoord, this.yCoord + 1, this.zCoord, Block.getBlockFromName("air"), 0, 2);
-				}
-				}
-				//If AE is installed, use its handler
-				}
-				else if (api != null)
-				{
-				if (api.registries().movable().askToMove(passenger))
-				{
-				// TODO gamerforEA code start
-				if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
-				return;
-				if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
-				return;
-				// TODO gamerforEA code end
+									this.worldObj.setBlock(this.xCoord, this.yCoord + 1, this.zCoord, Block.getBlockFromName("air"), 0, 2);
+								}
+							}
+							//If AE is installed, use its handler
+						}
+						else if (api != null)
+						{
+							if (api.registries().movable().askToMove(passenger))
+							{
+								// TODO gamerforEA code start
+								if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
+									return;
+								if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
+									return;
+								// TODO gamerforEA code end
 
-				this.worldObj.setBlock(targetX, this.yCoord + 1, targetZ, this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord), this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord), 3);
-				passenger.invalidate();
-				this.worldObj.setBlockToAir(this.xCoord, this.yCoord + 1, this.zCoord);
-				api.registries().movable().getHandler(passenger).moveTile(passenger, this.worldObj, targetX, this.yCoord + 1, targetZ);
-				api.registries().movable().doneMoving(passenger);
-				passenger.validate();
-				}
+								this.worldObj.setBlock(targetX, this.yCoord + 1, targetZ, this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord), this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord), 3);
+								passenger.invalidate();
+								this.worldObj.setBlockToAir(this.xCoord, this.yCoord + 1, this.zCoord);
+								api.registries().movable().getHandler(passenger).moveTile(passenger, this.worldObj, targetX, this.yCoord + 1, targetZ);
+								api.registries().movable().doneMoving(passenger);
+								passenger.validate();
+							}
 
-				//Handler IMovableTiles and vanilla TEs without AE
-				}
-				else if (passenger instanceof IMovableTile || passenger.getClass().getName().startsWith("net.minecraft.tileentity"))
-				{
-				// TODO gamerforEA code start
-				if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
-				return;
-				if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
-				return;
-				// TODO gamerforEA code end
+							//Handler IMovableTiles and vanilla TEs without AE
+						}
+						else if (passenger instanceof IMovableTile || passenger.getClass().getName().startsWith("net.minecraft.tileentity"))
+						{
+							// TODO gamerforEA code start
+							if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
+								return;
+							if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
+								return;
+							// TODO gamerforEA code end
 
-				boolean imovable = passenger instanceof IMovableTile;
-				if (imovable)
-				((IMovableTile) passenger).prepareToMove();
-				this.worldObj.setBlock(targetX, this.yCoord + 1, targetZ, this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord), this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord), 3);
-				passenger.invalidate();
-				this.worldObj.setBlockToAir(this.xCoord, this.yCoord + 1, this.zCoord);
+							boolean imovable = passenger instanceof IMovableTile;
+							if (imovable)
+								((IMovableTile) passenger).prepareToMove();
+							this.worldObj.setBlock(targetX, this.yCoord + 1, targetZ, this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord), this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord), 3);
+							passenger.invalidate();
+							this.worldObj.setBlockToAir(this.xCoord, this.yCoord + 1, this.zCoord);
 
-				//IMovableHandler default code
-				Chunk c = this.worldObj.getChunkFromBlockCoords(targetX, targetZ);
+							//IMovableHandler default code
+							Chunk c = this.worldObj.getChunkFromBlockCoords(targetX, targetZ);
 
-				c.func_150812_a(targetX & 0xF, this.yCoord + 1, targetZ & 0xF, passenger);
+							c.func_150812_a(targetX & 0xF, this.yCoord + 1, targetZ & 0xF, passenger);
 
-				if (c.isChunkLoaded)
-				{
-				this.worldObj.addTileEntity(passenger);
-				this.worldObj.markBlockForUpdate(targetX, this.yCoord + 1, targetZ);
-				}
-				if (imovable)
-				((IMovableTile) passenger).doneMoving();
-				passenger.validate();
+							if (c.isChunkLoaded)
+							{
+								this.worldObj.addTileEntity(passenger);
+								this.worldObj.markBlockForUpdate(targetX, this.yCoord + 1, targetZ);
+							}
+							if (imovable)
+								((IMovableTile) passenger).doneMoving();
+							passenger.validate();
 
-				}
-				//Move self
+						}
+					//Move self
 
-				// TODO gamerforEA code start
-				if (this.fake.cantBreak(targetX, this.yCoord, targetZ))
-				return;
-				// TODO gamerforEA code end
+					// TODO gamerforEA code start
+					if (this.fake.cantBreak(targetX, this.yCoord, targetZ))
+						return;
+					// TODO gamerforEA code end
 
-				this.invalidate();
-				this.worldObj.removeTileEntity(this.xCoord, this.yCoord, this.zCoord);
-				this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Block.getBlockFromName("air"), 0, 2);
-				this.worldObj.setBlock(targetX, this.yCoord, targetZ, ThaumicTinkerer.registry.getFirstBlockFromClass(BlockMobilizer.class));
+					this.invalidate();
+					this.worldObj.removeTileEntity(this.xCoord, this.yCoord, this.zCoord);
+					this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Block.getBlockFromName("air"), 0, 2);
+					this.worldObj.setBlock(targetX, this.yCoord, targetZ, ThaumicTinkerer.registry.getFirstBlockFromClass(BlockMobilizer.class));
 
-				int oldX = this.xCoord;
-				int oldZ = this.zCoord;
+					int oldX = this.xCoord;
+					int oldZ = this.zCoord;
 
-				this.xCoord = targetX;
-				this.zCoord = targetZ;
-				this.validate();
-				this.worldObj.addTileEntity(this);
-				this.worldObj.removeTileEntity(oldX, this.yCoord, oldZ);
+					this.xCoord = targetX;
+					this.zCoord = targetZ;
+					this.validate();
+					this.worldObj.addTileEntity(this);
+					this.worldObj.removeTileEntity(oldX, this.yCoord, oldZ);
 
-				this.worldObj.notifyBlockChange(oldX, this.yCoord, oldZ, Block.getBlockFromName("air"));
+					this.worldObj.notifyBlockChange(oldX, this.yCoord, oldZ, Block.getBlockFromName("air"));
 
 				}
 

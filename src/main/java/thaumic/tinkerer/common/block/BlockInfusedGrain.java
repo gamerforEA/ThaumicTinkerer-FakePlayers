@@ -1,8 +1,5 @@
 package thaumic.tinkerer.common.block;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -26,6 +23,9 @@ import thaumic.tinkerer.common.lib.LibBlockNames;
 import thaumic.tinkerer.common.registry.ITTinkererBlock;
 import thaumic.tinkerer.common.registry.ThaumicTinkererRecipe;
 import thaumic.tinkerer.common.research.IRegisterableResearch;
+
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by pixlepix on 4/14/14.
@@ -108,7 +108,9 @@ public class BlockInfusedGrain extends BlockCrops implements ITTinkererBlock
 		{
 			String s = names[j];
 			for (int i = 0; i < 4; i++)
+			{
 				this.icons[j][i] = IconHelper.forName(par1IconRegister, "crop_" + s + "_" + i);
+			}
 		}
 	}
 
@@ -142,7 +144,9 @@ public class BlockInfusedGrain extends BlockCrops implements ITTinkererBlock
 			ItemInfusedSeeds.setAspect(seedStack, this.getAspectDropped(world, x, y, z, metadata));
 			ItemInfusedSeeds.setAspectTendencies(seedStack, ((TileInfusedGrain) tile).primalTendencies);
 			while (rand.nextInt(10000) < Math.pow(this.getPrimalTendencyCount(world, x, y, z, Aspect.ENTROPY), 2))
+			{
 				seedStack.stackSize++;
+			}
 			ret.add(seedStack);
 			this.fertilizeSoil(world, x, y, z, metadata);
 		}
@@ -167,6 +171,7 @@ public class BlockInfusedGrain extends BlockCrops implements ITTinkererBlock
 	{
 		if (metadata >= 7)
 			do
+			{
 				if (world.getTileEntity(x, y - 1, z) instanceof TileInfusedFarmland)
 				{
 					Aspect currentAspect = getAspect(world, x, y, z);
@@ -174,6 +179,7 @@ public class BlockInfusedGrain extends BlockCrops implements ITTinkererBlock
 					((TileInfusedFarmland) world.getTileEntity(x, y - 1, z)).reduceSaturatedAspects();
 					world.markBlockForUpdate(x, y - 1, z);
 				}
+			}
 			while (world.rand.nextInt(55) < this.getPrimalTendencyCount(world, x, y, z, Aspect.EARTH));
 	}
 

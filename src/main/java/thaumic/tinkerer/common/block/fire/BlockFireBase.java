@@ -1,16 +1,5 @@
 package thaumic.tinkerer.common.block.fire;
 
-import static net.minecraftforge.common.util.ForgeDirection.DOWN;
-import static net.minecraftforge.common.util.ForgeDirection.EAST;
-import static net.minecraftforge.common.util.ForgeDirection.NORTH;
-import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
-import static net.minecraftforge.common.util.ForgeDirection.UP;
-import static net.minecraftforge.common.util.ForgeDirection.WEST;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -34,6 +23,12 @@ import thaumic.tinkerer.common.core.handler.ConfigHandler;
 import thaumic.tinkerer.common.core.helper.BlockTuple;
 import thaumic.tinkerer.common.item.ItemBlockFire;
 import thaumic.tinkerer.common.registry.ITTinkererBlock;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+
+import static net.minecraftforge.common.util.ForgeDirection.*;
 
 public abstract class BlockFireBase extends BlockFire implements ITTinkererBlock
 {
@@ -67,8 +62,10 @@ public abstract class BlockFireBase extends BlockFire implements ITTinkererBlock
 	public boolean isNeighborTarget(World w, int x, int y, int z)
 	{
 		for (ForgeDirection f : ForgeDirection.VALID_DIRECTIONS)
+		{
 			if (w.blockExists(x + f.offsetX, y + f.offsetY, z + f.offsetZ) && this.isTransmutationTarget(w.getBlock(x + f.offsetX, y + f.offsetY, z + f.offsetZ), w, x + f.offsetX, y + f.offsetY, z + f.offsetZ))
 				return true;
+		}
 		return false;
 	}
 
@@ -148,7 +145,6 @@ public abstract class BlockFireBase extends BlockFire implements ITTinkererBlock
 								else
 									world.setBlockToAir(x + dir.offsetX, y + dir.offsetY, z + dir.offsetZ);
 							} */
-				;
 
 			}
 			int l = world.getBlockMetadata(x, y, z);

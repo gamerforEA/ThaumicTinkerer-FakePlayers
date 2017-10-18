@@ -1,23 +1,20 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [Nov 24, 2013, 6:48:04 PM (GMT)]
  */
 package thaumic.tinkerer.common.block.tile.transvector;
 
-import java.util.List;
-
 import com.gamerforea.ttinkerer.EventConfig;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -33,6 +30,8 @@ import thaumcraft.common.config.ConfigBlocks;
 import thaumic.tinkerer.common.ThaumicTinkerer;
 import thaumic.tinkerer.common.block.transvector.BlockTransvectorDislocator;
 import thaumic.tinkerer.common.lib.LibFeatures;
+
+import java.util.List;
 
 public class TileTransvectorDislocator extends TileTransvector
 {
@@ -93,9 +92,13 @@ public class TileTransvectorDislocator extends TileTransvector
 		}
 
 		for (Entity entity : entitiesAtEnd)
+		{
 			this.moveEntity(entity, endToTarget);
+		}
 		for (Entity entity : entitiesAtTarget)
+		{
 			this.moveEntity(entity, targetToEnd);
+		}
 
 		this.cooldown = 10;
 	}
@@ -191,7 +194,6 @@ public class TileTransvectorDislocator extends TileTransvector
 				tile.writeToNBT(cmp);
 				this.tile = cmp;
 			}
-			;
 
 			this.coords = coords;
 		}

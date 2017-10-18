@@ -1,11 +1,6 @@
 package thaumic.tinkerer.common.potion;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
-
 import com.gamerforea.eventhelper.util.EventUtils;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.Entity;
@@ -14,6 +9,10 @@ import net.minecraft.init.Blocks;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import thaumic.tinkerer.common.ThaumicTinkerer;
 import thaumic.tinkerer.common.block.BlockForcefield;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Created by pixlepix on 4/19/14.
@@ -58,7 +57,9 @@ public class PotionEffectHandler
 				int centerZ = (int) ((e.entity.posZ + p.posZ) / 2);
 
 				for (int i = -2; i < 3; i++)
+				{
 					for (int j = -2; j < 3; j++)
+					{
 						if (xAxis)
 						{
 							if (p.worldObj.isAirBlock(centerX, centerY + i, centerZ + j))
@@ -73,6 +74,8 @@ public class PotionEffectHandler
 
 							ThaumicTinkerer.tcProxy.blockSparkle(p.worldObj, centerX + j, centerY + i, centerZ, 100, 100);
 						}
+					}
+				}
 			}
 		}
 	}
@@ -82,14 +85,20 @@ public class PotionEffectHandler
 	{
 		if (e.player.isPotionActive(ModPotions.potionWater))
 			for (int x = (int) (e.player.posX - 2); x < e.player.posX + 2; x++)
+			{
 				for (int y = (int) (e.player.posY - 2); y < e.player.posY + 2; y++)
+				{
 					for (int z = (int) (e.player.posZ - 2); z < e.player.posZ + 2; z++)
+					{
 						if (e.player.worldObj.getBlock(x, y, z) == Blocks.lava || e.player.worldObj.getBlock(x, y, z) == Blocks.flowing_lava)
 						{
 							e.player.worldObj.setBlock(x, y, z, Blocks.obsidian);
 							ThaumicTinkerer.tcProxy.burst(e.player.worldObj, x + .5, y + .5, z + .5, 1.2F);
 
 						}
+					}
+				}
+			}
 	}
 
 	@SubscribeEvent

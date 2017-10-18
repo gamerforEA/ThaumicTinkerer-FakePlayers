@@ -1,8 +1,5 @@
 package net.minecraft.potion;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,23 +7,40 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PotionEffect
 {
-	/** ID value of the potion this effect matches. */
+	/**
+	 * ID value of the potion this effect matches.
+	 */
 	private int potionID;
-	/** The duration of the potion effect */
+	/**
+	 * The duration of the potion effect
+	 */
 	public int duration;
-	/** The amplifier of the potion effect */
+	/**
+	 * The amplifier of the potion effect
+	 */
 	private int amplifier;
-	/** Whether the potion is a splash potion */
+	/**
+	 * Whether the potion is a splash potion
+	 */
 	private boolean isSplashPotion;
-	/** Whether the potion effect came from a beacon */
+	/**
+	 * Whether the potion effect came from a beacon
+	 */
 	private boolean isAmbient;
-	/** True if potion effect duration is at maximum, false otherwise. */
+	/**
+	 * True if potion effect duration is at maximum, false otherwise.
+	 */
 	@SideOnly(Side.CLIENT)
 	private boolean isPotionDurationMax;
 	private static final String __OBFID = "CL_00001529";
-	/** List of ItemStack that can cure the potion effect **/
+	/**
+	 * List of ItemStack that can cure the potion effect
+	 **/
 	private List<ItemStack> curativeItems;
 
 	public PotionEffect(int p_i1574_1_, int p_i1574_2_)
@@ -221,6 +235,7 @@ public class PotionEffect
 	}
 
 	/* ======================================== FORGE START =====================================*/
+
 	/***
 	 * Returns a list of curative items for the potion effect
 	 *
@@ -245,8 +260,10 @@ public class PotionEffect
 	{
 		boolean found = false;
 		for (ItemStack curativeItem : this.curativeItems)
+		{
 			if (curativeItem.isItemEqual(stack))
 				found = true;
+		}
 
 		return found;
 	}
@@ -272,8 +289,10 @@ public class PotionEffect
 	{
 		boolean found = false;
 		for (ItemStack curativeItem : this.curativeItems)
+		{
 			if (curativeItem.isItemEqual(stack))
 				found = true;
+		}
 		if (!found)
 			this.curativeItems.add(stack);
 	}

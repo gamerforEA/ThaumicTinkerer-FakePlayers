@@ -1,25 +1,21 @@
 /**
- x * This class was created by <Vazkii>. It's distributed as
+ * x * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [Nov 30, 2013, 5:39:09 PM (GMT)]
  */
 package thaumic.tinkerer.common.block.tile;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.gamerforea.ttinkerer.EventConfig;
-
 import appeng.api.movable.IMovableTile;
+import com.gamerforea.ttinkerer.EventConfig;
 import cpw.mods.fml.common.Loader;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
@@ -41,18 +37,24 @@ import thaumic.tinkerer.common.compat.TinkersConstructCompat;
 import thaumic.tinkerer.common.core.handler.ConfigHandler;
 import thaumic.tinkerer.common.lib.LibBlockNames;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /*import thaumic.tinkerer.common.compat.TinkersConstructCompat;*/
 
-public class TileRepairer extends TileEntity implements ISidedInventory, IAspectContainer, IEssentiaTransport, IMovableTile
+public class TileRepairer extends TileEntity
+		implements ISidedInventory, IAspectContainer, IEssentiaTransport, IMovableTile
 {
 
 	private static final Map<Aspect, Integer> repairValues = new HashMap();
+
 	static
 	{
 		repairValues.put(Aspect.TOOL, 8);
 		repairValues.put(Aspect.CRAFT, 5);
 		repairValues.put(Aspect.ORDER, 3);
 	}
+
 	public int ticksExisted = 0;
 	public boolean tookLastTick = true;
 	int dmgLastTick = 0;
@@ -301,8 +303,10 @@ public class TileRepairer extends TileEntity implements ISidedInventory, IAspect
 				return 0;
 
 			for (Aspect aspect : repairValues.keySet())
+			{
 				if (ic.getSuctionType(orientation.getOpposite()) == aspect && ic.getSuctionAmount(orientation.getOpposite()) < this.getSuctionAmount(orientation) && ic.takeEssentia(aspect, 1, orientation.getOpposite()) == 1)
 					return repairValues.get(aspect);
+			}
 		}
 		return 0;
 	}

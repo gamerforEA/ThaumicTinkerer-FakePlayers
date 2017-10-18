@@ -1,10 +1,6 @@
 package thaumic.tinkerer.common.item.foci;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.gamerforea.eventhelper.util.EventUtils;
-
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -27,6 +23,9 @@ import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.ResearchHelper;
 import thaumic.tinkerer.common.research.TTResearchItem;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ItemFocusSmelt extends ItemModFocus
 {
 	private static final AspectList visUsage = new AspectList().add(Aspect.FIRE, 45).add(Aspect.ENTROPY, 12);
@@ -36,7 +35,6 @@ public class ItemFocusSmelt extends ItemModFocus
 
 	public ItemFocusSmelt()
 	{
-		super();
 	}
 
 	@Override
@@ -115,11 +113,11 @@ public class ItemFocusSmelt extends ItemModFocus
 								// TODO gamerforEA code end
 								for (int i = 0; i < 25; i++)
 								{
-								double x = pos.blockX + Math.random();
-								double y = pos.blockY + Math.random();
-								double z = pos.blockZ + Math.random();
+									double x = pos.blockX + Math.random();
+									double y = pos.blockY + Math.random();
+									double z = pos.blockZ + Math.random();
 
-								ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
+									ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
 								}
 						}
 					}
@@ -143,11 +141,11 @@ public class ItemFocusSmelt extends ItemModFocus
 						// TODO gamerforEA code end
 						for (int i = 0; i < 2; i++)
 						{
-						double x = pos.blockX + Math.random();
-						double y = pos.blockY + Math.random();
-						double z = pos.blockZ + Math.random();
+							double x = pos.blockX + Math.random();
+							double y = pos.blockY + Math.random();
+							double z = pos.blockZ + Math.random();
 
-						ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
+							ThaumicTinkerer.tcProxy.wispFX2(p.worldObj, x, y, z, (float) Math.random() / 2F, 4, true, true, (float) -Math.random() / 10F);
 						}
 				}
 

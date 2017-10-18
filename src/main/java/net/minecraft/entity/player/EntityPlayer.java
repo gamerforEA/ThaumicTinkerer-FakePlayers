@@ -1,15 +1,7 @@
 package net.minecraft.entity.player;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.UUID;
-
 import com.google.common.base.Charsets;
 import com.mojang.authlib.GameProfile;
-
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -19,12 +11,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.server.CommandBlockLogic;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityMultiPart;
-import net.minecraft.entity.IMerchant;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.item.EntityBoat;
@@ -49,44 +36,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.potion.Potion;
-import net.minecraft.scoreboard.IScoreObjectiveCriteria;
-import net.minecraft.scoreboard.Score;
-import net.minecraft.scoreboard.ScoreObjective;
-import net.minecraft.scoreboard.ScorePlayerTeam;
-import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.scoreboard.Team;
+import net.minecraft.scoreboard.*;
 import net.minecraft.stats.AchievementList;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityBeacon;
-import net.minecraft.tileentity.TileEntityBrewingStand;
-import net.minecraft.tileentity.TileEntityDispenser;
-import net.minecraft.tileentity.TileEntityFurnace;
-import net.minecraft.tileentity.TileEntityHopper;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.tileentity.*;
+import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.ISpecialArmor.ArmorProperties;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.EntityInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
-import net.minecraftforge.event.entity.player.PlayerDropsEvent;
-import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
-import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
+import net.minecraftforge.event.entity.player.*;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public abstract class EntityPlayer extends EntityLivingBase implements ICommandSender
 {
@@ -94,16 +62,22 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	private HashMap<Integer, ChunkCoordinates> spawnChunkMap = new HashMap<Integer, ChunkCoordinates>();
 	private HashMap<Integer, Boolean> spawnForcedMap = new HashMap<Integer, Boolean>();
 
-	/** Inventory of the player */
+	/**
+	 * Inventory of the player
+	 */
 	public InventoryPlayer inventory = new InventoryPlayer(this);
 	private InventoryEnderChest theInventoryEnderChest = new InventoryEnderChest();
 	/**
 	 * The Container for the player's inventory (which opens when they press E)
 	 */
 	public Container inventoryContainer;
-	/** The Container the player has open. */
+	/**
+	 * The Container the player has open.
+	 */
 	public Container openContainer;
-	/** The food object of the player, the general hunger logic. */
+	/**
+	 * The food object of the player, the general hunger logic.
+	 */
 	protected FoodStats foodStats = new FoodStats();
 	/**
 	 * Used to tell if the player pressed jump twice. If this is at 0 and it's
@@ -125,27 +99,39 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	public double field_71094_bP;
 	public double field_71095_bQ;
 	public double field_71085_bR;
-	/** Boolean value indicating weather a player is sleeping or not */
+	/**
+	 * Boolean value indicating weather a player is sleeping or not
+	 */
 	protected boolean sleeping;
-	/** the current location of the player */
+	/**
+	 * the current location of the player
+	 */
 	public ChunkCoordinates playerLocation;
 	private int sleepTimer;
 	public float field_71079_bU;
 	@SideOnly(Side.CLIENT)
 	public float field_71082_cx;
 	public float field_71089_bV;
-	/** holds the spawn chunk of the player */
+	/**
+	 * holds the spawn chunk of the player
+	 */
 	private ChunkCoordinates spawnChunk;
 	/**
 	 * Whether this player's spawn point is forced, preventing execution of bed
 	 * checks.
 	 */
 	private boolean spawnForced;
-	/** Holds the coordinate of the player when enter a minecraft to ride. */
+	/**
+	 * Holds the coordinate of the player when enter a minecraft to ride.
+	 */
 	private ChunkCoordinates startMinecartRidingCoordinate;
-	/** The player's capabilities. (See class PlayerCapabilities) */
+	/**
+	 * The player's capabilities. (See class PlayerCapabilities)
+	 */
 	public PlayerCapabilities capabilities = new PlayerCapabilities();
-	/** The current experience level the player is on. */
+	/**
+	 * The current experience level the player is on.
+	 */
 	public int experienceLevel;
 	/**
 	 * The total amount of experience the player has. This also includes the
@@ -523,7 +509,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	{
 		if (!this.worldObj.isRemote && this.isSneaking())
 		{
-			this.mountEntity((Entity) null);
+			this.mountEntity(null);
 			this.setSneaking(false);
 		}
 		else
@@ -691,7 +677,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 			PlayerDropsEvent event = new PlayerDropsEvent(this, p_70645_1_, this.capturedDrops, this.recentlyHit > 0);
 			if (!MinecraftForge.EVENT_BUS.post(event))
 				for (EntityItem item : this.capturedDrops)
+				{
 					this.joinEntityItemWithWorld(item);
+				}
 		}
 
 		if (p_70645_1_ != null)
@@ -1107,7 +1095,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	{
 		Team team = this.getTeam();
 		Team team1 = p_96122_1_.getTeam();
-		return team == null ? true : !team.isSameTeam(team1) ? true : team.getAllowFriendlyFire();
+		return team == null || !team.isSameTeam(team1) || team.getAllowFriendlyFire();
 	}
 
 	@Override
@@ -1267,7 +1255,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	public void destroyCurrentEquippedItem()
 	{
 		ItemStack orig = this.getCurrentEquippedItem();
-		this.inventory.setInventorySlotContents(this.inventory.currentItem, (ItemStack) null);
+		this.inventory.setInventorySlotContents(this.inventory.currentItem, null);
 		MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(this, orig));
 	}
 
@@ -1465,7 +1453,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 		}
 
 		if (this.isRiding())
-			this.mountEntity((Entity) null);
+			this.mountEntity(null);
 
 		this.setSize(0.2F, 0.2F);
 		this.yOffset = 0.2F;
@@ -1534,7 +1522,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	 */
 	public void wakeUpPlayer(boolean p_70999_1_, boolean p_70999_2_, boolean p_70999_3_)
 	{
-		MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerWakeUpEvent(this, p_70999_1_, p_70999_2_, p_70999_3_));
+		MinecraftForge.EVENT_BUS.post(new PlayerWakeUpEvent(this, p_70999_1_, p_70999_2_, p_70999_3_));
 		this.setSize(0.6F, 1.8F);
 		this.resetHeight();
 		ChunkCoordinates chunkcoordinates = this.playerLocation;
@@ -2085,7 +2073,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	public boolean canPlayerEdit(int p_82247_1_, int p_82247_2_, int p_82247_3_, int p_82247_4_, ItemStack p_82247_5_)
 	{
-		return this.capabilities.allowEdit ? true : p_82247_5_ != null ? p_82247_5_.canEditBlocks() : false;
+		return this.capabilities.allowEdit || p_82247_5_ != null && p_82247_5_.canEditBlocks();
 	}
 
 	/**
@@ -2138,8 +2126,10 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 			this.teleportDirection = p_71049_1_.teleportDirection;
 			//Copy and re-init ExtendedProperties when switching dimensions.
 			this.extendedProperties = p_71049_1_.extendedProperties;
-			for (net.minecraftforge.common.IExtendedEntityProperties p : this.extendedProperties.values())
+			for (IExtendedEntityProperties p : this.extendedProperties.values())
+			{
 				p.init(this, this.worldObj);
+			}
 		}
 		else if (this.worldObj.getGameRules().getGameRuleBooleanValue("keepInventory"))
 		{
@@ -2160,7 +2150,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 		NBTTagCompound old = p_71049_1_.getEntityData();
 		if (old.hasKey(PERSISTED_NBT_TAG))
 			this.getEntityData().setTag(PERSISTED_NBT_TAG, old.getCompoundTag(PERSISTED_NBT_TAG));
-		MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerEvent.Clone(this, p_71049_1_, !p_71049_2_));
+		MinecraftForge.EVENT_BUS.post(new PlayerEvent.Clone(this, p_71049_1_, !p_71049_2_));
 	}
 
 	/**
@@ -2323,18 +2313,16 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 		return uuid;
 	}
 
-	public static enum EnumChatVisibility
+	public enum EnumChatVisibility
 	{
-		FULL(0, "options.chat.visibility.full"),
-		SYSTEM(1, "options.chat.visibility.system"),
-		HIDDEN(2, "options.chat.visibility.hidden");
+		FULL(0, "options.chat.visibility.full"), SYSTEM(1, "options.chat.visibility.system"), HIDDEN(2, "options.chat.visibility.hidden");
 		private static final EntityPlayer.EnumChatVisibility[] field_151432_d = new EntityPlayer.EnumChatVisibility[values().length];
 		private final int chatVisibility;
 		private final String resourceKey;
 
 		private static final String __OBFID = "CL_00001714";
 
-		private EnumChatVisibility(int p_i45323_3_, String p_i45323_4_)
+		EnumChatVisibility(int p_i45323_3_, String p_i45323_4_)
 		{
 			this.chatVisibility = p_i45323_3_;
 			this.resourceKey = p_i45323_4_;
@@ -2375,6 +2363,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 
 	/* ======================================== FORGE START =====================================*/
+
 	/**
 	 * interpolated position vector
 	 */
@@ -2396,10 +2385,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	/**
 	 * A dimension aware version of getBedLocation.
 	 *
-	 * @param dimension
-	 *            The dimension to get the bed spawn for
+	 * @param dimension The dimension to get the bed spawn for
 	 * @return The player specific spawn location for the dimension. May be
-	 *         null.
+	 * null.
 	 */
 	public ChunkCoordinates getBedLocation(int dimension)
 	{
@@ -2411,11 +2399,10 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	 * used to determine if the respawn system should check for a bed or not.
 	 * This just extends that to be dimension aware.
 	 *
-	 * @param dimension
-	 *            The dimension to get whether to check for a bed before
-	 *            spawning for
+	 * @param dimension The dimension to get whether to check for a bed before
+	 *                  spawning for
 	 * @return The player specific spawn location for the dimension. May be
-	 *         null.
+	 * null.
 	 */
 	public boolean isSpawnForced(int dimension)
 	{
@@ -2430,14 +2417,11 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	 * but allows you to specify which dimension to affect, rather than
 	 * affecting the player's current dimension.
 	 *
-	 * @param chunkCoordinates
-	 *            The spawn point to set as the player-specific spawn point for
-	 *            the dimension
-	 * @param forced
-	 *            Whether or not the respawn code should check for a bed at this
-	 *            location (true means it won't check for a bed)
-	 * @param dimension
-	 *            Which dimension to apply the player-specific respawn point to
+	 * @param chunkCoordinates The spawn point to set as the player-specific spawn point for
+	 *                         the dimension
+	 * @param forced           Whether or not the respawn code should check for a bed at this
+	 *                         location (true means it won't check for a bed)
+	 * @param dimension        Which dimension to apply the player-specific respawn point to
 	 */
 	public void setSpawnChunk(ChunkCoordinates chunkCoordinates, boolean forced, int dimension)
 	{
@@ -2502,14 +2486,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	}
 	/* ======================================== FORGE END  =====================================*/
 
-	public static enum EnumStatus
+	public enum EnumStatus
 	{
-		OK,
-		NOT_POSSIBLE_HERE,
-		NOT_POSSIBLE_NOW,
-		TOO_FAR_AWAY,
-		OTHER_PROBLEM,
-		NOT_SAFE;
+		OK, NOT_POSSIBLE_HERE, NOT_POSSIBLE_NOW, TOO_FAR_AWAY, OTHER_PROBLEM, NOT_SAFE;
 
 		private static final String __OBFID = "CL_00001712";
 	}

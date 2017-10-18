@@ -1,21 +1,20 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [Dec 27, 2013, 1:03:05 AM (GMT)]
  */
 package thaumic.tinkerer.common.item.kami.armor;
 
 import com.gamerforea.ttinkerer.EventConfig;
-
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayer;
@@ -75,7 +74,7 @@ public class ItemGemLegs extends ItemIchorclothArmorAdv
 		// TODO gamerforEA code end
 
 		ItemBrightNitor.meta = 1;
-		((ItemBrightNitor) ThaumicTinkerer.registry.getFirstItemFromClass(ItemBrightNitor.class)).onUpdate(null, player.worldObj, player, 0, false);
+		ThaumicTinkerer.registry.getFirstItemFromClass(ItemBrightNitor.class).onUpdate(null, player.worldObj, player, 0, false);
 		ItemBrightNitor.meta = 0;
 
 		int x = (int) Math.floor(player.posX);

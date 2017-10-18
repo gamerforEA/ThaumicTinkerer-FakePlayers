@@ -1,7 +1,6 @@
 package thaumic.tinkerer.common.item.kami.foci;
 
 import com.gamerforea.eventhelper.util.EventUtils;
-
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -41,7 +40,6 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 
 	public ItemFocusShadowbeam()
 	{
-		super();
 		EntityRegistry.registerModEntity(Beam.class, "ShadowbeamStaffBeam", 0, ThaumicTinkerer.instance, 0, 0, false);
 	}
 
@@ -273,7 +271,9 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 		public void updateUntilDead()
 		{
 			while (!this.isDead)
+			{
 				this.onUpdate();
+			}
 		}
 
 		@Override

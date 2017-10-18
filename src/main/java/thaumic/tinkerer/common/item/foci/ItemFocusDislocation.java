@@ -1,24 +1,21 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [9 Sep 2013, 22:19:25 (GMT)]
  */
 package thaumic.tinkerer.common.item.foci;
 
-import java.util.ArrayList;
-
 import com.gamerforea.eventhelper.util.EventUtils;
 import com.gamerforea.ttinkerer.EventConfig;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -53,6 +50,8 @@ import thaumic.tinkerer.common.registry.ThaumicTinkererRecipe;
 import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.ResearchHelper;
 import thaumic.tinkerer.common.research.TTResearchItem;
+
+import java.util.ArrayList;
 
 public class ItemFocusDislocation extends ItemModFocus
 {

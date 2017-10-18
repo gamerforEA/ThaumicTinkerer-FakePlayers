@@ -1,26 +1,21 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [14 Sep 2013, 15:05:23 (GMT)]
  */
 package thaumic.tinkerer.common.enchantment.core;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import thaumcraft.api.aspects.Aspect;
@@ -32,6 +27,10 @@ import thaumic.tinkerer.common.core.helper.MiscHelper;
 import thaumic.tinkerer.common.enchantment.ModEnchantments;
 import thaumic.tinkerer.common.enchantment.core.rule.BasicCompatibilityRule;
 import thaumic.tinkerer.common.lib.LibResearch;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class EnchantmentManager
 {
@@ -109,8 +108,10 @@ public final class EnchantmentManager
 			return false;
 
 		for (IEnchantmentRule rule : rules.get(enchant.effectId))
+		{
 			if (rule.cantApplyAlongside(currentEnchants))
 				return false;
+		}
 
 		return true;
 	}
@@ -149,6 +150,7 @@ public final class EnchantmentManager
 	private static void registerCompatibilityRules()
 	{
 		for (Enchantment ench : Enchantment.enchantmentsList)
+		{
 			if (ench != null)
 				for (Enchantment ench1 : Enchantment.enchantmentsList)
 				{
@@ -158,6 +160,7 @@ public final class EnchantmentManager
 					if (!ench.canApplyTogether(ench1) || !ench1.canApplyTogether(ench))
 						rules.put(ench.effectId, new BasicCompatibilityRule(ench1));
 				}
+		}
 
 	}
 

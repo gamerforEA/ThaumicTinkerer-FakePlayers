@@ -1,20 +1,18 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [Dec 29, 2013, 8:24:43 PM (GMT)]
  */
 package thaumic.tinkerer.common.item.kami.tool;
-
-import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -49,6 +47,8 @@ import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.KamiResearchItem;
 import thaumic.tinkerer.common.research.ResearchHelper;
 
+import java.util.List;
+
 public class ItemIchorAxeAdv extends ItemIchorAxe implements IAdvancedTool
 {
 
@@ -56,7 +56,6 @@ public class ItemIchorAxeAdv extends ItemIchorAxe implements IAdvancedTool
 
 	public ItemIchorAxeAdv()
 	{
-		super();
 		this.setHasSubtypes(true);
 	}
 
@@ -81,16 +80,13 @@ public class ItemIchorAxeAdv extends ItemIchorAxe implements IAdvancedTool
 			case 0:
 				break;
 			case 1:
-			{
 				boolean doX = direction.offsetX == 0;
 				boolean doY = direction.offsetY == 0;
 				boolean doZ = direction.offsetZ == 0;
 
 				ToolHandler.removeBlocksInIteration(player, world, x, y, z, doX ? -2 : 0, doY ? -1 : 0, doZ ? -2 : 0, doX ? 3 : 1, doY ? 4 : 1, doZ ? 3 : 1, null, ToolHandler.materialsAxe, silk, fortune);
 				break;
-			}
 			case 2:
-			{
 				Block blck = world.getBlock(x, y, z);
 				if (Utils.isWoodLog(world, x, y, z))
 				{
@@ -111,7 +107,6 @@ public class ItemIchorAxeAdv extends ItemIchorAxe implements IAdvancedTool
 				}
 
 				break;
-			}
 		}
 		return false;
 	}
@@ -128,7 +123,9 @@ public class ItemIchorAxeAdv extends ItemIchorAxe implements IAdvancedTool
 	{
 		super.registerIcons(par1IconRegister);
 		for (int i = 0; i < this.specialIcons.length; i++)
+		{
 			this.specialIcons[i] = IconHelper.forItem(par1IconRegister, this, i);
+		}
 	}
 
 	@Override

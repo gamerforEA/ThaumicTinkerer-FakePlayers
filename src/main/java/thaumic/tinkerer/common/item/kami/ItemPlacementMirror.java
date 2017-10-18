@@ -1,10 +1,6 @@
 package thaumic.tinkerer.common.item.kami;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.gamerforea.eventhelper.util.EventUtils;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -15,11 +11,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import thaumcraft.api.aspects.Aspect;
@@ -41,6 +33,9 @@ import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.KamiResearchItem;
 import thaumic.tinkerer.common.research.ResearchHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ItemPlacementMirror extends ItemKamiBase
 {
 
@@ -55,7 +50,6 @@ public class ItemPlacementMirror extends ItemKamiBase
 
 	public ItemPlacementMirror()
 	{
-		super();
 		this.setMaxStackSize(1);
 	}
 
@@ -119,7 +113,9 @@ public class ItemPlacementMirror extends ItemKamiBase
 			int zOff = !(dir == ForgeDirection.SOUTH || dir == ForgeDirection.NORTH) ? topOrBottom ? player.rotationPitch > 75 || (rotation & 1) == 1 ? range : 0 : range : 0;
 
 			for (int x = -xOff; x < xOff + 1; x++)
+			{
 				for (int y = 0; y < yOff * 2 + 1; y++)
+				{
 					for (int z = -zOff; z < zOff + 1; z++)
 					{
 						int xp = pos.blockX + x + dir.offsetX;
@@ -133,6 +129,8 @@ public class ItemPlacementMirror extends ItemKamiBase
 								// TODO gamerforEA code end
 								coords.add(new ChunkCoordinates(xp, yp, zp));
 					}
+				}
+			}
 
 		}
 
@@ -214,7 +212,9 @@ public class ItemPlacementMirror extends ItemKamiBase
 
 		ItemStack stackToPlace = new ItemStack(getBlock(stack), 1, getBlockMeta(stack));
 		for (ChunkCoordinates coords : blocksToPlace)
+		{
 			this.placeBlockAndConsume(player, stackToPlace, coords);
+		}
 		player.worldObj.playSoundAtEntity(player, "thaumcraft:wand", 1F, 1F);
 	}
 

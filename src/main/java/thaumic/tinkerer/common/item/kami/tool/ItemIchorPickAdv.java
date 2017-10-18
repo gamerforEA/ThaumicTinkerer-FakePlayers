@@ -1,23 +1,20 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [Dec 29, 2013, 6:01:04 PM (GMT)]
  */
 package thaumic.tinkerer.common.item.kami.tool;
 
-import java.util.List;
-
 import com.gamerforea.ttinkerer.EventConfig;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -49,13 +46,14 @@ import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.KamiResearchItem;
 import thaumic.tinkerer.common.research.ResearchHelper;
 
+import java.util.List;
+
 public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 {
 	IIcon[] specialIcons = new IIcon[3];
 
 	public ItemIchorPickAdv()
 	{
-		super();
 		this.setHasSubtypes(true);
 	}
 
@@ -64,7 +62,9 @@ public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 	{
 		super.registerIcons(par1IconRegister);
 		for (int i = 0; i < this.specialIcons.length; i++)
+		{
 			this.specialIcons[i] = IconHelper.forItem(par1IconRegister, this, i);
+		}
 	}
 
 	@Override
@@ -134,7 +134,6 @@ public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 			case 0:
 				break;
 			case 1:
-			{
 				boolean doX = direction.offsetX == 0;
 				boolean doY = direction.offsetY == 0;
 				boolean doZ = direction.offsetZ == 0;
@@ -142,16 +141,13 @@ public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 				ToolHandler.removeBlocksInIteration(player, world, x, y, z, doX ? -2 : 0, doY ? -1 : 0, doZ ? -2 : 0, doX ? 3 : 1, doY ? 4 : 1, doZ ? 3 : 1, null, ToolHandler.materialsPick, silk, fortune);
 
 				break;
-			}
 			case 2:
-			{
 				int xo = -direction.offsetX;
 				int yo = -direction.offsetY;
 				int zo = -direction.offsetZ;
 
 				ToolHandler.removeBlocksInIteration(player, world, x, y, z, xo >= 0 ? 0 : -10, yo >= 0 ? 0 : -10, zo >= 0 ? 0 : -10, xo > 0 ? 10 : 1, yo > 0 ? 10 : 1, zo > 0 ? 10 : 1, null, ToolHandler.materialsPick, silk, fortune);
 				break;
-			}
 		}
 		return false;
 	}

@@ -1,30 +1,27 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [29 Sep 2013, 11:52:00 (GMT)]
  */
 package thaumic.tinkerer.common.enchantment;
 
-import java.util.List;
-import java.util.Random;
-
 import com.gamerforea.eventhelper.util.EventUtils;
-
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,6 +34,9 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import thaumic.tinkerer.common.lib.LibEnchantIDs;
+
+import java.util.List;
+import java.util.Random;
 
 public class ModEnchantmentHandler
 {
@@ -65,7 +65,7 @@ public class ModEnchantmentHandler
 				ItemStack legs = player.getCurrentArmor(1);
 				int pounce = EnchantmentHelper.getEnchantmentLevel(LibEnchantIDs.pounce, legs);
 				if (pounce > 0)
-					if (player.worldObj.getBlock((int) Math.floor(player.posX), (int) Math.floor(player.posY) - 1, (int) Math.floor(player.posZ)) == net.minecraft.init.Blocks.air)
+					if (player.worldObj.getBlock((int) Math.floor(player.posX), (int) Math.floor(player.posY) - 1, (int) Math.floor(player.posZ)) == Blocks.air)
 						event.ammount *= 1 + .25 * pounce;
 
 			}
@@ -191,9 +191,11 @@ public class ModEnchantmentHandler
 			int shockwave = EnchantmentHelper.getEnchantmentLevel(LibEnchantIDs.shockwave, boots);
 			if (shockwave > 0)
 				for (EntityLivingBase target : (List<EntityLivingBase>) event.entity.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(event.entity.posX - 10, event.entity.posY - 10, event.entity.posZ - 10, event.entity.posX + 10, event.entity.posY + 10, event.entity.posZ + 10)))
-					// TODO gamerforEA add condition [3]
+				// TODO gamerforEA add condition [3]
+				{
 					if (target != event.entity && event.distance > 3 && !EventUtils.cantDamage(event.entity, target))
 						target.attackEntityFrom(DamageSource.fall, .1F * shockwave * event.distance);
+				}
 		}
 	}
 

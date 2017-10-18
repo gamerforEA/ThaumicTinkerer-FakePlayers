@@ -1,26 +1,22 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [Dec 30, 2013, 12:46:22 AM (GMT)]
  */
 package thaumic.tinkerer.common.item.kami;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.gamerforea.ttinkerer.EventConfig;
-
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
+import com.gamerforea.ttinkerer.EventConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -60,6 +56,9 @@ import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.KamiResearchItem;
 import thaumic.tinkerer.common.research.ResearchHelper;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 {
 	@Deprecated
@@ -72,7 +71,6 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 
 	public ItemBlockTalisman()
 	{
-		super();
 		this.setMaxStackSize(1);
 		this.setHasSubtypes(true);
 	}

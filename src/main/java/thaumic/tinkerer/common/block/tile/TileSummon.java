@@ -1,10 +1,6 @@
 package thaumic.tinkerer.common.block.tile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import com.gamerforea.ttinkerer.NoDupeProperties;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -15,6 +11,9 @@ import thaumcraft.common.tiles.TilePedestal;
 import thaumic.tinkerer.common.ThaumicTinkerer;
 import thaumic.tinkerer.common.core.helper.EnumMobAspect;
 import thaumic.tinkerer.common.item.ItemMobAspect;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TileSummon extends TileEntity
 {
@@ -29,15 +28,19 @@ public class TileSummon extends TileEntity
 			{
 				ArrayList<TileEntity> pedestals = new ArrayList<TileEntity>();
 				for (int x = this.xCoord - radius; x < this.xCoord + radius; x++)
+				{
 					for (int z = this.zCoord - radius; z < this.zCoord + radius; z++)
 					{
 						TileEntity tile = this.worldObj.getTileEntity(x, this.yCoord, z);
 						if (tile instanceof TilePedestal && ((TilePedestal) tile).getStackInSlot(0) != null && ((TilePedestal) tile).getStackInSlot(0).getItem() instanceof ItemMobAspect)
 							pedestals.add(tile);
 					}
+				}
 
 				for (int i = 0; i < pedestals.size(); i++)
+				{
 					for (int j = 0; j < pedestals.size(); j++)
+					{
 						for (int k = 0; k < pedestals.size(); k++)
 						{
 							TilePedestal ped1 = (TilePedestal) pedestals.get(i);
@@ -54,6 +57,7 @@ public class TileSummon extends TileEntity
 								aspects.add(ItemMobAspect.getAspect(ped3.getStackInSlot(0)));
 
 								for (EnumMobAspect recipe : EnumMobAspect.values())
+								{
 									if (Arrays.asList(recipe.aspects).containsAll(aspects) && aspects.containsAll(Arrays.asList(recipe.aspects)))
 									{
 
@@ -113,10 +117,13 @@ public class TileSummon extends TileEntity
 										return;
 
 									}
+								}
 
 							}
 
 						}
+					}
+				}
 			}
 		}
 	}
