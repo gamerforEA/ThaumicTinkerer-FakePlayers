@@ -1,15 +1,15 @@
 /**
  * This class was created by <Vazkii>. It's distributed as
  * part of the ThaumicTinkerer Mod.
- *
+ * <p>
  * ThaumicTinkerer is Open Source and distributed under a
  * Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License
  * (http://creativecommons.org/licenses/by-nc-sa/3.0/deed.en_GB)
- *
+ * <p>
  * ThaumicTinkerer is a Derivative Work on Thaumcraft 4.
  * Thaumcraft 4 (c) Azanor 2012
  * (http://www.minecraftforum.net/topic/1585216-)
- *
+ * <p>
  * File Created @ [Dec 29, 2013, 10:37:08 PM (GMT)]
  */
 package thaumic.tinkerer.common.block.tile.container.kami;
@@ -19,10 +19,13 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import thaumcraft.common.container.InventoryFocusPouch;
 import thaumcraft.common.items.wands.ItemFocusPouch;
 import thaumic.tinkerer.common.block.tile.container.ContainerPlayerInv;
 import thaumic.tinkerer.common.block.tile.container.slot.kami.SlotNoPouches;
+
+import java.util.UUID;
 
 public class ContainerIchorPouch extends ContainerPlayerInv
 {
@@ -40,9 +43,24 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 		this.pouch = player.getCurrentEquippedItem();
 		this.blockSlot = player.inventory.currentItem + 27 + 13 * 9;
 
+		// TODO gamerforEA code start
+		if (this.pouch != null)
+		{
+			if (!this.pouch.hasTagCompound())
+				this.pouch.setTagCompound(new NBTTagCompound());
+			NBTTagCompound nbt = this.pouch.getTagCompound();
+			if (!nbt.hasKey(NBT_KEY_UID))
+				nbt.setString(NBT_KEY_UID, UUID.randomUUID().toString());
+		}
+		// TODO gamerforEA code end
+
 		for (int y = 0; y < 9; y++)
+		{
 			for (int x = 0; x < 13; x++)
+			{
 				this.addSlotToContainer(new SlotNoPouches(this.inv, y * 13 + x, 12 + x * 18, 8 + y * 18));
+			}
+		}
 		this.initPlayerInv();
 
 		if (!player.worldObj.isRemote)
@@ -98,7 +116,9 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 		if (!this.player.worldObj.isRemote)
 		{
 			((ItemFocusPouch) this.pouch.getItem()).setInventory(this.pouch, ((InventoryIchorPouch) this.inv).stackList);
-			if (this.player == null)
+
+			// TODO gamerforEA add condition [2]
+			if (this.player == null || !this.canInteractWith(this.player))
 				return;
 			if (this.player.getHeldItem() != null && this.player.getHeldItem().isItemEqual(this.pouch))
 				this.player.setCurrentItemOrArmor(0, this.pouch);
@@ -110,7 +130,9 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 	@Override
 	public boolean canInteractWith(EntityPlayer entityplayer)
 	{
-		return true;
+		// TODO gamerforEA code replace, old code: return true;
+		return isSameItemInventory(this.pouch, this.player.getCurrentEquippedItem());
+		// TODO gamerforEA code end
 	}
 
 	@Override
@@ -126,13 +148,31 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 	}
 
 	// TODO gamerforEA code start
+	private static final String NBT_KEY_UID = "UID";
+
 	@Override
 	public void onCraftMatrixChanged(IInventory inventory)
 	{
 		((ItemFocusPouch) this.pouch.getItem()).setInventory(this.pouch, ((InventoryIchorPouch) this.inv).stackList);
-		if (this.player != null && this.player.getHeldItem() != null && this.player.getHeldItem().isItemEqual(this.pouch))
+		if (this.player != null && this.canInteractWith(this.player) && this.player.getHeldItem() != null && this.player.getHeldItem().isItemEqual(this.pouch))
 			this.player.setCurrentItemOrArmor(0, this.pouch);
 		super.onCraftMatrixChanged(inventory);
+	}
+
+	private static boolean isSameItemInventory(ItemStack base, ItemStack comparison)
+	{
+		if (base == null || comparison == null)
+			return false;
+
+		if (base.getItem() != comparison.getItem())
+			return false;
+
+		if (!base.hasTagCompound() || !comparison.hasTagCompound())
+			return false;
+
+		String baseUID = base.getTagCompound().getString(NBT_KEY_UID);
+		String comparisonUID = comparison.getTagCompound().getString(NBT_KEY_UID);
+		return baseUID != null && comparisonUID != null && baseUID.equals(comparisonUID);
 	}
 	// TODO gamerforEA code end
 
