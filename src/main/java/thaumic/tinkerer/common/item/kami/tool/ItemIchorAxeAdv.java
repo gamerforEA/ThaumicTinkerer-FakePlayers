@@ -14,6 +14,7 @@
  */
 package thaumic.tinkerer.common.item.kami.tool;
 
+import com.gamerforea.ttinkerer.EventConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -90,13 +91,17 @@ public class ItemIchorAxeAdv extends ItemIchorAxe implements IAdvancedTool
 				Block blck = world.getBlock(x, y, z);
 				if (Utils.isWoodLog(world, x, y, z))
 				{
-					// TODO gamerforEA code replace, old code: while (blck != Blocks.air)
-					for (int i = 0; i < 30 && blck != Blocks.air; i++)
-					// TODO gamerforEA code end
+					/* TODO gamerforEA code replace, old code:
+					while (blck != Blocks.air)
 					{
 						BlockUtils.breakFurthestBlock(world, x, y, z, blck, player);
 						blck = world.getBlock(x, y, z);
+					} */
+					for (int i = 0; i < EventConfig.ichorAxeMaxBlocks && blck != Blocks.air && BlockUtils.breakFurthestBlock(world, x, y, z, blck, player); i++)
+					{
+						blck = world.getBlock(x, y, z);
 					}
+					// TODO gamerforEA code end
 
 					List<EntityItem> items = world.getEntitiesWithinAABB(EntityItem.class, AxisAlignedBB.getBoundingBox(x - 5, y - 1, z - 5, x + 5, y + 64, z + 5));
 					for (EntityItem item : items)
