@@ -97,7 +97,7 @@ public class ItemFocusDislocation extends ItemModFocus
 		int meta = world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 
 		// TODO gamerforEA code start
-		if (EventConfig.inBlackList(EventConfig.focusDislocationBlackList, block, meta))
+		if (EventConfig.inList(EventConfig.focusDislocationBlackList, block, meta))
 		{
 			player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Данный блок запрещено перемещать!"));
 			return itemstack;

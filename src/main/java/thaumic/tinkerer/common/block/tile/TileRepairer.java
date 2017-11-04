@@ -66,7 +66,7 @@ public class TileRepairer extends TileEntity
 		if (++this.ticksExisted % 10 == 0)
 		{
 			// TODO gamerforEA code start
-			if (EventConfig.inBlackList(EventConfig.repairerBlackList, this.inventorySlots[0]))
+			if (EventConfig.inList(EventConfig.repairerBlackList, this.inventorySlots[0]))
 				return;
 			// TODO gamerforEA code end
 

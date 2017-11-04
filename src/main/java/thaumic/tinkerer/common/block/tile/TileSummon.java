@@ -1,5 +1,6 @@
 package thaumic.tinkerer.common.block.tile;
 
+import com.gamerforea.ttinkerer.EventConfig;
 import com.gamerforea.ttinkerer.NoDupeProperties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -85,7 +86,7 @@ public class TileSummon extends TileEntity
 												// TODO gamerforEA code end
 												{
 													// TODO gamerforEA code start
-													if (isInfused)
+													if (EventConfig.summonerDenyDropAspect || isInfused)
 														NoDupeProperties.denyDropAspect(spawn);
 													// TODO gamerforEA code end
 

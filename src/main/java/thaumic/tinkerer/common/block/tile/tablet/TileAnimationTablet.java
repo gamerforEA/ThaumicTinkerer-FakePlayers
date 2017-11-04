@@ -144,7 +144,7 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 		Item item = stack.getItem();
 
 		// TODO gamerforEA code start
-		if (EventConfig.inBlackList(EventConfig.animationTabletBlackList, item, stack.getItemDamage()))
+		if (EventConfig.inList(EventConfig.animationTabletBlackList, item, stack.getItemDamage()))
 			return;
 		// TODO gamerforEA code end
 

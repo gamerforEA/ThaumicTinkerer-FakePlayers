@@ -137,7 +137,7 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 		int meta = par3World.getBlockMetadata(par4, par5, par6);
 
 		// TODO gamerforEA code start
-		if (EventConfig.inBlackList(EventConfig.blockTalismanBlackList, block, meta))
+		if (EventConfig.inList(EventConfig.blockTalismanBlackList, block, meta))
 		{
 			par2EntityPlayer.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Данное взаимодействие запрещено!"));
 			return false;
