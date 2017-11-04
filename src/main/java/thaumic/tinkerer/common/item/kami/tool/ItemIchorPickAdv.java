@@ -46,10 +46,43 @@ import thaumic.tinkerer.common.research.IRegisterableResearch;
 import thaumic.tinkerer.common.research.KamiResearchItem;
 import thaumic.tinkerer.common.research.ResearchHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 {
+	// TODO gamerforEA code start
+	private static final Material[] ALL_BLOCK_MATERIALS;
+
+	static
+	{
+		List<Material> list = new ArrayList<Material>();
+		list.add(Material.grass);
+		list.add(Material.ground);
+		list.add(Material.wood);
+		list.add(Material.rock);
+		list.add(Material.iron);
+		list.add(Material.anvil);
+		list.add(Material.sponge);
+		list.add(Material.cloth);
+		list.add(Material.sand);
+		list.add(Material.circuits);
+		list.add(Material.carpet);
+		list.add(Material.glass);
+		list.add(Material.tnt);
+		list.add(Material.redstoneLight);
+		list.add(Material.coral);
+		list.add(Material.ice);
+		list.add(Material.packedIce);
+		list.add(Material.snow);
+		list.add(Material.craftedSnow);
+		list.add(Material.cactus);
+		list.add(Material.clay);
+		list.add(Material.web);
+		ALL_BLOCK_MATERIALS = list.toArray(new Material[list.size()]);
+	}
+	// TODO gamerforEA code end
+
 	IIcon[] specialIcons = new IIcon[3];
 
 	public ItemIchorPickAdv()
@@ -107,18 +140,24 @@ public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 	public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player)
 	{
 		World world = player.worldObj;
-		Material mat = world.getBlock(x, y, z).getMaterial();
-		if (!ToolHandler.isRightMaterial(mat, ToolHandler.materialsPick))
+		Block blk = world.getBlock(x, y, z);
+		Material mat = blk.getMaterial();
+
+		// TODO gamerforEA code replace, old code:
+		// if (!ToolHandler.isRightMaterial(mat, ToolHandler.materialsPick))
+		Material[] materials = EventConfig.enableIchorPickAdvAllBreaking ? ALL_BLOCK_MATERIALS : ToolHandler.materialsPick;
+		if (!ToolHandler.isRightMaterial(mat, materials))
+		// TODO gamerforEA code end
+		{
 			return false;
+		}
 
 		MovingObjectPosition block = ToolHandler.raytraceFromEntity(world, player, true, 4.5);
 		if (block == null)
 			return false;
 
-		Block blk = world.getBlock(x, y, z);
-
 		// TODO gamerforEA code start
-		if (!EventConfig.enableIchorPickAdvBedrockBreaking && blk == Blocks.bedrock)
+		if (!EventConfig.enableIchorPickAdvBedrockBreaking && blk.getBlockHardness(world, x, y, z) < 0)
 			return false;
 		// TODO gamerforEA code end
 
@@ -138,7 +177,10 @@ public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 				boolean doY = direction.offsetY == 0;
 				boolean doZ = direction.offsetZ == 0;
 
-				ToolHandler.removeBlocksInIteration(player, world, x, y, z, doX ? -2 : 0, doY ? -1 : 0, doZ ? -2 : 0, doX ? 3 : 1, doY ? 4 : 1, doZ ? 3 : 1, null, ToolHandler.materialsPick, silk, fortune);
+				// TODO gamerforEA code replace, old code:
+				// ToolHandler.removeBlocksInIteration(player, world, x, y, z, doX ? -2 : 0, doY ? -1 : 0, doZ ? -2 : 0, doX ? 3 : 1, doY ? 4 : 1, doZ ? 3 : 1, null, ToolHandler.materialsPick, silk, fortune);
+				ToolHandler.removeBlocksInIteration(player, world, x, y, z, doX ? -2 : 0, doY ? -1 : 0, doZ ? -2 : 0, doX ? 3 : 1, doY ? 4 : 1, doZ ? 3 : 1, null, materials, silk, fortune);
+				// TODO gamerforEA code end
 
 				break;
 			case 2:
@@ -146,7 +188,11 @@ public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 				int yo = -direction.offsetY;
 				int zo = -direction.offsetZ;
 
-				ToolHandler.removeBlocksInIteration(player, world, x, y, z, xo >= 0 ? 0 : -10, yo >= 0 ? 0 : -10, zo >= 0 ? 0 : -10, xo > 0 ? 10 : 1, yo > 0 ? 10 : 1, zo > 0 ? 10 : 1, null, ToolHandler.materialsPick, silk, fortune);
+				// TODO gamerforEA code replace, old code:
+				// ToolHandler.removeBlocksInIteration(player, world, x, y, z, xo >= 0 ? 0 : -10, yo >= 0 ? 0 : -10, zo >= 0 ? 0 : -10, xo > 0 ? 10 : 1, yo > 0 ? 10 : 1, zo > 0 ? 10 : 1, null, ToolHandler.materialsPick, silk, fortune);
+				ToolHandler.removeBlocksInIteration(player, world, x, y, z, xo >= 0 ? 0 : -10, yo >= 0 ? 0 : -10, zo >= 0 ? 0 : -10, xo > 0 ? 10 : 1, yo > 0 ? 10 : 1, zo > 0 ? 10 : 1, null, materials, silk, fortune);
+				// TODO gamerforEA code end
+
 				break;
 		}
 		return false;

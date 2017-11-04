@@ -116,7 +116,7 @@ public final class ToolHandler
 			return;
 
 		// TODO gamerforEA code start
-		if (!EventConfig.enableIchorPickAdvBedrockBreaking && block == Blocks.bedrock)
+		if (!EventConfig.enableIchorPickAdvBedrockBreaking && block.getBlockHardness(world, x, y, z) < 0)
 			return;
 
 		if (EventUtils.cantBreak(player, x, y, z))
@@ -190,7 +190,7 @@ public final class ToolHandler
 			return;
 
 		// TODO gamerforEA code start
-		if (!EventConfig.enableIchorPickAdvBedrockBreaking && blk == Blocks.bedrock)
+		if (!EventConfig.enableIchorPickAdvBedrockBreaking && blk.getBlockHardness(world, x, y, z) < 0)
 			return;
 
 		if (EventUtils.cantBreak(player, x, y, z))
