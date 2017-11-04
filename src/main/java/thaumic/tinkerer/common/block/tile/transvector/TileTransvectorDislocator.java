@@ -15,6 +15,7 @@
 package thaumic.tinkerer.common.block.tile.transvector;
 
 import com.gamerforea.ttinkerer.EventConfig;
+import com.google.common.collect.Sets;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -32,9 +33,14 @@ import thaumic.tinkerer.common.block.transvector.BlockTransvectorDislocator;
 import thaumic.tinkerer.common.lib.LibFeatures;
 
 import java.util.List;
+import java.util.Set;
 
 public class TileTransvectorDislocator extends TileTransvector
 {
+	// TODO gamerforEA code start
+	private static final Set<Block> BLOCKS_BLACKLIST = Sets.newHashSet(Blocks.redstone_wire, Blocks.unpowered_comparator, Blocks.powered_comparator, Blocks.unpowered_repeater, Blocks.powered_repeater, Blocks.wooden_door, Blocks.iron_door);
+	// TODO gamerforEA code end
+
 	private static final String TAG_ORIENTATION = "orientation";
 	public int orientation;
 	private int cooldown = 0;
@@ -75,11 +81,11 @@ public class TileTransvectorDislocator extends TileTransvector
 		Vector3 endToTarget = this.asVector(endCoords, targetCoords);
 		if (this.worldObj.blockExists(this.x, this.y, this.z))
 		{
-			BlockData endData = new BlockData(endCoords);
-			BlockData targetData = new BlockData(targetCoords);
-
 			if (this.checkBlock(targetCoords) && this.checkBlock(endCoords))
 			{
+				BlockData endData = new BlockData(endCoords);
+				BlockData targetData = new BlockData(targetCoords);
+
 				endData.clearTileEntityAt();
 				targetData.clearTileEntityAt();
 
@@ -106,10 +112,16 @@ public class TileTransvectorDislocator extends TileTransvector
 	private boolean checkBlock(ChunkCoordinates coords)
 	{
 		Block block = this.worldObj.getBlock(coords.posX, coords.posY, coords.posZ);
+
+		// TODO gamerforEA code start
+		if (BLOCKS_BLACKLIST.contains(block))
+			return false;
+		// TODO gamerforEA code end
+
 		int meta = this.worldObj.getBlockMetadata(coords.posX, coords.posY, coords.posZ);
 
 		// TODO gamerforEA code start
-		if (EventConfig.inBlackList(EventConfig.transvectorBlackList, block, meta))
+		if (EventConfig.inList(EventConfig.transvectorBlackList, block, meta))
 			return false;
 
 		if (this.fake.cantBreak(coords.posX, coords.posY, coords.posZ))
