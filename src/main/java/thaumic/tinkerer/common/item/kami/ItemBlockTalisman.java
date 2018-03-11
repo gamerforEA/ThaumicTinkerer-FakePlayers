@@ -131,15 +131,15 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer player, World world, int x, int y, int z, int side, float par8, float par9, float par10)
 	{
-		Block block = par3World.getBlock(par4, par5, par6);
-		int meta = par3World.getBlockMetadata(par4, par5, par6);
+		Block block = world.getBlock(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z);
 
 		// TODO gamerforEA code start
 		if (EventConfig.inList(EventConfig.blockTalismanBlackList, block, meta))
 		{
-			par2EntityPlayer.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Данное взаимодействие запрещено!"));
+			player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Данное взаимодействие запрещено!"));
 			return false;
 		}
 		// TODO gamerforEA code end
@@ -151,11 +151,11 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 			Block bBlock = getBlock(par1ItemStack);
 			int bmeta = getBlockMeta(par1ItemStack);
 
-			TileEntity tile = par3World.getTileEntity(par4, par5, par6);
+			TileEntity tile = world.getTileEntity(x, y, z);
 			if (tile != null && tile instanceof IInventory)
 			{
 				IInventory inv = (IInventory) tile;
-				int[] slots = inv instanceof ISidedInventory ? ((ISidedInventory) inv).getAccessibleSlotsFromSide(par7) : TileTransvectorInterface.buildSlotsForLinearInventory(inv);
+				int[] slots = inv instanceof ISidedInventory ? ((ISidedInventory) inv).getAccessibleSlotsFromSide(side) : TileTransvectorInterface.buildSlotsForLinearInventory(inv);
 				for (int slot : slots)
 				{
 					ItemStack stackInSlot = inv.getStackInSlot(slot);
@@ -165,22 +165,30 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 						int maxSize = stack.getMaxStackSize();
 						stack.stackSize = remove(par1ItemStack, maxSize);
 						if (stack.stackSize != 0)
-							if (inv.isItemValidForSlot(slot, stack) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, stack, par7)))
+							if (inv.isItemValidForSlot(slot, stack) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, stack, side)))
 							{
 								inv.setInventorySlotContents(slot, stack);
 								inv.markDirty();
 								set = true;
 							}
 					}
-					else if (stackInSlot.getItem() == Item.getItemFromBlock(bBlock) && stackInSlot.getItemDamage() == bmeta)
+					else
 					{
-						int maxSize = stackInSlot.getMaxStackSize();
-						int missing = maxSize - stackInSlot.stackSize;
-						if (inv.isItemValidForSlot(slot, stackInSlot) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, stackInSlot, par7)))
+						// TODO gamerforEA code start
+						if (stackInSlot.hasTagCompound())
+							continue;
+						// TODO gamerforEA code end
+
+						if (stackInSlot.getItem() == Item.getItemFromBlock(bBlock) && stackInSlot.getItemDamage() == bmeta)
 						{
-							stackInSlot.stackSize += remove(par1ItemStack, missing);
-							inv.markDirty();
-							set = true;
+							int maxSize = stackInSlot.getMaxStackSize();
+							int missing = maxSize - stackInSlot.stackSize;
+							if (inv.isItemValidForSlot(slot, stackInSlot) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, stackInSlot, side)))
+							{
+								stackInSlot.stackSize += remove(par1ItemStack, missing);
+								inv.markDirty();
+								set = true;
+							}
 						}
 					}
 				}
@@ -190,13 +198,13 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 				int remove = remove(par1ItemStack, 1);
 				if (remove > 0)
 				{
-					Item.getItemFromBlock(bBlock).onItemUse(new ItemStack(bBlock, 1, bmeta), par2EntityPlayer, par3World, par4, par5, par6, par7, par8, par9, par10);
+					Item.getItemFromBlock(bBlock).onItemUse(new ItemStack(bBlock, 1, bmeta), player, world, x, y, z, side, par8, par9, par10);
 					set = true;
 				}
 			}
 		}
 
-		par2EntityPlayer.setCurrentItemOrArmor(0, par1ItemStack);
+		player.setCurrentItemOrArmor(0, par1ItemStack);
 
 		return set;
 	}
