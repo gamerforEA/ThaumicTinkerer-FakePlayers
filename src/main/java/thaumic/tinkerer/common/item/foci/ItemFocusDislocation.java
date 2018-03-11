@@ -93,6 +93,11 @@ public class ItemFocusDislocation extends ItemModFocus
 		if (mop == null)
 			return itemstack;
 
+		// TODO gamerforEA code start
+		if (!EventConfig.enableFocusDislocation)
+			return itemstack;
+		// TODO gamerforEA code starend
+
 		Block block = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
 		int meta = world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
 
@@ -102,9 +107,6 @@ public class ItemFocusDislocation extends ItemModFocus
 			player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Данный блок запрещено перемещать!"));
 			return itemstack;
 		}
-
-		if (EventUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ))
-			return itemstack;
 		// TODO gamerforEA code end
 
 		TileEntity tile = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
@@ -112,6 +114,11 @@ public class ItemFocusDislocation extends ItemModFocus
 
 		if (player.canPlayerEdit(mop.blockX, mop.blockY, mop.blockZ, mop.sideHit, itemstack))
 		{
+			// TODO gamerforEA code start
+			if (EventUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ))
+				return itemstack;
+			// TODO gamerforEA code end
+
 			ItemStack stack = this.getPickedBlock(itemstack);
 			if (stack != null)
 			{
@@ -130,6 +137,11 @@ public class ItemFocusDislocation extends ItemModFocus
 
 				if (block.canPlaceBlockOnSide(world, mop.blockX, mop.blockY, mop.blockZ, mop.sideHit))
 				{
+					// TODO gamerforEA code start
+					if (EventUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ))
+						return itemstack;
+					// TODO gamerforEA code end
+
 					if (!world.isRemote)
 					{
 						world.setBlock(mop.blockX, mop.blockY, mop.blockZ, ((ItemBlock) stack.getItem()).field_150939_a, stack.getItemDamage(), 1 | 2);
