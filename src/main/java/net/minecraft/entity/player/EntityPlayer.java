@@ -190,9 +190,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	protected void entityInit()
 	{
 		super.entityInit();
-		this.dataWatcher.addObject(16, Byte.valueOf((byte) 0));
-		this.dataWatcher.addObject(17, Float.valueOf(0.0F));
-		this.dataWatcher.addObject(18, Integer.valueOf(0));
+		this.dataWatcher.addObject(16, (byte) 0);
+		this.dataWatcher.addObject(17, 0.0F);
+		this.dataWatcher.addObject(18, 0);
 	}
 
 	/**
@@ -636,7 +636,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	 */
 	public void setScore(int p_85040_1_)
 	{
-		this.dataWatcher.updateObject(18, Integer.valueOf(p_85040_1_));
+		this.dataWatcher.updateObject(18, p_85040_1_);
 	}
 
 	/**
@@ -645,7 +645,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 	public void addScore(int p_85039_1_)
 	{
 		int j = this.getScore();
-		this.dataWatcher.updateObject(18, Integer.valueOf(j + p_85039_1_));
+		this.dataWatcher.updateObject(18, j + p_85039_1_);
 	}
 
 	/**
@@ -1653,9 +1653,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 		byte b0 = this.dataWatcher.getWatchableObjectByte(16);
 
 		if (p_82239_2_)
-			this.dataWatcher.updateObject(16, Byte.valueOf((byte) (b0 | 1 << p_82239_1_)));
+			this.dataWatcher.updateObject(16, (byte) (b0 | 1 << p_82239_1_));
 		else
-			this.dataWatcher.updateObject(16, Byte.valueOf((byte) (b0 & ~(1 << p_82239_1_))));
+			this.dataWatcher.updateObject(16, (byte) (b0 & ~(1 << p_82239_1_)));
 	}
 
 	public void addChatComponentMessage(IChatComponent p_146105_1_)
@@ -1886,7 +1886,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 			this.triggerAchievement(AchievementList.killEnemy);
 
 		int i = EntityList.getEntityID(p_70074_1_);
-		EntityList.EntityEggInfo entityegginfo = (EntityList.EntityEggInfo) EntityList.entityEggs.get(Integer.valueOf(i));
+		EntityList.EntityEggInfo entityegginfo = (EntityList.EntityEggInfo) EntityList.entityEggs.get(i);
 
 		if (entityegginfo != null)
 			this.addStat(entityegginfo.field_151512_d, 1);
@@ -2062,8 +2062,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 				{
 					ItemStack itemstack = this.getCurrentEquippedItem();
 
-					if (itemstack.func_150998_b(block) || itemstack.func_150997_a(block) > 1.0F)
-						return true;
+					return itemstack.func_150998_b(block) || itemstack.func_150997_a(block) > 1.0F;
 				}
 			}
 
@@ -2294,7 +2293,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 		if (p_110149_1_ < 0.0F)
 			p_110149_1_ = 0.0F;
 
-		this.getDataWatcher().updateObject(17, Float.valueOf(p_110149_1_));
+		this.getDataWatcher().updateObject(17, p_110149_1_);
 	}
 
 	@Override
@@ -2315,7 +2314,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	public enum EnumChatVisibility
 	{
-		FULL(0, "options.chat.visibility.full"), SYSTEM(1, "options.chat.visibility.system"), HIDDEN(2, "options.chat.visibility.hidden");
+		FULL(0, "options.chat.visibility.full"),
+		SYSTEM(1, "options.chat.visibility.system"),
+		HIDDEN(2, "options.chat.visibility.hidden");
 		private static final EntityPlayer.EnumChatVisibility[] field_151432_d = new EntityPlayer.EnumChatVisibility[values().length];
 		private final int chatVisibility;
 		private final String resourceKey;
@@ -2488,7 +2489,12 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 
 	public enum EnumStatus
 	{
-		OK, NOT_POSSIBLE_HERE, NOT_POSSIBLE_NOW, TOO_FAR_AWAY, OTHER_PROBLEM, NOT_SAFE;
+		OK,
+		NOT_POSSIBLE_HERE,
+		NOT_POSSIBLE_NOW,
+		TOO_FAR_AWAY,
+		OTHER_PROBLEM,
+		NOT_SAFE;
 
 		private static final String __OBFID = "CL_00001712";
 	}

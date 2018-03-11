@@ -748,14 +748,14 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 
 	@Callback(doc = "function():boolean -- Returns Whether tablet is redstone activated")
 	@Optional.Method(modid = "OpenComputers")
-	public Object[] getRedstone(Context context, Arguments args) throws Exception
+	public Object[] getRedstone(Context context, Arguments args)
 	{
 		return new Object[] { this.redstone };
 	}
 
 	@Callback(doc = "function(boolean):Nil -- Sets Whether tablet is redstone activated")
 	@Optional.Method(modid = "OpenComputers")
-	public Object[] setRedstone(Context context, Arguments args) throws Exception
+	public Object[] setRedstone(Context context, Arguments args)
 	{
 		this.setRedstoneImplementation(args.checkBoolean(0));
 		return new Object[] { this.redstone };
@@ -763,14 +763,14 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 
 	@Callback(doc = "function():boolean -- Returns Whether tablet Left clicks")
 	@Optional.Method(modid = "OpenComputers")
-	public Object[] getLeftClick(Context context, Arguments args) throws Exception
+	public Object[] getLeftClick(Context context, Arguments args)
 	{
 		return new Object[] { this.leftClick };
 	}
 
 	@Callback(doc = "function(boolean):Nil -- Sets Whether tablet Left Clicks")
 	@Optional.Method(modid = "OpenComputers")
-	public Object[] setLeftClick(Context context, Arguments args) throws Exception
+	public Object[] setLeftClick(Context context, Arguments args)
 	{
 		this.setLeftClickImplementation(args.checkBoolean(0));
 		return new Object[] { this.leftClick };
@@ -779,7 +779,7 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 	// TODO {"hasItem", "trigger" };
 	@Callback(doc = "function():number -- Returns tablet Rotation")
 	@Optional.Method(modid = "OpenComputers")
-	public Object[] getRotation(Context context, Arguments args) throws Exception
+	public Object[] getRotation(Context context, Arguments args)
 	{
 		return new Object[] { this.getBlockMetadata() - 2 };
 	}
@@ -794,14 +794,14 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 
 	@Callback(doc = "function():boolean -- Returns wether tablet has an item or not")
 	@Optional.Method(modid = "OpenComputers")
-	public Object[] hasItem(Context context, Arguments args) throws Exception
+	public Object[] hasItem(Context context, Arguments args)
 	{
 		return new Object[] { this.getStackInSlot(0) != null };
 	}
 
 	@Callback(doc = "function():Nil -- Triggers tablets swing")
 	@Optional.Method(modid = "OpenComputers")
-	public Object[] trigger(Context context, Arguments args) throws Exception
+	public Object[] trigger(Context context, Arguments args)
 	{
 		return this.triggerImplementation();
 	}

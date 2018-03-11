@@ -21,6 +21,8 @@ public final class EventConfig
 	public static final Set<String> transvectorBlackList = Sets.newHashSet(DEFAULT_BLOCKS);
 	public static final Set<String> animationTabletBlackList = Sets.newHashSet(DEFAULT_BLOCKS);
 	public static final Set<String> repairerBlackList = Sets.newHashSet(DEFAULT_BLOCKS);
+	public static final Set<String> placementMirrorBlackList = Sets.newHashSet(DEFAULT_BLOCKS);
+
 	public static boolean enableIchorPickAdvBedrockBreaking = false;
 	public static boolean enableIchorPickAdvAllBreaking = false;
 	public static boolean enableGenLegsLight = false;
@@ -30,6 +32,15 @@ public final class EventConfig
 	public static boolean disableClothRecipeStack = false;
 	public static int ichorAxeMaxBlocks = 1000;
 	public static boolean summonerDenyDropAspect = true;
+	public static boolean enableFocusDislocation = true;
+
+	public static int ichorArmor1 = 3;
+	public static int ichorArmor2 = 8;
+	public static int ichorArmor3 = 6;
+	public static int ichorArmor4 = 3;
+
+	public static boolean transvectorDenySameBlock = false;
+	public static boolean transvectorDenyInventory = false;
 
 	static
 	{
@@ -37,11 +48,14 @@ public final class EventConfig
 		{
 			Configuration cfg = FastUtils.getConfig("ThaumicTinkerer");
 			String c = CATEGORY_GENERAL;
+
 			readStringSet(cfg, "focusDislocationBlackList", c, "Чёрный список блоков для Фокуса Перемещения", focusDislocationBlackList);
 			readStringSet(cfg, "blockTalismanBlackList", c, "Чёрный список блоков для Кольца черной дыры", blockTalismanBlackList);
 			readStringSet(cfg, "transvectorBlackList", c, "Чёрный список блоков для Трансвекторного дислокатора", transvectorBlackList);
 			readStringSet(cfg, "animationTabletBlackList", c, "Чёрный список предметов для Динамической дощечки", animationTabletBlackList);
 			readStringSet(cfg, "repairerBlackList", c, "Чёрный список предметов для Таум-Восстановителя", repairerBlackList);
+			readStringSet(cfg, "placementMirrorBlackList", c, "Чёрный список предметов для Терраформингового стекла", placementMirrorBlackList);
+
 			enableIchorPickAdvBedrockBreaking = cfg.getBoolean("enableIchorPickAdvBedrockBreaking", c, enableIchorPickAdvBedrockBreaking, "Включить разрушение коренной породы Пробуждённой ихориевой киркой");
 			enableIchorPickAdvAllBreaking = cfg.getBoolean("enableIchorPickAdvAllBreaking", c, enableIchorPickAdvAllBreaking, "Включить разрушение всех (почти) блоков Пробуждённой ихориевой киркой");
 			enableGenLegsLight = cfg.getBoolean("enableGenLegsLight", c, enableGenLegsLight, "Включить освещение территории Пылающими шароварами");
@@ -51,6 +65,16 @@ public final class EventConfig
 			disableClothRecipeStack = cfg.getBoolean("disableClothRecipeStack", c, disableClothRecipeStack, "Выключить работу со стаками для Ткани поглощения заклинаний");
 			ichorAxeMaxBlocks = cfg.getInt("ichorAxeMaxBlocks", c, ichorAxeMaxBlocks, 1, Integer.MAX_VALUE, "Максимальное количество блоков, разрушаемое Пробуждённым ихориевым топором");
 			summonerDenyDropAspect = cfg.getBoolean("summonerDenyDropAspect", c, summonerDenyDropAspect, "Запретить дроп аспектов с мобов, призванных Пьедесталом некроманта");
+			enableFocusDislocation = cfg.getBoolean("enableFocusDislocation", c, enableFocusDislocation, "Включить Набалдашник Перемещения");
+
+			ichorArmor1 = cfg.getInt("ichorArmor1", c, ichorArmor1, 1, Integer.MAX_VALUE, "Количество очков защиты Ихориевой брони");
+			ichorArmor2 = cfg.getInt("ichorArmor2", c, ichorArmor2, 1, Integer.MAX_VALUE, "Количество очков защиты Ихориевой брони");
+			ichorArmor3 = cfg.getInt("ichorArmor3", c, ichorArmor3, 1, Integer.MAX_VALUE, "Количество очков защиты Ихориевой брони");
+			ichorArmor4 = cfg.getInt("ichorArmor4", c, ichorArmor4, 1, Integer.MAX_VALUE, "Количество очков защиты Ихориевой брони");
+
+			transvectorDenySameBlock = cfg.getBoolean("transvectorDenySameBlock", c, transvectorDenySameBlock, "Запрет для Трансвекторного дислокатора на обмен одинаковых блоков");
+			transvectorDenyInventory = cfg.getBoolean("transvectorDenyInventory", c, transvectorDenyInventory, "Запрет для Трансвекторного дислокатора на перемещение контейнеров");
+
 			cfg.save();
 		}
 		catch (Throwable throwable)

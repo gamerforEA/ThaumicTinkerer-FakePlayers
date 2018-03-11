@@ -1,6 +1,7 @@
 package thaumic.tinkerer.common.item.kami;
 
 import com.gamerforea.eventhelper.util.EventUtils;
+import com.gamerforea.ttinkerer.EventConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -206,11 +207,19 @@ public class ItemPlacementMirror extends ItemKamiBase
 
 	public void placeAllBlocks(ItemStack stack, EntityPlayer player)
 	{
+		Block block = getBlock(stack);
+		int meta = getBlockMeta(stack);
+
+		// TODO gamerforEA code start
+		if (EventConfig.inList(EventConfig.placementMirrorBlackList, stack))
+			return;
+		// TODO gamerforEA code end
+
 		ChunkCoordinates[] blocksToPlace = getBlocksToPlace(stack, player);
 		if (!hasBlocks(stack, player, blocksToPlace))
 			return;
 
-		ItemStack stackToPlace = new ItemStack(getBlock(stack), 1, getBlockMeta(stack));
+		ItemStack stackToPlace = new ItemStack(block, 1, meta);
 		for (ChunkCoordinates coords : blocksToPlace)
 		{
 			this.placeBlockAndConsume(player, stackToPlace, coords);

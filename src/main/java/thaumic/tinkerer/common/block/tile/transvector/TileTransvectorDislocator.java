@@ -20,6 +20,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -86,14 +87,19 @@ public class TileTransvectorDislocator extends TileTransvector
 				BlockData endData = new BlockData(endCoords);
 				BlockData targetData = new BlockData(targetCoords);
 
-				endData.clearTileEntityAt();
-				targetData.clearTileEntityAt();
+				// TODO gamerforEA code start
+				if (!EventConfig.transvectorDenySameBlock || endData.block != targetData.block || endData.meta != targetData.meta)
+				// TODO gamerforEA code end
+				{
+					endData.clearTileEntityAt();
+					targetData.clearTileEntityAt();
 
-				endData.setTo(targetCoords);
-				targetData.setTo(endCoords);
+					endData.setTo(targetCoords);
+					targetData.setTo(endCoords);
 
-				endData.notify(targetCoords);
-				targetData.notify(endCoords);
+					endData.notify(targetCoords);
+					targetData.notify(endCoords);
+				}
 			}
 		}
 
@@ -122,6 +128,9 @@ public class TileTransvectorDislocator extends TileTransvector
 
 		// TODO gamerforEA code start
 		if (EventConfig.inList(EventConfig.transvectorBlackList, block, meta))
+			return false;
+
+		if (EventConfig.transvectorDenyInventory && this.worldObj.getTileEntity(coords.posX, coords.posY, coords.posZ) instanceof IInventory)
 			return false;
 
 		if (this.fake.cantBreak(coords.posX, coords.posY, coords.posZ))
