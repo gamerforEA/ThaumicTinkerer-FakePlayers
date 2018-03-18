@@ -42,16 +42,19 @@ public class SpellClothRecipe implements IRecipe
 			ItemStack stack = var1.getStackInSlot(i);
 			if (stack != null)
 			{
-				if (stack.isItemEnchanted() && !(stack.getItem() instanceof INoRemoveEnchant) && !foundEnchanted)
+				Item item = stack.getItem();
+				if (stack.isItemEnchanted() && !(item instanceof INoRemoveEnchant) && !foundEnchanted)
 				{
 					// TODO gamerforEA code start
 					if (EventConfig.disableClothRecipeStack && stack.stackSize != 1)
+						return false;
+					if (!(item instanceof ItemSpellCloth) && item.hasContainerItem(stack))
 						return false;
 					// TODO gamerforEA code end
 
 					foundEnchanted = true;
 				}
-				else if (stack.getItem() == this.item && !foundCloth)
+				else if (item == this.item && !foundCloth)
 					foundCloth = true;
 				else
 					return false; // Found an invalid item, breaking the recipe
