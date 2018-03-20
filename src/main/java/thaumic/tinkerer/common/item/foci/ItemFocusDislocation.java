@@ -23,6 +23,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -177,6 +178,19 @@ public class ItemFocusDislocation extends ItemModFocus
 					world.removeTileEntity(mop.blockX, mop.blockY, mop.blockZ);
 					world.setBlock(mop.blockX, mop.blockY, mop.blockZ, Blocks.air, 0, 1 | 2);
 					this.storePickedBlock(itemstack, block, (short) meta, tile);
+
+					// TODO gamerforEA code start
+					if (tile instanceof IInventory)
+					{
+						IInventory inventory = (IInventory) tile;
+						for (int slot = 0; slot < inventory.getSizeInventory(); slot++)
+						{
+							ItemStack stackInSlot = inventory.getStackInSlot(slot);
+							if (stackInSlot != null)
+								inventory.setInventorySlotContents(slot, null);
+						}
+					}
+					// TODO gamerforEA code end
 				}
 
 				for (int i = 0; i < 8; i++)
