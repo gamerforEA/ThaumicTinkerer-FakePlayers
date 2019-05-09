@@ -2,6 +2,7 @@ package thaumic.tinkerer.common.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockCrops;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -30,7 +31,8 @@ import java.util.Random;
 /**
  * Created by pixlepix on 4/14/14.
  */
-public class BlockInfusedGrain extends BlockCrops implements ITTinkererBlock
+// TODO gamerforEA implement ITileEntityProvider
+public class BlockInfusedGrain extends BlockCrops implements ITTinkererBlock, ITileEntityProvider
 {
 
 	//Code based off vanilla potato code
@@ -117,15 +119,13 @@ public class BlockInfusedGrain extends BlockCrops implements ITTinkererBlock
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
 	{
-
 		super.breakBlock(world, x, y, z, block, metadata);
-
 	}
 
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune)
 	{
-		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		ArrayList<ItemStack> ret = new ArrayList<>();
 		if (world == null)
 			return ret;
 
@@ -133,23 +133,23 @@ public class BlockInfusedGrain extends BlockCrops implements ITTinkererBlock
 
 		// TODO gamerforEA code start
 		if (!(tile instanceof TileInfusedGrain))
+		{
+			ThaumicTinkerer.log.warn("TileEntity at {}:{}:{}:{} is {} but must be TileInfusedGrain", world.getWorldInfo().getWorldName(), x, y, z, tile);
 			return ret;
+		}
 		// TODO gamerforEA code end
 
 		Random rand = new Random();
-		int count = 1;
-		for (int i = 0; i < count; i++)
+		ItemStack seedStack = new ItemStack(ThaumicTinkerer.registry.getFirstItemFromClass(ItemInfusedSeeds.class));
+		ItemInfusedSeeds.setAspect(seedStack, this.getAspectDropped(world, x, y, z, metadata));
+		ItemInfusedSeeds.setAspectTendencies(seedStack, ((TileInfusedGrain) tile).primalTendencies);
+		while (rand.nextInt(10000) < Math.pow(this.getPrimalTendencyCount(world, x, y, z, Aspect.ENTROPY), 2))
 		{
-			ItemStack seedStack = new ItemStack(ThaumicTinkerer.registry.getFirstItemFromClass(ItemInfusedSeeds.class));
-			ItemInfusedSeeds.setAspect(seedStack, this.getAspectDropped(world, x, y, z, metadata));
-			ItemInfusedSeeds.setAspectTendencies(seedStack, ((TileInfusedGrain) tile).primalTendencies);
-			while (rand.nextInt(10000) < Math.pow(this.getPrimalTendencyCount(world, x, y, z, Aspect.ENTROPY), 2))
-			{
-				seedStack.stackSize++;
-			}
-			ret.add(seedStack);
-			this.fertilizeSoil(world, x, y, z, metadata);
+			seedStack.stackSize++;
 		}
+		ret.add(seedStack);
+
+		this.fertilizeSoil(world, x, y, z, metadata);
 		if (metadata >= 7)
 			do
 			{
@@ -159,6 +159,7 @@ public class BlockInfusedGrain extends BlockCrops implements ITTinkererBlock
 
 			}
 			while (world.rand.nextInt(75) < this.getPrimalTendencyCount(world, x, y, z, Aspect.ORDER));
+
 		return ret;
 	}
 
@@ -250,6 +251,14 @@ public class BlockInfusedGrain extends BlockCrops implements ITTinkererBlock
 	{
 		return new TileInfusedGrain();
 	}
+
+	// TODO gamerforEA code start
+	@Override
+	public TileEntity createNewTileEntity(World world, int metadata)
+	{
+		return new TileInfusedGrain();
+	}
+	// TODO gamerforEA code end
 
 	@Override
 	public boolean hasTileEntity(int metadata)
