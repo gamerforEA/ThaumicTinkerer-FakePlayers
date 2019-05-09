@@ -1,6 +1,7 @@
 package thaumic.tinkerer.common.item;
 
 import com.gamerforea.ttinkerer.EventConfig;
+import com.gamerforea.ttinkerer.properties.ExtendedPlayer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
@@ -10,7 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.Constants;
@@ -75,6 +78,20 @@ public class ItemShareBook extends ItemBase
 		String name = this.getPlayerName(stack);
 		if (name.endsWith(NON_ASIGNED))
 		{
+			// TODO gamerforEA code start
+			if (EventConfig.shareBookCreateLimit > 0)
+			{
+				ExtendedPlayer extendedPlayer = ExtendedPlayer.get(player);
+				int counter = extendedPlayer.getShareBooksCounter();
+				if (counter >= EventConfig.shareBookCreateLimit)
+				{
+					player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Достигнут лимит на запись изучений!"));
+					return stack;
+				}
+				extendedPlayer.setShareBooksCounter(counter + 1);
+			}
+			// TODO gamerforEA code end
+
 			this.setPlayerName(stack, player.getGameProfile().getName());
 			this.setPlayerResearch(stack, player.getGameProfile().getName());
 			if (!world.isRemote)
