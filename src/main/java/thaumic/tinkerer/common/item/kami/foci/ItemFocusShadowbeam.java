@@ -248,6 +248,14 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 		@Override
 		public void onUpdate()
 		{
+			// TODO gamerforEA code start
+			if (this.inPortal)
+			{
+				this.setDead();
+				return;
+			}
+			// TODO gamerforEA code end
+
 			this.motionX = this.movementVector.x;
 			this.motionY = this.movementVector.y;
 			this.motionZ = this.movementVector.z;
@@ -261,12 +269,14 @@ public class ItemFocusShadowbeam extends ItemModKamiFocus
 
 			if (this.ticksExisted >= this.maxTicks)
 				this.setDead();
-
-			// TODO gamerforEA code start
-			if (this.inPortal)
-				this.setDead();
-			// TODO gamerforEA code end
 		}
+
+		// TODO gamerforEA code start
+		@Override
+		public void setInPortal()
+		{
+		}
+		// TODO gamerforEA code end
 
 		public void updateUntilDead()
 		{
