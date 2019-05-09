@@ -106,6 +106,11 @@ public class ItemIchorSwordAdv extends ItemIchorSword implements IAdvancedTool
 
 					break;
 				case 2:
+					// TODO gamerforEA code start
+					if (EventUtils.cantDamage(player, entity))
+						break;
+					// TODO gamerforEA code end
+
 					EntityLivingBase living = (EntityLivingBase) entity;
 					PotionEffect effect = new PotionEffect(Potion.resistance.id, 1, 1);
 					living.addPotionEffect(effect);

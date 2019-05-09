@@ -56,7 +56,7 @@ public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 
 	static
 	{
-		List<Material> list = new ArrayList<Material>();
+		List<Material> list = new ArrayList<>();
 		list.add(Material.grass);
 		list.add(Material.ground);
 		list.add(Material.wood);
@@ -79,7 +79,7 @@ public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 		list.add(Material.cactus);
 		list.add(Material.clay);
 		list.add(Material.web);
-		ALL_BLOCK_MATERIALS = list.toArray(new Material[list.size()]);
+		ALL_BLOCK_MATERIALS = list.toArray(new Material[0]);
 	}
 	// TODO gamerforEA code end
 
@@ -157,8 +157,11 @@ public class ItemIchorPickAdv extends ItemIchorPick implements IAdvancedTool
 			return false;
 
 		// TODO gamerforEA code start
-		if (!EventConfig.enableIchorPickAdvBedrockBreaking && blk.getBlockHardness(world, x, y, z) < 0)
-			return false;
+		if (blk.getBlockHardness(world, x, y, z) < 0)
+		{
+			if (!(blk == Blocks.bedrock && EventConfig.enableIchorPickAdvBedrockBreaking))
+				return false;
+		}
 		// TODO gamerforEA code end
 
 		ForgeDirection direction = ForgeDirection.getOrientation(block.sideHit);
