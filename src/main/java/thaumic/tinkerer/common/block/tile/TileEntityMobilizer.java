@@ -6,6 +6,7 @@ import appeng.api.movable.IMovableTile;
 import com.gamerforea.eventhelper.fake.FakePlayerContainer;
 import com.gamerforea.ttinkerer.ModUtils;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.chunk.Chunk;
@@ -94,7 +95,7 @@ public class TileEntityMobilizer extends TileEntity
 			int targetX = this.xCoord + this.movementDirection.offsetX;
 			int targetZ = this.zCoord + this.movementDirection.offsetZ;
 			//Switch direction if at end of track
-			if (this.worldObj.getBlock(targetX, this.yCoord, targetZ) != Block.getBlockFromName("air") || this.worldObj.getBlock(targetX, this.yCoord + 1, targetZ) != Block.getBlockFromName("air"))
+			if (this.worldObj.getBlock(targetX, this.yCoord, targetZ) != Blocks.air || this.worldObj.getBlock(targetX, this.yCoord + 1, targetZ) != Blocks.air)
 				this.movementDirection = this.movementDirection.getOpposite();
 		}
 		//Move
@@ -111,17 +112,18 @@ public class TileEntityMobilizer extends TileEntity
 				//Move the block on top of the mobilizer
 				if (!this.worldObj.isRemote)
 				{
+					/* TODO gamerforEA code replace, old code:
 					TileEntity passenger = this.worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
-					IAppEngApi api = AEApi.instance();
-
-					// TODO gamerforEA code start
+					IAppEngApi api = AEApi.instance(); */
 					if (this.fake.cantBreak(targetX, this.yCoord, targetZ))
 						return;
 					// TODO gamerforEA code end
 
 					//Prevent the passenger from popping off. Not sent to clients.
-					this.worldObj.setBlock(targetX, this.yCoord, targetZ, Block.getBlockFromName("stone"), 0, 0);
+					this.worldObj.setBlock(targetX, this.yCoord, targetZ, Blocks.stone, 0, 0);
+
 					//Move non-TE blocks
+					/* TODO gamerforEA code replace, old code:
 					Block passengerId = this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord);
 
 					if (this.worldObj.isAirBlock(this.xCoord, this.yCoord + 1, this.zCoord) || passengerId.canPlaceBlockAt(this.worldObj, targetX, this.yCoord + 1, targetZ))
@@ -129,26 +131,77 @@ public class TileEntityMobilizer extends TileEntity
 						{
 							if (passengerId != Block.getBlockFromName("bedrock") && passengerId != Block.getBlockFromName(""))
 							{
-								// TODO gamerforEA code start
-								if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
-									return;
-								// TODO gamerforEA code end
-
 								this.worldObj.setBlock(targetX, this.yCoord + 1, targetZ, passengerId, this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord), 3);
 								if (passengerId != Block.getBlockFromName("air") && passengerId != Block.getBlockFromName("piston_head"))
-								{
-									// TODO gamerforEA code start
-									if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
-										return;
-									// TODO gamerforEA code end
-
 									this.worldObj.setBlock(this.xCoord, this.yCoord + 1, this.zCoord, Block.getBlockFromName("air"), 0, 2);
-								}
 							}
 							//If AE is installed, use its handler
 						}
 						else if (api != null)
 						{
+							if (api.registries().movable().askToMove(passenger))
+							{
+								this.worldObj.setBlock(targetX, this.yCoord + 1, targetZ, this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord), this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord), 3);
+								passenger.invalidate();
+								this.worldObj.setBlockToAir(this.xCoord, this.yCoord + 1, this.zCoord);
+								api.registries().movable().getHandler(passenger).moveTile(passenger, this.worldObj, targetX, this.yCoord + 1, targetZ);
+								api.registries().movable().doneMoving(passenger);
+								passenger.validate();
+							}
+
+							//Handler IMovableTiles and vanilla TEs without AE
+						}
+						else if (passenger instanceof IMovableTile || passenger.getClass().getName().startsWith("net.minecraft.tileentity"))
+						{
+							boolean imovable = passenger instanceof IMovableTile;
+							if (imovable)
+								((IMovableTile) passenger).prepareToMove();
+							this.worldObj.setBlock(targetX, this.yCoord + 1, targetZ, this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord), this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord), 3);
+							passenger.invalidate();
+							this.worldObj.setBlockToAir(this.xCoord, this.yCoord + 1, this.zCoord);
+
+							//IMovableHandler default code
+							Chunk c = this.worldObj.getChunkFromBlockCoords(targetX, targetZ);
+
+							c.func_150812_a(targetX & 0xF, this.yCoord + 1, targetZ & 0xF, passenger);
+
+							if (c.isChunkLoaded)
+							{
+								this.worldObj.addTileEntity(passenger);
+								this.worldObj.markBlockForUpdate(targetX, this.yCoord + 1, targetZ);
+							}
+							if (imovable)
+								((IMovableTile) passenger).doneMoving();
+							passenger.validate();
+
+						} */
+					Block passengerId = this.worldObj.getBlock(this.xCoord, this.yCoord + 1, this.zCoord);
+					boolean canMovePassenger = passengerId.getMobilityFlag() == 0;
+					if (canMovePassenger)
+						canMovePassenger = !passengerId.isAir(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord);
+					if (canMovePassenger)
+						canMovePassenger = passengerId.getBlockHardness(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord) >= 0;
+					if (canMovePassenger)
+						canMovePassenger = passengerId.canPlaceBlockAt(this.worldObj, targetX, this.yCoord + 1, targetZ);
+					if (canMovePassenger)
+					{
+						TileEntity passenger = this.worldObj.getTileEntity(this.xCoord, this.yCoord + 1, this.zCoord);
+						IAppEngApi api = AEApi.instance();
+						if (passenger == null)
+						{
+							// TODO gamerforEA code start
+							if (this.fake.cantBreak(targetX, this.yCoord + 1, targetZ))
+								return;
+							if (this.fake.cantBreak(this.xCoord, this.yCoord + 1, this.zCoord))
+								return;
+							// TODO gamerforEA code end
+
+							this.worldObj.setBlock(targetX, this.yCoord + 1, targetZ, passengerId, this.worldObj.getBlockMetadata(this.xCoord, this.yCoord + 1, this.zCoord), 3);
+							this.worldObj.setBlock(this.xCoord, this.yCoord + 1, this.zCoord, Blocks.air, 0, 2);
+						}
+						else if (api != null)
+						{
+							//If AE is installed, use its handler
 							if (api.registries().movable().askToMove(passenger))
 							{
 								// TODO gamerforEA code start
@@ -199,16 +252,14 @@ public class TileEntityMobilizer extends TileEntity
 							passenger.validate();
 
 						}
-					//Move self
-
-					// TODO gamerforEA code start
-					if (this.fake.cantBreak(targetX, this.yCoord, targetZ))
-						return;
+					}
 					// TODO gamerforEA code end
+
+					//Move self
 
 					this.invalidate();
 					this.worldObj.removeTileEntity(this.xCoord, this.yCoord, this.zCoord);
-					this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Block.getBlockFromName("air"), 0, 2);
+					this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, Blocks.air, 0, 2);
 					this.worldObj.setBlock(targetX, this.yCoord, targetZ, ThaumicTinkerer.registry.getFirstBlockFromClass(BlockMobilizer.class));
 
 					int oldX = this.xCoord;
@@ -220,7 +271,7 @@ public class TileEntityMobilizer extends TileEntity
 					this.worldObj.addTileEntity(this);
 					this.worldObj.removeTileEntity(oldX, this.yCoord, oldZ);
 
-					this.worldObj.notifyBlockChange(oldX, this.yCoord, oldZ, Block.getBlockFromName("air"));
+					this.worldObj.notifyBlockChange(oldX, this.yCoord, oldZ, Blocks.air);
 
 				}
 
