@@ -108,7 +108,7 @@ public class BlockTransvectorDislocator extends BlockCamo
 	public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
 	{
 		TileEntity tile = par1World.getTileEntity(par2, par3, par4);
-		if (tile != null && tile instanceof TileTransvectorDislocator)
+		if (tile instanceof TileTransvectorDislocator)
 		{
 			TileTransvectorDislocator dislocator = (TileTransvectorDislocator) tile;
 			dislocator.receiveRedstonePulse();

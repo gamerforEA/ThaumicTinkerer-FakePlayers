@@ -14,7 +14,7 @@
  */
 package thaumic.tinkerer.common.item;
 
-import com.gamerforea.ttinkerer.NoDupeProperties;
+import com.gamerforea.ttinkerer.properties.NoDupeProperties;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -127,12 +127,14 @@ public class ItemBloodSword extends ItemSword implements IRepairable, ITTinkerer
 				//if(as!=null && as.size()!=0){
 				if (aspects != null)
 				{
-					// TODO gamerforEA code start
+					// TODO gamerforEA code replace, old code:
+					// event.drops.removeAll(event.drops);
 					if (event.entityLiving != null && !NoDupeProperties.canDropAspect(event.entityLiving))
 						return;
+
+					event.drops.clear();
 					// TODO gamerforEA code end
 
-					event.drops.removeAll(event.drops);
 					//for(Aspect a:as.getAspects()){
 					for (Aspect a : aspects)
 					{
@@ -172,7 +174,7 @@ public class ItemBloodSword extends ItemSword implements IRepairable, ITTinkerer
 		if (handle)
 		{
 			Entity source = event.source.getSourceOfDamage();
-			if (source != null && source instanceof EntityLivingBase)
+			if (source instanceof EntityLivingBase)
 			{
 				EntityLivingBase attacker = (EntityLivingBase) source;
 				ItemStack itemInUse = attacker.getHeldItem();

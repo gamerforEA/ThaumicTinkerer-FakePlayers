@@ -15,7 +15,7 @@
 package thaumic.tinkerer.common.block.tile.transvector;
 
 import com.gamerforea.ttinkerer.EventConfig;
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -39,7 +39,7 @@ import java.util.Set;
 public class TileTransvectorDislocator extends TileTransvector
 {
 	// TODO gamerforEA code start
-	private static final Set<Block> BLOCKS_BLACKLIST = Sets.newHashSet(Blocks.redstone_wire, Blocks.unpowered_comparator, Blocks.powered_comparator, Blocks.unpowered_repeater, Blocks.powered_repeater, Blocks.wooden_door, Blocks.iron_door);
+	private static final Set<Block> BLOCKS_BLACKLIST = ImmutableSet.of(Blocks.redstone_wire, Blocks.unpowered_comparator, Blocks.powered_comparator, Blocks.unpowered_repeater, Blocks.powered_repeater, Blocks.wooden_door, Blocks.iron_door);
 	// TODO gamerforEA code end
 
 	private static final String TAG_ORIENTATION = "orientation";

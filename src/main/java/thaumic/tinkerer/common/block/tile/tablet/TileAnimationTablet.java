@@ -199,7 +199,7 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 				{
 					ForgeEventFactory.onPlayerInteract(this.player, Action.RIGHT_CLICK_AIR, coords.posX, coords.posY, coords.posZ, side, this.worldObj);
 					Entity entity = this.detectedEntities.isEmpty() ? null : this.detectedEntities.get(this.worldObj.rand.nextInt(this.detectedEntities.size()));
-					done = entity != null && entity instanceof EntityLiving && (item.itemInteractionForEntity(stack, this.player, (EntityLivingBase) entity) || !(entity instanceof EntityAnimal) || ((EntityAnimal) entity).interact(this.player));
+					done = entity instanceof EntityLiving && (item.itemInteractionForEntity(stack, this.player, (EntityLivingBase) entity) || !(entity instanceof EntityAnimal) || ((EntityAnimal) entity).interact(this.player));
 
 					if (!done)
 					{
@@ -223,11 +223,12 @@ public class TileAnimationTablet extends TileEntity implements IInventory, IMova
 				catch (Throwable e)
 				{
 					e.printStackTrace();
-					List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 8, this.yCoord - 8, this.zCoord - 8, this.xCoord + 8, this.yCoord + 8, this.zCoord + 8));
-					for (Object player : list)
+					@SuppressWarnings("unchecked")
+					List<? extends EntityPlayer> list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(this.xCoord - 8, this.yCoord - 8, this.zCoord - 8, this.xCoord + 8, this.yCoord + 8, this.zCoord + 8));
+					for (EntityPlayer player : list)
 					{
-						((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Something went wrong with a Tool Dynamism Tablet! Check your FML log."));
-						((EntityPlayer) player).addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + e.getMessage()));
+						player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Something went wrong with a Tool Dynamism Tablet! Check your FML log."));
+						player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "" + EnumChatFormatting.ITALIC + e.getMessage()));
 					}
 				}
 		}

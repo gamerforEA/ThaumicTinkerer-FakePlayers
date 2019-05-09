@@ -1,7 +1,7 @@
 package thaumic.tinkerer.common.block.tile;
 
 import com.gamerforea.ttinkerer.EventConfig;
-import com.gamerforea.ttinkerer.NoDupeProperties;
+import com.gamerforea.ttinkerer.properties.NoDupeProperties;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -27,7 +27,7 @@ public class TileSummon extends TileEntity
 				return;
 			for (int radius = 1; radius < 6; radius++)
 			{
-				ArrayList<TileEntity> pedestals = new ArrayList<TileEntity>();
+				ArrayList<TileEntity> pedestals = new ArrayList<>();
 				for (int x = this.xCoord - radius; x < this.xCoord + radius; x++)
 				{
 					for (int z = this.zCoord - radius; z < this.zCoord + radius; z++)
@@ -50,7 +50,7 @@ public class TileSummon extends TileEntity
 
 							if (ped1 != ped2 && ped2 != ped3 && ped1 != ped3)
 							{
-								ArrayList<Aspect> aspects = new ArrayList<Aspect>();
+								ArrayList<Aspect> aspects = new ArrayList<>();
 								aspects.add(ItemMobAspect.getAspect(ped1.getStackInSlot(0)));
 
 								aspects.add(ItemMobAspect.getAspect(ped2.getStackInSlot(0)));

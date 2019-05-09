@@ -191,8 +191,8 @@ public class ModEnchantmentHandler
 			int shockwave = EnchantmentHelper.getEnchantmentLevel(LibEnchantIDs.shockwave, boots);
 			if (shockwave > 0)
 				for (EntityLivingBase target : (List<EntityLivingBase>) event.entity.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, AxisAlignedBB.getBoundingBox(event.entity.posX - 10, event.entity.posY - 10, event.entity.posZ - 10, event.entity.posX + 10, event.entity.posY + 10, event.entity.posZ + 10)))
-				// TODO gamerforEA add condition [3]
 				{
+					// TODO gamerforEA add condition [3]
 					if (target != event.entity && event.distance > 3 && !EventUtils.cantDamage(event.entity, target))
 						target.attackEntityFrom(DamageSource.fall, .1F * shockwave * event.distance);
 				}

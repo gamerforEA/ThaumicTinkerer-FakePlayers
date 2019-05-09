@@ -59,7 +59,7 @@ public class PotionEffect
 		this.duration = p_i1576_2_;
 		this.amplifier = p_i1576_3_;
 		this.isAmbient = p_i1576_4_;
-		this.curativeItems = new ArrayList<ItemStack>();
+		this.curativeItems = new ArrayList<>();
 		this.curativeItems.add(new ItemStack(Items.milk_bucket));
 	}
 

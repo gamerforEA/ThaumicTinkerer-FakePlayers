@@ -56,11 +56,11 @@ public class ItemShareBook extends ItemBase
 	@Override
 	public IRegisterableResearch getResearchItem()
 	{
-		IRegisterableResearch research = (TTResearchItem) new TTResearchItem(LibResearch.KEY_SHARE_TOME, new AspectList(), 0, -1, 0, new ItemStack(this)).setStub().setAutoUnlock().setRound();
+		TTResearchItem research = (TTResearchItem) new TTResearchItem(LibResearch.KEY_SHARE_TOME, new AspectList(), 0, -1, 0, new ItemStack(this)).setStub().setAutoUnlock().setRound();
 		if (ConfigHandler.enableSurvivalShareTome)
-			((TTResearchItem) research).setPages(new ResearchPage("0"), ResearchHelper.recipePage(LibResearch.KEY_SHARE_TOME));
+			research.setPages(new ResearchPage("0"), ResearchHelper.recipePage(LibResearch.KEY_SHARE_TOME));
 		else
-			((TTResearchItem) research).setPages(new ResearchPage("0"));
+			research.setPages(new ResearchPage("0"));
 		return research;
 	}
 
@@ -131,7 +131,7 @@ public class ItemShareBook extends ItemBase
 
 	private List<String> getPlayerResearch(ItemStack par1ItemStack)
 	{
-		List<String> retVals = new ArrayList<String>();
+		List<String> retVals = new ArrayList<>();
 		NBTTagCompound cmp = ItemNBTHelper.getNBT(par1ItemStack);
 		if (!cmp.hasKey("research"))
 			return retVals;

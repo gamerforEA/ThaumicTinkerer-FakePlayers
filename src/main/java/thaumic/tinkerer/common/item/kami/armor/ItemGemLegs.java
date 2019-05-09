@@ -82,7 +82,12 @@ public class ItemGemLegs extends ItemIchorclothArmorAdv
 		int z = (int) Math.floor(player.posZ);
 
 		float yaw = MathHelper.wrapAngleTo180_float(player.rotationYaw + 90F) * (float) Math.PI / 180F;
-		Vector3 lookVector = new Vector3(Math.cos(yaw), Math.sin(yaw), 0).normalize();
+
+		// TODO gamerforEA code replace, old code:
+		// Vector3 lookVector = new Vector3(Math.cos(yaw), Math.sin(yaw), 0).normalize();
+		Vector3 lookVector = new Vector3(MathHelper.cos(yaw), MathHelper.sin(yaw), 0).normalize();
+		// TODO gamerforEA code end
+
 		Vector3 newVector = new Vector3(lookVector.x, lookVector.y, 0);
 
 		for (int i = 0; i < 5; i++)

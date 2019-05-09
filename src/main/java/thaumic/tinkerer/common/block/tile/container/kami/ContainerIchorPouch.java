@@ -72,7 +72,7 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 			{
 				((InventoryIchorPouch) this.inv).stackList = ((ItemFocusPouch) this.pouch.getItem()).getInventory(this.pouch);
 			}
-			catch (Exception e)
+			catch (Exception ignored)
 			{
 			}
 	}
@@ -140,6 +140,7 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 			// TODO gamerforEA add condition [2]
 			if (this.player == null || !this.canInteractWith(this.player))
 				return;
+
 			if (this.player.getHeldItem() != null && this.player.getHeldItem().isItemEqual(this.pouch))
 				this.player.setCurrentItemOrArmor(0, this.pouch);
 

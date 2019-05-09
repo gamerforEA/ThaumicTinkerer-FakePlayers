@@ -302,10 +302,11 @@ public class TileRepairer extends TileEntity
 			if (!ic.canOutputTo(orientation.getOpposite()))
 				return 0;
 
-			for (Aspect aspect : repairValues.keySet())
+			for (Map.Entry<Aspect, Integer> entry : repairValues.entrySet())
 			{
+				Aspect aspect = entry.getKey();
 				if (ic.getSuctionType(orientation.getOpposite()) == aspect && ic.getSuctionAmount(orientation.getOpposite()) < this.getSuctionAmount(orientation) && ic.takeEssentia(aspect, 1, orientation.getOpposite()) == 1)
-					return repairValues.get(aspect);
+					return entry.getValue();
 			}
 		}
 		return 0;

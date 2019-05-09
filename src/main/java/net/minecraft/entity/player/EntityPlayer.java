@@ -53,14 +53,17 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 public abstract class EntityPlayer extends EntityLivingBase implements ICommandSender
 {
 	public static final String PERSISTED_NBT_TAG = "PlayerPersisted";
-	private HashMap<Integer, ChunkCoordinates> spawnChunkMap = new HashMap<Integer, ChunkCoordinates>();
-	private HashMap<Integer, Boolean> spawnForcedMap = new HashMap<Integer, Boolean>();
+	private HashMap<Integer, ChunkCoordinates> spawnChunkMap = new HashMap<>();
+	private HashMap<Integer, Boolean> spawnForcedMap = new HashMap<>();
 
 	/**
 	 * Inventory of the player
@@ -730,11 +733,9 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 		else
 			this.addStat(StatList.mobKillsStat, 1);
 
-		Iterator iterator = collection.iterator();
-
-		while (iterator.hasNext())
+		for (Object aCollection : collection)
 		{
-			ScoreObjective scoreobjective = (ScoreObjective) iterator.next();
+			ScoreObjective scoreobjective = (ScoreObjective) aCollection;
 			Score score = this.getWorldScoreboard().func_96529_a(this.getCommandSenderName(), scoreobjective);
 			score.func_96648_a();
 		}
@@ -1346,7 +1347,7 @@ public abstract class EntityPlayer extends EntityLivingBase implements ICommandS
 						{
 							IEntityMultiPart ientitymultipart = ((EntityDragonPart) p_71059_1_).entityDragonObj;
 
-							if (ientitymultipart != null && ientitymultipart instanceof EntityLivingBase)
+							if (ientitymultipart instanceof EntityLivingBase)
 								object = ientitymultipart;
 						}
 
