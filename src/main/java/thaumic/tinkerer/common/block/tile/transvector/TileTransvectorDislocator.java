@@ -127,7 +127,9 @@ public class TileTransvectorDislocator extends TileTransvector
 		int meta = this.worldObj.getBlockMetadata(coords.posX, coords.posY, coords.posZ);
 
 		// TODO gamerforEA code start
-		if (EventConfig.inList(EventConfig.transvectorBlackList, block, meta))
+		if (EventConfig.transvectorEnableBlackList && EventConfig.transvectorBlackList.contains(block, meta))
+			return false;
+		if (EventConfig.transvectorEnableWhiteList && !EventConfig.transvectorWhiteList.contains(block, meta))
 			return false;
 
 		if (EventConfig.transvectorDenyInventory && this.worldObj.getTileEntity(coords.posX, coords.posY, coords.posZ) instanceof IInventory)

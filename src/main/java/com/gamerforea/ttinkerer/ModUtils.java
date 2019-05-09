@@ -1,24 +1,31 @@
 package com.gamerforea.ttinkerer;
 
-import com.gamerforea.eventhelper.util.FastUtils;
-import com.mojang.authlib.GameProfile;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
+import com.gamerforea.eventhelper.nexus.ModNexus;
+import com.gamerforea.eventhelper.nexus.ModNexusFactory;
+import com.gamerforea.eventhelper.nexus.NexusUtils;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockDoor;
+import net.minecraft.item.ItemStack;
+import thaumcraft.common.blocks.BlockArcaneDoor;
 
-import java.util.UUID;
-
+@ModNexus(name = "ThaumicTinkerer", uuid = "87dc1bfd-b4ec-4b5f-a720-186891ee4515")
 public final class ModUtils
 {
-	public static final GameProfile profile = new GameProfile(UUID.fromString("87dc1bfd-b4ec-4b5f-a720-186891ee4515"), "[ThaumicTinkerer]");
-	private static FakePlayer player = null;
+	public static final ModNexusFactory NEXUS_FACTORY = NexusUtils.getFactory();
 
-	public static FakePlayer getModFake(World world)
+	public static void init()
 	{
-		if (player == null)
-			player = FastUtils.getFake(world, profile);
-		else
-			player.worldObj = world;
+		EventConfig.init();
+		FixEventHandler.init();
+	}
 
-		return player;
+	public static boolean isItemEqual(ItemStack stack1, ItemStack stack2)
+	{
+		return stack1 == stack2 || stack1 != null && stack2 != null && stack1.isItemEqual(stack2) && ItemStack.areItemStackTagsEqual(stack1, stack2);
+	}
+
+	public static boolean isDoorBlock(Block block)
+	{
+		return block instanceof BlockDoor || block instanceof BlockArcaneDoor;
 	}
 }

@@ -14,26 +14,28 @@
  */
 package thaumic.tinkerer.common.block.tile.container.kami;
 
+import com.gamerforea.eventhelper.util.ItemInventoryValidator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import thaumcraft.common.container.InventoryFocusPouch;
 import thaumcraft.common.items.wands.ItemFocusPouch;
 import thaumic.tinkerer.common.block.tile.container.ContainerPlayerInv;
 import thaumic.tinkerer.common.block.tile.container.slot.kami.SlotNoPouches;
-
-import java.util.UUID;
+import thaumic.tinkerer.common.item.kami.ItemIchorPouch;
 
 public class ContainerIchorPouch extends ContainerPlayerInv
 {
-
 	public IInventory inv = new InventoryIchorPouch(this);
 	EntityPlayer player;
 	ItemStack pouch;
 	int blockSlot;
+
+	// TODO gamerforEA code start
+	public final ItemInventoryValidator validator;
+	// TODO gamerforEA code end
 
 	public ContainerIchorPouch(EntityPlayer player)
 	{
@@ -44,14 +46,8 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 		this.blockSlot = player.inventory.currentItem + 27 + 13 * 9;
 
 		// TODO gamerforEA code start
-		if (this.pouch != null)
-		{
-			if (!this.pouch.hasTagCompound())
-				this.pouch.setTagCompound(new NBTTagCompound());
-			NBTTagCompound nbt = this.pouch.getTagCompound();
-			if (!nbt.hasKey(NBT_KEY_UID))
-				nbt.setString(NBT_KEY_UID, UUID.randomUUID().toString());
-		}
+		this.validator = new ItemInventoryValidator(this.pouch, ItemIchorPouch.class::isInstance);
+		this.validator.setSlotIndex(player.inventory.currentItem, true);
 		// TODO gamerforEA code end
 
 		for (int y = 0; y < 9; y++)
@@ -62,6 +58,14 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 			}
 		}
 		this.initPlayerInv();
+
+		// TODO gamerforEA code start
+		for (Slot slot : (Iterable<? extends Slot>) this.inventorySlots)
+		{
+			if (this.validator.tryGetSlotNumberFromPlayerSlot(slot))
+				break;
+		}
+		// TODO gamerforEA code end
 
 		if (!player.worldObj.isRemote)
 			try
@@ -74,15 +78,25 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slot)
+	public ItemStack transferStackInSlot(EntityPlayer player, int slot)
 	{
 		if (slot == this.blockSlot)
 			return null;
+
+		// TODO gamerforEA code start
+		if (this.validator.getSlotNumber() == slot)
+			return null;
+		// TODO gamerforEA code end
 
 		ItemStack stack = null;
 		Slot slotObject = (Slot) this.inventorySlots.get(slot);
 		if (slotObject != null && slotObject.getHasStack())
 		{
+			// TODO gamerforEA code start
+			if (!this.canInteractWith(player))
+				return null;
+			// TODO gamerforEA code end
+
 			ItemStack stackInSlot = slotObject.getStack();
 			stack = stackInSlot.copy();
 			if (slot < 13 * 9)
@@ -102,11 +116,17 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 	}
 
 	@Override
-	public ItemStack slotClick(int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
+	public ItemStack slotClick(int slot, int button, int buttonType, EntityPlayer player)
 	{
-		if (par1 == this.blockSlot)
+		if (slot == this.blockSlot)
 			return null;
-		return super.slotClick(par1, par2, par3, par4EntityPlayer);
+
+		// TODO gamerforEA code start
+		if (!this.validator.canSlotClick(slot, button, buttonType, player))
+			return null;
+		// TODO gamerforEA code end
+
+		return super.slotClick(slot, button, buttonType, player);
 	}
 
 	@Override
@@ -128,10 +148,11 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 	}
 
 	@Override
-	public boolean canInteractWith(EntityPlayer entityplayer)
+	public boolean canInteractWith(EntityPlayer player)
 	{
-		// TODO gamerforEA code replace, old code: return true;
-		return isSameItemInventory(this.pouch, this.player.getCurrentEquippedItem());
+		// TODO gamerforEA code replace, old code:
+		// return true;
+		return this.validator.canInteractWith(player);
 		// TODO gamerforEA code end
 	}
 
@@ -148,8 +169,6 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 	}
 
 	// TODO gamerforEA code start
-	private static final String NBT_KEY_UID = "UID";
-
 	@Override
 	public void onCraftMatrixChanged(IInventory inventory)
 	{
@@ -158,27 +177,10 @@ public class ContainerIchorPouch extends ContainerPlayerInv
 			this.player.setCurrentItemOrArmor(0, this.pouch);
 		super.onCraftMatrixChanged(inventory);
 	}
-
-	private static boolean isSameItemInventory(ItemStack base, ItemStack comparison)
-	{
-		if (base == null || comparison == null)
-			return false;
-
-		if (base.getItem() != comparison.getItem())
-			return false;
-
-		if (!base.hasTagCompound() || !comparison.hasTagCompound())
-			return false;
-
-		String baseUID = base.getTagCompound().getString(NBT_KEY_UID);
-		String comparisonUID = comparison.getTagCompound().getString(NBT_KEY_UID);
-		return baseUID != null && comparisonUID != null && baseUID.equals(comparisonUID);
-	}
 	// TODO gamerforEA code end
 
 	private static class InventoryIchorPouch extends InventoryFocusPouch
 	{
-
 		public InventoryIchorPouch(Container par1Container)
 		{
 			super(par1Container);

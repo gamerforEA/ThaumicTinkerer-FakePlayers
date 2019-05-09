@@ -135,17 +135,17 @@ public class BlockTransvectorDislocator extends BlockCamo
 	}
 
 	@Override
-	public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack)
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack)
 	{
-		TileEntity tile = par1World.getTileEntity(par2, par3, par4);
+		TileEntity tile = world.getTileEntity(x, y, z);
 
 		// TODO gamerforEA code start
-		if (par5EntityLivingBase instanceof EntityPlayer)
-			((TileTransvectorDislocator) tile).fake.setProfile(((EntityPlayer) par5EntityLivingBase).getGameProfile());
+		if (entity instanceof EntityPlayer)
+			((TileTransvectorDislocator) tile).fake.setProfile((EntityPlayer) entity);
 		// TODO gamerforEA code end
 
-		((TileTransvectorDislocator) tile).orientation = BlockPistonBase.determineOrientation(par1World, par2, par3, par4, par5EntityLivingBase);
-		par1World.markBlockForUpdate(par2, par3, par4);
+		((TileTransvectorDislocator) tile).orientation = BlockPistonBase.determineOrientation(world, x, y, z, entity);
+		world.markBlockForUpdate(x, y, z);
 	}
 
 	@Override

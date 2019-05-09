@@ -1,136 +1,205 @@
 package com.gamerforea.ttinkerer;
 
-import com.gamerforea.eventhelper.util.FastUtils;
-import com.google.common.collect.Sets;
-import cpw.mods.fml.common.registry.GameData;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
+import com.gamerforea.eventhelper.config.*;
 import net.minecraftforge.common.config.Configuration;
-
-import java.util.Set;
 
 import static net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL;
 
+@Config(name = "ThaumicTinkerer")
 public final class EventConfig
 {
-	private static final String[] DEFAULT_BLOCKS = { "minecraft:bedrock", "modid:blockname:meta" };
-	public static final Set<String> focusDislocationBlackList = Sets.newHashSet(DEFAULT_BLOCKS);
-	public static final Set<String> blockTalismanBlackList = Sets.newHashSet(DEFAULT_BLOCKS);
-	public static final Set<String> transvectorBlackList = Sets.newHashSet(DEFAULT_BLOCKS);
-	public static final Set<String> animationTabletBlackList = Sets.newHashSet(DEFAULT_BLOCKS);
-	public static final Set<String> repairerBlackList = Sets.newHashSet(DEFAULT_BLOCKS);
-	public static final Set<String> placementMirrorBlackList = Sets.newHashSet(DEFAULT_BLOCKS);
+	private static final String CATEGORY_BLACKLISTS = "blacklists";
+	private static final String CATEGORY_BLACKLISTS_TRANSVECTOR = CATEGORY_BLACKLISTS + Configuration.CATEGORY_SPLITTER + "transvector";
+	private static final String CATEGORY_OTHER = "other";
+	private static final String CATEGORY_ARMOR = "armor";
 
+	@ConfigItemBlockList(name = "focusDislocation",
+						 category = CATEGORY_BLACKLISTS,
+						 comment = "Чёрный список блоков для Фокуса Перемещения",
+						 oldName = "focusDislocationBlackList",
+						 oldCategory = CATEGORY_GENERAL)
+	public static final ItemBlockList focusDislocationBlackList = new ItemBlockList();
+
+	@ConfigItemBlockList(name = "blockTalisman",
+						 category = CATEGORY_BLACKLISTS,
+						 comment = "Чёрный список блоков для Кольца черной дыры",
+						 oldName = "blockTalismanBlackList",
+						 oldCategory = CATEGORY_GENERAL)
+	public static final ItemBlockList blockTalismanBlackList = new ItemBlockList();
+
+	@ConfigItemBlockList(name = "animationTablet",
+						 category = CATEGORY_BLACKLISTS,
+						 comment = "Чёрный список предметов для Динамической дощечки",
+						 oldName = "animationTabletBlackList",
+						 oldCategory = CATEGORY_GENERAL)
+	public static final ItemBlockList animationTabletBlackList = new ItemBlockList();
+
+	@ConfigItemBlockList(name = "repairer",
+						 category = CATEGORY_BLACKLISTS,
+						 comment = "Чёрный список предметов для Таум-Восстановителя",
+						 oldName = "repairerBlackList",
+						 oldCategory = CATEGORY_GENERAL)
+	public static final ItemBlockList repairerBlackList = new ItemBlockList();
+
+	@ConfigItemBlockList(name = "placementMirror",
+						 category = CATEGORY_BLACKLISTS,
+						 comment = "Чёрный список предметов для Терраформингового стекла",
+						 oldName = "placementMirrorBlackList",
+						 oldCategory = CATEGORY_GENERAL)
+	public static final ItemBlockList placementMirrorBlackList = new ItemBlockList();
+
+	@ConfigItemBlockList(name = "ichorPouch",
+						 category = CATEGORY_BLACKLISTS,
+						 comment = "Чёрный список предметов для Бездонной сумки",
+						 oldName = "ichorPouchBlackList",
+						 oldCategory = CATEGORY_GENERAL)
+	public static final ItemBlockList ichorPouchBlackList = new ItemBlockList();
+
+	@ConfigItemBlockList(name = "blackList",
+						 category = CATEGORY_BLACKLISTS_TRANSVECTOR,
+						 comment = "Чёрный список блоков для Трансвекторного дислокатора",
+						 oldName = "transvectorBlackList",
+						 oldCategory = CATEGORY_GENERAL)
+	public static final ItemBlockList transvectorBlackList = new ItemBlockList();
+
+	@ConfigItemBlockList(name = "whiteList",
+						 category = CATEGORY_BLACKLISTS_TRANSVECTOR,
+						 comment = "Белый список блоков для Трансвекторного дислокатора",
+						 oldName = "transvectorWhiteList",
+						 oldCategory = CATEGORY_GENERAL)
+	public static final ItemBlockList transvectorWhiteList = new ItemBlockList();
+
+	@ConfigBoolean(name = "enableBlackList",
+				   category = CATEGORY_BLACKLISTS_TRANSVECTOR,
+				   comment = "Включить чёрный список блоков для Трансвекторного дислокатора",
+				   oldName = "transvectorEnableBlackList",
+				   oldCategory = CATEGORY_GENERAL)
+	public static boolean transvectorEnableBlackList = true;
+
+	@ConfigBoolean(name = "enableWhiteList",
+				   category = CATEGORY_BLACKLISTS_TRANSVECTOR,
+				   comment = "Включить белый список блоков для Трансвекторного дислокатора",
+				   oldName = "transvectorEnableWhiteList",
+				   oldCategory = CATEGORY_GENERAL)
+	public static boolean transvectorEnableWhiteList = false;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Включить разрушение коренной породы Пробуждённой ихориевой киркой",
+				   oldCategory = CATEGORY_GENERAL)
 	public static boolean enableIchorPickAdvBedrockBreaking = false;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Включить разрушение всех (почти) блоков Пробуждённой ихориевой киркой",
+				   oldCategory = CATEGORY_GENERAL)
 	public static boolean enableIchorPickAdvAllBreaking = false;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Включить освещение территории Пылающими шароварами",
+				   oldCategory = CATEGORY_GENERAL)
 	public static boolean enableGenLegsLight = false;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Одноразовое использование Тома записи исследований",
+				   oldCategory = CATEGORY_GENERAL)
 	public static boolean shareBookSingleUse = true;
+
+	@ConfigInt(category = CATEGORY_OTHER,
+			   comment = "Максимальное количество созданий Тома записи исследований (0 - без ограничений)",
+			   oldCategory = CATEGORY_GENERAL,
+			   min = 0)
+	public static int shareBookCreateLimit = 0;
+
+	@ConfigFloat(category = CATEGORY_OTHER,
+				 comment = "Множитель потребления Вис в Набалдашника Перемещения",
+				 oldCategory = CATEGORY_GENERAL,
+				 min = 0)
 	public static float dislocationVisMultipier = 1;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Включить защиту от снарядов для Робы стратосферы",
+				   oldCategory = CATEGORY_GENERAL)
 	public static boolean robeStratosphereProjectileProtect = true;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Выключить работу со стаками для Ткани поглощения заклинаний",
+				   oldCategory = CATEGORY_GENERAL)
 	public static boolean disableClothRecipeStack = false;
+
+	@ConfigInt(category = CATEGORY_OTHER,
+			   comment = "Максимальное количество блоков, разрушаемое Пробуждённым ихориевым топором",
+			   oldCategory = CATEGORY_GENERAL,
+			   min = 1)
 	public static int ichorAxeMaxBlocks = 1000;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Запретить дроп аспектов с мобов, призванных Пьедесталом некроманта",
+				   oldCategory = CATEGORY_GENERAL)
 	public static boolean summonerDenyDropAspect = true;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Включить Набалдашник Перемещения",
+				   oldCategory = CATEGORY_GENERAL)
 	public static boolean enableFocusDislocation = true;
 
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Запрет для Трансвекторного дислокатора на обмен одинаковых блоков",
+				   oldCategory = CATEGORY_GENERAL)
+	public static boolean transvectorDenySameBlock = false;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Запрет для Трансвекторного дислокатора на перемещение контейнеров",
+				   oldCategory = CATEGORY_GENERAL)
+	public static boolean transvectorDenyInventory = false;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Запрет ставить больше 1 Пьедестала некроманта на чанк",
+				   oldCategory = CATEGORY_GENERAL)
+	public static boolean summonerOnlyOnePerChunk = false;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "При использовании Набалдашника Перемещения обновлять соседние блоки (фикс дюпа)",
+				   oldCategory = CATEGORY_GENERAL)
+	public static boolean focusDislocationNotifyNeighbors = false;
+
+	@ConfigBoolean(category = CATEGORY_OTHER,
+				   comment = "Запретить переносить блоки-контейнеры Набалдашником Перемещения",
+				   oldCategory = CATEGORY_GENERAL)
+	public static boolean focusDislocationDenyInventory = false;
+
+	@ConfigBoolean(category = CATEGORY_OTHER, comment = "Фикс крафта Наполненных семян", oldCategory = CATEGORY_GENERAL)
+	public static boolean fixInfusedSeedsCraft = false;
+
+	@ConfigInt(category = CATEGORY_ARMOR,
+			   comment = "Количество очков защиты Ихориевой брони",
+			   oldCategory = CATEGORY_GENERAL,
+			   min = 1)
 	public static int ichorArmor1 = 3;
+
+	@ConfigInt(category = CATEGORY_ARMOR,
+			   comment = "Количество очков защиты Ихориевой брони",
+			   oldCategory = CATEGORY_GENERAL,
+			   min = 1)
 	public static int ichorArmor2 = 8;
+
+	@ConfigInt(category = CATEGORY_ARMOR,
+			   comment = "Количество очков защиты Ихориевой брони",
+			   oldCategory = CATEGORY_GENERAL,
+			   min = 1)
 	public static int ichorArmor3 = 6;
+
+	@ConfigInt(category = CATEGORY_ARMOR,
+			   comment = "Количество очков защиты Ихориевой брони",
+			   oldCategory = CATEGORY_GENERAL,
+			   min = 1)
 	public static int ichorArmor4 = 3;
 
-	public static boolean transvectorDenySameBlock = false;
-	public static boolean transvectorDenyInventory = false;
+	public static void init()
+	{
+		ConfigUtils.readConfig(EventConfig.class);
+	}
 
 	static
 	{
-		try
-		{
-			Configuration cfg = FastUtils.getConfig("ThaumicTinkerer");
-			String c = CATEGORY_GENERAL;
-
-			readStringSet(cfg, "focusDislocationBlackList", c, "Чёрный список блоков для Фокуса Перемещения", focusDislocationBlackList);
-			readStringSet(cfg, "blockTalismanBlackList", c, "Чёрный список блоков для Кольца черной дыры", blockTalismanBlackList);
-			readStringSet(cfg, "transvectorBlackList", c, "Чёрный список блоков для Трансвекторного дислокатора", transvectorBlackList);
-			readStringSet(cfg, "animationTabletBlackList", c, "Чёрный список предметов для Динамической дощечки", animationTabletBlackList);
-			readStringSet(cfg, "repairerBlackList", c, "Чёрный список предметов для Таум-Восстановителя", repairerBlackList);
-			readStringSet(cfg, "placementMirrorBlackList", c, "Чёрный список предметов для Терраформингового стекла", placementMirrorBlackList);
-
-			enableIchorPickAdvBedrockBreaking = cfg.getBoolean("enableIchorPickAdvBedrockBreaking", c, enableIchorPickAdvBedrockBreaking, "Включить разрушение коренной породы Пробуждённой ихориевой киркой");
-			enableIchorPickAdvAllBreaking = cfg.getBoolean("enableIchorPickAdvAllBreaking", c, enableIchorPickAdvAllBreaking, "Включить разрушение всех (почти) блоков Пробуждённой ихориевой киркой");
-			enableGenLegsLight = cfg.getBoolean("enableGenLegsLight", c, enableGenLegsLight, "Включить освещение территории Пылающими шароварами");
-			shareBookSingleUse = cfg.getBoolean("shareBookSingleUse", c, shareBookSingleUse, "Одноразовое использование Тома записи исследований");
-			dislocationVisMultipier = cfg.getFloat("dislocationVisMultipier", c, dislocationVisMultipier, 0, Float.MAX_VALUE, "Множитель потребления Вис в Набалдашника Перемещения");
-			robeStratosphereProjectileProtect = cfg.getBoolean("robeStratosphereProjectileProtect", c, robeStratosphereProjectileProtect, "Включить защиту от снарядов для Робы стратосферы");
-			disableClothRecipeStack = cfg.getBoolean("disableClothRecipeStack", c, disableClothRecipeStack, "Выключить работу со стаками для Ткани поглощения заклинаний");
-			ichorAxeMaxBlocks = cfg.getInt("ichorAxeMaxBlocks", c, ichorAxeMaxBlocks, 1, Integer.MAX_VALUE, "Максимальное количество блоков, разрушаемое Пробуждённым ихориевым топором");
-			summonerDenyDropAspect = cfg.getBoolean("summonerDenyDropAspect", c, summonerDenyDropAspect, "Запретить дроп аспектов с мобов, призванных Пьедесталом некроманта");
-			enableFocusDislocation = cfg.getBoolean("enableFocusDislocation", c, enableFocusDislocation, "Включить Набалдашник Перемещения");
-
-			ichorArmor1 = cfg.getInt("ichorArmor1", c, ichorArmor1, 1, Integer.MAX_VALUE, "Количество очков защиты Ихориевой брони");
-			ichorArmor2 = cfg.getInt("ichorArmor2", c, ichorArmor2, 1, Integer.MAX_VALUE, "Количество очков защиты Ихориевой брони");
-			ichorArmor3 = cfg.getInt("ichorArmor3", c, ichorArmor3, 1, Integer.MAX_VALUE, "Количество очков защиты Ихориевой брони");
-			ichorArmor4 = cfg.getInt("ichorArmor4", c, ichorArmor4, 1, Integer.MAX_VALUE, "Количество очков защиты Ихориевой брони");
-
-			transvectorDenySameBlock = cfg.getBoolean("transvectorDenySameBlock", c, transvectorDenySameBlock, "Запрет для Трансвекторного дислокатора на обмен одинаковых блоков");
-			transvectorDenyInventory = cfg.getBoolean("transvectorDenyInventory", c, transvectorDenyInventory, "Запрет для Трансвекторного дислокатора на перемещение контейнеров");
-
-			cfg.save();
-		}
-		catch (Throwable throwable)
-		{
-			System.err.println("Failed load config. Use default values.");
-			throwable.printStackTrace();
-		}
-	}
-
-	public static boolean inList(Set<String> list, ItemStack stack)
-	{
-		return stack != null && inList(list, stack.getItem(), stack.getItemDamage());
-	}
-
-	public static boolean inList(Set<String> list, Item item, int meta)
-	{
-		if (item instanceof ItemBlock)
-			return inList(list, ((ItemBlock) item).field_150939_a, meta);
-
-		return inList(list, getId(item), meta);
-	}
-
-	public static boolean inList(Set<String> list, Block block, int meta)
-	{
-		return inList(list, getId(block), meta);
-	}
-
-	private static boolean inList(Set<String> blackList, String id, int meta)
-	{
-		return id != null && (blackList.contains(id) || blackList.contains(id + ':' + meta));
-	}
-
-	private static void readStringSet(Configuration cfg, String name, String category, String comment, Set<String> def)
-	{
-		Set<String> temp = getStringSet(cfg, name, category, comment, def);
-		def.clear();
-		def.addAll(temp);
-	}
-
-	private static Set<String> getStringSet(Configuration cfg, String name, String category, String comment, Set<String> def)
-	{
-		return getStringSet(cfg, name, category, comment, def.toArray(new String[def.size()]));
-	}
-
-	private static Set<String> getStringSet(Configuration cfg, String name, String category, String comment, String... def)
-	{
-		return Sets.newHashSet(cfg.getStringList(name, category, def, comment));
-	}
-
-	private static String getId(Item item)
-	{
-		return GameData.getItemRegistry().getNameForObject(item);
-	}
-
-	private static String getId(Block block)
-	{
-		return GameData.getBlockRegistry().getNameForObject(block);
+		init();
 	}
 }

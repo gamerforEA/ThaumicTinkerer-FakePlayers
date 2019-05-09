@@ -15,7 +15,6 @@
 package thaumic.tinkerer.common.block.tile.transvector;
 
 import com.gamerforea.eventhelper.fake.FakePlayerContainer;
-import com.gamerforea.eventhelper.fake.FakePlayerContainerTileEntity;
 import com.gamerforea.ttinkerer.ModUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -32,7 +31,7 @@ public abstract class TileTransvector extends TileCamo
 	private boolean cheaty;
 
 	// TODO gamerforEA code start
-	public final FakePlayerContainer fake = new FakePlayerContainerTileEntity(ModUtils.profile, this);
+	public final FakePlayerContainer fake = ModUtils.NEXUS_FACTORY.wrapFake(this);
 	// TODO gamerforEA code end
 
 	@Override

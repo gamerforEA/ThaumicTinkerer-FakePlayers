@@ -4,7 +4,6 @@ import appeng.api.AEApi;
 import appeng.api.IAppEngApi;
 import appeng.api.movable.IMovableTile;
 import com.gamerforea.eventhelper.fake.FakePlayerContainer;
-import com.gamerforea.eventhelper.fake.FakePlayerContainerTileEntity;
 import com.gamerforea.ttinkerer.ModUtils;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,7 +27,7 @@ public class TileEntityMobilizer extends TileEntity
 	public ForgeDirection movementDirection;
 
 	// TODO gamerforEA code start
-	public final FakePlayerContainer fake = new FakePlayerContainerTileEntity(ModUtils.profile, this);
+	public final FakePlayerContainer fake = ModUtils.NEXUS_FACTORY.wrapFake(this);
 	// TODO gamerforEA code end
 
 	@Override
