@@ -17,6 +17,7 @@ package thaumic.tinkerer.common.item.kami;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import com.gamerforea.ttinkerer.EventConfig;
+import com.gamerforea.ttinkerer.ModUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -104,7 +105,6 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 		Block block = Block.getBlockFromName(getBlockName(stack));
 		if (block == Blocks.air)
 			block = Block.getBlockById(getBlockID(stack));
-
 		return block;
 	}
 
@@ -131,80 +131,81 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer player, World world, int x, int y, int z, int side, float par8, float par9, float par10)
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float par8, float par9, float par10)
 	{
 		Block block = world.getBlock(x, y, z);
 		int meta = world.getBlockMetadata(x, y, z);
 
 		// TODO gamerforEA code start
-		if (EventConfig.inList(EventConfig.blockTalismanBlackList, block, meta))
+		if (EventConfig.blockTalismanBlackList.contains(block, meta))
 		{
 			player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Данное взаимодействие запрещено!"));
 			return false;
 		}
 		// TODO gamerforEA code end
 
-		boolean set = this.setBlock(par1ItemStack, block, meta);
+		boolean set = this.setBlock(stack, block, meta);
 
 		if (!set)
 		{
-			Block bBlock = getBlock(par1ItemStack);
-			int bmeta = getBlockMeta(par1ItemStack);
-
-			TileEntity tile = world.getTileEntity(x, y, z);
-			if (tile != null && tile instanceof IInventory)
+			Block bBlock = getBlock(stack);
+			int bMeta = getBlockMeta(stack);
+			ItemStack bStack = new ItemStack(bBlock, 1, bMeta);
+			Item bItem = bStack.getItem();
+			if (bItem != null)
 			{
-				IInventory inv = (IInventory) tile;
-				int[] slots = inv instanceof ISidedInventory ? ((ISidedInventory) inv).getAccessibleSlotsFromSide(side) : TileTransvectorInterface.buildSlotsForLinearInventory(inv);
-				for (int slot : slots)
+				int maxSize = bStack.getMaxStackSize();
+				TileEntity tile = world.getTileEntity(x, y, z);
+				if (tile instanceof IInventory)
 				{
-					ItemStack stackInSlot = inv.getStackInSlot(slot);
-					if (stackInSlot == null)
+					IInventory inv = (IInventory) tile;
+					int[] slots = inv instanceof ISidedInventory ? ((ISidedInventory) inv).getAccessibleSlotsFromSide(side) : TileTransvectorInterface.buildSlotsForLinearInventory(inv);
+					for (int slot : slots)
 					{
-						ItemStack stack = new ItemStack(bBlock, 1, bmeta);
-						int maxSize = stack.getMaxStackSize();
-						stack.stackSize = remove(par1ItemStack, maxSize);
-						if (stack.stackSize != 0)
-							if (inv.isItemValidForSlot(slot, stack) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, stack, side)))
-							{
-								inv.setInventorySlotContents(slot, stack);
-								inv.markDirty();
-								set = true;
-							}
-					}
-					else
-					{
-						// TODO gamerforEA code start
-						if (stackInSlot.hasTagCompound())
-							continue;
-						// TODO gamerforEA code end
-
-						if (stackInSlot.getItem() == Item.getItemFromBlock(bBlock) && stackInSlot.getItemDamage() == bmeta)
+						ItemStack stackInSlot = inv.getStackInSlot(slot);
+						if (stackInSlot == null)
 						{
-							int maxSize = stackInSlot.getMaxStackSize();
-							int missing = maxSize - stackInSlot.stackSize;
-							if (inv.isItemValidForSlot(slot, stackInSlot) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, stackInSlot, side)))
+							ItemStack newStack = bStack.copy();
+							newStack.stackSize = remove(stack, maxSize);
+							if (newStack.stackSize > 0)
+								if (inv.isItemValidForSlot(slot, newStack) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, newStack, side)))
+								{
+									inv.setInventorySlotContents(slot, newStack);
+									inv.markDirty();
+									set = true;
+								}
+						}
+						else
+						{
+							// TODO gamerforEA code replace, old code:
+							// if (stackInSlot.getItem() == bItem && stackInSlot.getItemDamage() == bMeta)
+							if (ModUtils.isItemEqual(stackInSlot, bStack))
+							// TODO gamerforEA code end
 							{
-								stackInSlot.stackSize += remove(par1ItemStack, missing);
-								inv.markDirty();
-								set = true;
+								int missing = maxSize - stackInSlot.stackSize;
+								if (inv.isItemValidForSlot(slot, stackInSlot) && (!(inv instanceof ISidedInventory) || ((ISidedInventory) inv).canInsertItem(slot, stackInSlot, side)))
+								{
+									stackInSlot.stackSize += remove(stack, missing);
+									inv.markDirty();
+									set = true;
+								}
 							}
 						}
 					}
 				}
-			}
-			else
-			{
-				int remove = remove(par1ItemStack, 1);
-				if (remove > 0)
+				else
 				{
-					Item.getItemFromBlock(bBlock).onItemUse(new ItemStack(bBlock, 1, bmeta), player, world, x, y, z, side, par8, par9, par10);
-					set = true;
+					int remove = remove(stack, 1);
+					if (remove > 0)
+					{
+						bItem.onItemUse(bStack.copy(), player, world, x, y, z, side, par8, par9, par10);
+						set = true;
+					}
 				}
 			}
 		}
 
-		player.setCurrentItemOrArmor(0, par1ItemStack);
+		player.setCurrentItemOrArmor(0, stack);
 
 		return set;
 	}
@@ -271,14 +272,18 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 	}
 
 	@Override
-	public void onWornTick(ItemStack itemstack, EntityLivingBase entity)
+	public void onWornTick(ItemStack stack, EntityLivingBase entity)
 	{
-		Block block = getBlock(itemstack);
-		if (!entity.worldObj.isRemote && itemstack.getItemDamage() == 1 && block != Blocks.air && entity instanceof EntityPlayer)
+		Block bBlock = getBlock(stack);
+		if (!entity.worldObj.isRemote && bBlock != Blocks.air && entity instanceof EntityPlayer && stack.getItemDamage() == 1)
 		{
 			EntityPlayer player = (EntityPlayer) entity;
-			int meta = getBlockMeta(itemstack);
-
+			int bMeta = getBlockMeta(stack);
+			ItemStack bStack = new ItemStack(bBlock, 1, bMeta);
+			Item bItem = bStack.getItem();
+			if (bItem == null)
+				return;
+			int maxSize = bStack.getMaxStackSize();
 			int highest = -1;
 			boolean hasFreeSlot = false;
 			int[] counts = new int[player.inventory.getSizeInventory() - player.inventory.armorInventory.length];
@@ -286,21 +291,19 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 
 			for (int i = 0; i < counts.length; i++)
 			{
-				ItemStack stack = player.inventory.getStackInSlot(i);
-				if (stack == null)
+				ItemStack stackInSlot = player.inventory.getStackInSlot(i);
+				if (stackInSlot == null)
 				{
 					hasFreeSlot = true;
 					continue;
 				}
 
-				if (Item.getItemFromBlock(block) == stack.getItem() && stack.getItemDamage() == meta)
+				// TODO gamerforEA code replace, old code:
+				// if (bItem == stackInSlot.getItem() && stackInSlot.getItemDamage() == bMeta)
+				if (ModUtils.isItemEqual(bStack, stackInSlot))
+				// TODO gamerforEA code end
 				{
-					// TODO gamerforEA code start
-					if (stack.hasTagCompound())
-						continue;
-					// TODO gamerforEA code end
-
-					counts[i] = stack.stackSize;
+					counts[i] = stackInSlot.stackSize;
 					if (highest == -1)
 						highest = i;
 					else
@@ -311,11 +314,21 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 			if (highest == -1)
 			{
 				ItemStack heldItem = player.inventory.getItemStack();
-				if (hasFreeSlot && (heldItem == null || Item.getItemFromBlock(block) == heldItem.getItem() || heldItem.getItemDamage() != meta))
+
+				// TODO gamerforEA code replace, old code:
+				// if (hasFreeSlot && (heldItem == null || bItem == heldItem.getItem() || heldItem.getItemDamage() != bMeta))
+				if (hasFreeSlot && (heldItem == null || ModUtils.isItemEqual(bStack, heldItem)))
+				// TODO gamerforEA code end
 				{
-					ItemStack stack = new ItemStack(block, remove(itemstack, 64), meta);
-					if (stack.stackSize != 0)
-						player.inventory.addItemStackToInventory(stack);
+					ItemStack newStack = bStack.copy();
+
+					// TODO gamerforEA code replace, old code:
+					// newStack.stackSize = remove(stack, 64);
+					newStack.stackSize = remove(stack, maxSize);
+					// TODO gamerforEA code end
+
+					if (newStack.stackSize != 0)
+						player.inventory.addItemStackToInventory(newStack);
 				}
 			}
 			else
@@ -327,17 +340,16 @@ public class ItemBlockTalisman extends ItemKamiBase implements IBauble
 					if (i == highest || count == 0)
 						continue;
 
-					this.add(itemstack, count);
+					this.add(stack, count);
 					player.inventory.setInventorySlotContents(i, null);
 				}
 
 				int countInHighest = counts[highest];
-				int maxSize = new ItemStack(block, 1, meta).getMaxStackSize();
 				if (countInHighest < maxSize)
 				{
 					int missing = maxSize - countInHighest;
 					ItemStack stackInHighest = player.inventory.getStackInSlot(highest);
-					stackInHighest.stackSize += remove(itemstack, missing);
+					stackInHighest.stackSize += remove(stack, missing);
 				}
 			}
 		}
