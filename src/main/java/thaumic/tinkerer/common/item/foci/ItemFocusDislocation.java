@@ -16,14 +16,17 @@ package thaumic.tinkerer.common.item.foci;
 
 import com.gamerforea.eventhelper.util.EventUtils;
 import com.gamerforea.ttinkerer.EventConfig;
+import com.gamerforea.ttinkerer.ModUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockChest;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryLargeChest;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,6 +37,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
@@ -72,7 +76,7 @@ public class ItemFocusDislocation extends ItemModFocus
 	// TODO gamerforEA add multiplier
 	private static final AspectList visUsageSpawner = new AspectList().add(Aspect.ENTROPY, (int) (10000 * EventConfig.dislocationVisMultipier)).add(Aspect.ORDER, (int) (10000 * EventConfig.dislocationVisMultipier)).add(Aspect.EARTH, (int) (5000 * EventConfig.dislocationVisMultipier));
 
-	private static ArrayList<Block> blacklist = new ArrayList<Block>();
+	private static ArrayList<Block> blacklist = new ArrayList<>();
 	private IIcon ornament;
 
 	private static AspectList getCost(TileEntity tile)
@@ -89,97 +93,145 @@ public class ItemFocusDislocation extends ItemModFocus
 	}
 
 	@Override
-	public ItemStack onFocusRightClick(ItemStack itemstack, World world, EntityPlayer player, MovingObjectPosition mop)
+	public ItemStack onFocusRightClick(ItemStack wandStack, World world, EntityPlayer player, MovingObjectPosition mop)
 	{
 		if (mop == null)
-			return itemstack;
+			return wandStack;
 
 		// TODO gamerforEA code start
 		if (!EventConfig.enableFocusDislocation)
-			return itemstack;
+			return wandStack;
 		// TODO gamerforEA code starend
 
-		Block block = world.getBlock(mop.blockX, mop.blockY, mop.blockZ);
-		int meta = world.getBlockMetadata(mop.blockX, mop.blockY, mop.blockZ);
+		int x = mop.blockX;
+		int y = mop.blockY;
+		int z = mop.blockZ;
+		int side = mop.sideHit;
+
+		Block block = world.getBlock(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z);
+		TileEntity tile = world.getTileEntity(x, y, z);
 
 		// TODO gamerforEA code start
-		if (EventConfig.inList(EventConfig.focusDislocationBlackList, block, meta))
+		if (ModUtils.isDoorBlock(block) || EventConfig.focusDislocationDenyInventory && tile instanceof IInventory || EventConfig.focusDislocationBlackList.contains(block, meta))
 		{
 			player.addChatComponentMessage(new ChatComponentText(EnumChatFormatting.RED + "Данный блок запрещено перемещать!"));
-			return itemstack;
+			return wandStack;
 		}
 		// TODO gamerforEA code end
 
-		TileEntity tile = world.getTileEntity(mop.blockX, mop.blockY, mop.blockZ);
-		ItemWandCasting wand = (ItemWandCasting) itemstack.getItem();
+		ItemWandCasting wand = (ItemWandCasting) wandStack.getItem();
 
-		if (player.canPlayerEdit(mop.blockX, mop.blockY, mop.blockZ, mop.sideHit, itemstack))
+		if (player.canPlayerEdit(x, y, z, side, wandStack))
 		{
 			// TODO gamerforEA code start
-			if (EventUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ))
-				return itemstack;
+			if (EventUtils.cantBreak(player, x, y, z))
+				return wandStack;
 			// TODO gamerforEA code end
 
-			ItemStack stack = this.getPickedBlock(itemstack);
-			if (stack != null)
+			ItemStack blockStack = this.getPickedBlock(wandStack);
+			if (blockStack != null)
 			{
-				if (mop.sideHit == 0)
-					--mop.blockY;
-				if (mop.sideHit == 1)
-					++mop.blockY;
-				if (mop.sideHit == 2)
-					--mop.blockZ;
-				if (mop.sideHit == 3)
-					++mop.blockZ;
-				if (mop.sideHit == 4)
-					--mop.blockX;
-				if (mop.sideHit == 5)
-					++mop.blockX;
+				if (side == 0)
+					--y;
+				if (side == 1)
+					++y;
+				if (side == 2)
+					--z;
+				if (side == 3)
+					++z;
+				if (side == 4)
+					--x;
+				if (side == 5)
+					++x;
 
-				if (block.canPlaceBlockOnSide(world, mop.blockX, mop.blockY, mop.blockZ, mop.sideHit))
+				if (block.canPlaceBlockOnSide(world, x, y, z, side))
 				{
 					// TODO gamerforEA code start
-					if (EventUtils.cantBreak(player, mop.blockX, mop.blockY, mop.blockZ))
-						return itemstack;
+					if (EventUtils.cantBreak(player, x, y, z))
+						return wandStack;
+
+					for (ForgeDirection direction : new ForgeDirection[] { ForgeDirection.EAST, ForgeDirection.NORTH, ForgeDirection.SOUTH, ForgeDirection.WEST })
+					{
+						int xx = x + direction.offsetX;
+						int yy = y + direction.offsetY;
+						int zz = z + direction.offsetZ;
+						if (world.blockExists(xx, yy, zz) && world.getBlock(xx, yy, zz) instanceof BlockChest && Blocks.chest.func_149951_m(world, xx, yy, zz) instanceof InventoryLargeChest)
+							return wandStack;
+					}
 					// TODO gamerforEA code end
 
 					if (!world.isRemote)
 					{
-						world.setBlock(mop.blockX, mop.blockY, mop.blockZ, ((ItemBlock) stack.getItem()).field_150939_a, stack.getItemDamage(), 1 | 2);
-						((ItemBlock) stack.getItem()).field_150939_a.onBlockPlacedBy(world, mop.blockX, mop.blockY, mop.blockZ, player, itemstack);
-						NBTTagCompound tileCmp = this.getStackTileEntity(itemstack);
+						ItemBlock itemBlock = (ItemBlock) blockStack.getItem();
+
+						// TODO gamerforEA code replace, old code:
+						// world.setBlock(x, y, z, itemBlock.field_150939_a, blockStack.getItemDamage(), 1 | 2);
+						if (ModUtils.isDoorBlock(itemBlock.field_150939_a))
+						{
+							this.clearPickedBlock(wandStack);
+							return wandStack;
+						}
+
+						boolean blockPlaced = world.setBlock(x, y, z, itemBlock.field_150939_a, blockStack.getItemDamage(), 1 | 2);
+						if (!blockPlaced)
+							return wandStack;
+						// TODO gamerforEA code end
+
+						itemBlock.field_150939_a.onBlockPlacedBy(world, x, y, z, player, wandStack);
+						NBTTagCompound tileCmp = this.getStackTileEntity(wandStack);
 						if (tileCmp != null && !tileCmp.hasNoTags())
 						{
-							TileEntity tile1 = TileEntity.createAndLoadEntity(tileCmp);
-							tile1.xCoord = mop.blockX;
-							tile1.yCoord = mop.blockY;
-							tile1.zCoord = mop.blockZ;
-							world.setTileEntity(mop.blockX, mop.blockY, mop.blockZ, tile1);
+							/* TODO gamerforEA code replace, old code:
+							TileEntity tileCopy = TileEntity.createAndLoadEntity(tileCmp);
+							tileCopy.xCoord = x;
+							tileCopy.yCoord = y;
+							tileCopy.zCoord = z;
+							world.setTileEntity(x, y, z, tileCopy); */
+							TileEntity tileCopy = createAndLoadEntity(tileCmp, x, y, z);
+							if (tileCopy != null)
+								world.setTileEntity(x, y, z, tileCopy);
+							// TODO gamerforEA code end
 						}
 					}
 					else
 						player.swingItem();
-					this.clearPickedBlock(itemstack);
+
+					this.clearPickedBlock(wandStack);
 
 					for (int i = 0; i < 8; i++)
 					{
-						float x = (float) (mop.blockX + Math.random());
-						float y = (float) (mop.blockY + Math.random()) + 0.65F;
-						float z = (float) (mop.blockZ + Math.random());
-						ThaumicTinkerer.tcProxy.burst(world, x, y, z, 0.2F);
+						float xx = (float) (x + Math.random());
+						float yy = (float) (y + Math.random()) + 0.65F;
+						float zz = (float) (z + Math.random());
+						ThaumicTinkerer.tcProxy.burst(world, xx, yy, zz, 0.2F);
 					}
 					world.playSoundAtEntity(player, "thaumcraft:wand", 0.5F, 1F);
 				}
 			}
-			else if (!blacklist.contains(block) && !ThaumcraftApi.portableHoleBlackList.contains(block) && block != null && block.getBlockHardness(world, mop.blockX, mop.blockY, mop.blockZ) != -1F && wand.consumeAllVis(itemstack, player, getCost(tile), true, false))
+			else if (!blacklist.contains(block) && !ThaumcraftApi.portableHoleBlackList.contains(block) && block != null && block.getBlockHardness(world, x, y, z) != -1F && wand.consumeAllVis(wandStack, player, getCost(tile), true, false))
 			{
 				if (!world.isRemote)
 				{
-					world.removeTileEntity(mop.blockX, mop.blockY, mop.blockZ);
-					world.setBlock(mop.blockX, mop.blockY, mop.blockZ, Blocks.air, 0, 1 | 2);
-					this.storePickedBlock(itemstack, block, (short) meta, tile);
+					/* TODO gamerforEA code replace, old code:
+					world.removeTileEntity(x, y, z);
+					world.setBlock(x, y, z, Blocks.air, 0, 1 | 2);
+					this.storePickedBlock(wandStack, block, (short) meta, tile); */
+					NBTTagCompound tileNbt = getTileNBT(tile);
 
-					// TODO gamerforEA code start
+					world.removeTileEntity(x, y, z);
+					boolean blockRemoved = world.setBlock(x, y, z, Blocks.air, 0, 1 | 2);
+
+					if (!blockRemoved && tileNbt != null && !tileNbt.hasNoTags())
+					{
+						TileEntity tileCopy = createAndLoadEntity(tileNbt, x, y, z);
+						if (tileCopy != null)
+							world.setTileEntity(x, y, z, tileCopy);
+						return wandStack;
+					}
+
+					this.storePickedBlock(wandStack, block, (short) meta, tileNbt);
+
 					if (tile instanceof IInventory)
 					{
 						IInventory inventory = (IInventory) tile;
@@ -190,16 +242,20 @@ public class ItemFocusDislocation extends ItemModFocus
 								inventory.setInventorySlotContents(slot, null);
 						}
 					}
+
+					if (EventConfig.focusDislocationNotifyNeighbors)
+						world.notifyBlockChange(x, y, z, Blocks.air);
 					// TODO gamerforEA code end
 				}
 
 				for (int i = 0; i < 8; i++)
 				{
-					float x = (float) (mop.blockX + Math.random());
-					float y = (float) (mop.blockY + Math.random());
-					float z = (float) (mop.blockZ + Math.random());
-					ThaumicTinkerer.tcProxy.burst(world, x, y, z, 0.2F);
+					float xx = (float) (x + Math.random());
+					float yy = (float) (y + Math.random());
+					float zz = (float) (z + Math.random());
+					ThaumicTinkerer.tcProxy.burst(world, xx, yy, zz, 0.2F);
 				}
+
 				world.playSoundAtEntity(player, block.stepSound.getBreakSound(), 1F, 1F);
 				world.playSoundAtEntity(player, "thaumcraft:wand", 0.5F, 1F);
 
@@ -208,7 +264,7 @@ public class ItemFocusDislocation extends ItemModFocus
 			}
 		}
 
-		return itemstack;
+		return wandStack;
 	}
 
 	@Override
@@ -276,8 +332,49 @@ public class ItemFocusDislocation extends ItemModFocus
 		return ItemNBTHelper.getCompound(focus, TAG_TILE_CMP, true);
 	}
 
+	// TODO gamerforEA code start
+	private void storePickedBlock(ItemStack stack, Block block, short meta, NBTTagCompound tileNbt)
+	{
+		ItemWandCasting wand = (ItemWandCasting) stack.getItem();
+		ItemStack focus = wand.getFocusItem(stack);
+		String blockName = Block.blockRegistry.getNameForObject(block);
+		ItemNBTHelper.setString(focus, TAG_BLOCK_NAME, blockName);
+		ItemNBTHelper.setInt(focus, TAG_BLOCK_META, meta);
+		NBTTagCompound cmp = tileNbt == null ? new NBTTagCompound() : tileNbt;
+		ItemNBTHelper.setCompound(focus, TAG_TILE_CMP, cmp);
+		ItemNBTHelper.setBoolean(focus, TAG_AVAILABLE, true);
+		wand.setFocus(stack, focus);
+	}
+
+	private static NBTTagCompound getTileNBT(TileEntity tile)
+	{
+		if (tile == null)
+			return null;
+		NBTTagCompound nbt = new NBTTagCompound();
+		tile.writeToNBT(nbt);
+		return nbt;
+	}
+
+	private static TileEntity createAndLoadEntity(NBTTagCompound nbt, int x, int y, int z)
+	{
+		if (nbt == null || nbt.hasNoTags())
+			return null;
+
+		TileEntity tile = TileEntity.createAndLoadEntity(nbt);
+		if (tile == null)
+			return null;
+
+		tile.xCoord = x;
+		tile.yCoord = y;
+		tile.zCoord = z;
+
+		return tile;
+	}
+	// TODO gamerforEA code end
+
 	private void storePickedBlock(ItemStack stack, Block block, short meta, TileEntity tile)
 	{
+		/* TODO gamerforEA code replace, old code:
 		ItemWandCasting wand = (ItemWandCasting) stack.getItem();
 		ItemStack focus = wand.getFocusItem(stack);
 		String blockName = Block.blockRegistry.getNameForObject(block);
@@ -288,7 +385,9 @@ public class ItemFocusDislocation extends ItemModFocus
 			tile.writeToNBT(cmp);
 		ItemNBTHelper.setCompound(focus, TAG_TILE_CMP, cmp);
 		ItemNBTHelper.setBoolean(focus, TAG_AVAILABLE, true);
-		wand.setFocus(stack, focus);
+		wand.setFocus(stack, focus); */
+		this.storePickedBlock(stack, block, meta, getTileNBT(tile));
+		// TODO gamerforEA code end
 	}
 
 	private void clearPickedBlock(ItemStack stack)
